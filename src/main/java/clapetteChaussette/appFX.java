@@ -1,5 +1,5 @@
 package clapetteChaussette;
 
-public class main {
+public class appFX {
 
 }

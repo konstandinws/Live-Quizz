@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>be.helha</groupId>
-    <artifactId>uno-mvc</artifactId>
+    <artifactId>clapetteChaussette</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>clapetteChausette</name>
+    <name>clapetteChaussette</name>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
@@ -59,7 +59,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>clapetteChaussette.AppFX</mainClass>
+                    <mainClass>clapetteChaussette.appFX</mainClass>
                 </configuration>
             </plugin>
         </plugins>

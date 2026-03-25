@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>demo1</artifactId>
+    <artifactId>clapetteChaussette</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>demo1</name>
+    <name>clapetteChaussette</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -60,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.demo1/com.example.demo1.HelloApplication</mainClass>
+                            <mainClass>com.example.clapetteChaussette/com.example.clapetteChaussette.HelloApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

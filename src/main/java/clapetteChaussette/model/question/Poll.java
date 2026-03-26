@@ -19,4 +19,16 @@ public class Poll extends Question {
         this.answers.add(option);
         this.voteCounts.add(0);
     }
+    public void vote(int index) {
+        this.voteCounts.set(index, this.voteCounts.get(index) + 1);
+    }
+
+    public ArrayList<Integer> getVoteCounts() {
+        return this.voteCounts;
+    }
+
+    @Override
+    public String toString() {
+        return "Sondage:" + this.getQuestion() ;
+    }
 }

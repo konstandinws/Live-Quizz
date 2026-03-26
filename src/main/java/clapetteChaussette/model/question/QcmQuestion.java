@@ -24,6 +24,7 @@ public class QcmQuestion extends Question{
         this.choixMultiple = true;
     }
 
+
     public String getCorrectAnswer() {
         return correctAnswer;
     }

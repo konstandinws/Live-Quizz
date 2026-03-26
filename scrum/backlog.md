@@ -1,9 +1,7 @@
 # Product Backlog
 
-```
-Product backlog du projet Clapette Chaussette
--v1.0
-```
+> Product backlog du projet Clapette Chaussette
+> `v1.0`.
 
 ## Features
 

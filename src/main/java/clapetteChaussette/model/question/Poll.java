@@ -29,6 +29,6 @@ public class Poll extends Question {
 
     @Override
     public String toString() {
-        return "Sondage:" + this.getQuestion() ;
+        return "Poll:" + this.getQuestion() ;
     }
 }

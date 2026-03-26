@@ -28,6 +28,6 @@ public class Poll extends Question {
 
     @Override
     public String toString() {
-        return "Poll :" + this.getQuestion() ;
+        return "Poll:" + this.getQuestion() ;
     }
 }

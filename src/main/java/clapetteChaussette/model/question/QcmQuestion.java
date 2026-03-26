@@ -8,12 +8,14 @@ public class QcmQuestion extends Question{
     ArrayList<String> correctAnswers;
     boolean choixMultiple;
 
+    // QCM classique avec une seule bonne réponse
     public QcmQuestion(String question, String correctAnswer) {
         super(question);
         this.correctAnswer = correctAnswer;
         this.choixMultiple = false;
     }
 
+    // Vrai QCM avec plusieurs bonnes réponses
     public QcmQuestion(String question, ArrayList<String> correctAnswers) {
         super(question);
         this.correctAnswers = correctAnswers;

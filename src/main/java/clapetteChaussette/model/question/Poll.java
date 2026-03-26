@@ -7,12 +7,11 @@ import java.util.List;
 public class Poll extends Question {
 
 
-    private ArrayList<Integer> voteCounts;
+    private final ArrayList<Integer> voteCounts;
 
     public Poll(String Question) {
         super(Question);
         this.voteCounts = new ArrayList<>();
-
     }
 
     public void addOption(String option) {
@@ -29,6 +28,6 @@ public class Poll extends Question {
 
     @Override
     public String toString() {
-        return "Poll:" + this.getQuestion() ;
+        return "Poll :" + this.getQuestion() ;
     }
 }

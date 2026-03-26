@@ -17,7 +17,7 @@
    <center>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Button" />
+            <Button fx:id="buttonclose"  mnemonicParsing="false" text="close" onAction="#leaveApplication" />
             <Button mnemonicParsing="false" text="Button" />
             <Button mnemonicParsing="false" text="Button" />
          </children>

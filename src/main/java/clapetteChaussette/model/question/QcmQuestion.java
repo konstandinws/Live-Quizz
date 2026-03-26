@@ -1,6 +1,7 @@
 package clapetteChaussette.model.question;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class QcmQuestion extends Question{
 
@@ -9,15 +10,17 @@ public class QcmQuestion extends Question{
     boolean choixMultiple;
 
     // QCM classique avec une seule bonne réponse
-    public QcmQuestion(String question, String correctAnswer) {
+    public QcmQuestion(String question, ArrayList<String> answers, String correctAnswer) {
         super(question);
+        this.answers = answers;
         this.correctAnswer = correctAnswer;
         this.choixMultiple = false;
     }
 
     // Vrai QCM avec plusieurs bonnes réponses
-    public QcmQuestion(String question, ArrayList<String> correctAnswers) {
+    public QcmQuestion(String question, ArrayList<String> answers,  ArrayList<String> correctAnswers) {
         super(question);
+        this.answers = answers;
         this.correctAnswers = correctAnswers;
         this.choixMultiple = true;
     }

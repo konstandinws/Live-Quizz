@@ -15,7 +15,7 @@
          </font>
       </Label>
         <Label text="Ma Question Libre" />
-      <TextArea maxWidth="400.0" prefHeight="71.0" prefWidth="492.0" promptText="entrer votre reponse" scrollLeft="1.0">
+      <TextArea maxWidth="500.0" prefHeight="71.0" prefWidth="492.0" promptText="entrer votre reponse" scrollLeft="1.0">
          <font>
             <Font name="Agency FB" size="24.0" />
          </font>

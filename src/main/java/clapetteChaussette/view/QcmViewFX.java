@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 
-public class QCM_FX_Controller {
+public class QcmViewFX {
 
     @FXML
     private Label laQuestion;

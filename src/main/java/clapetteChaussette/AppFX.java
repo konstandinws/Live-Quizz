@@ -1,5 +1,6 @@
 package clapetteChaussette;
 
+import clapetteChaussette.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,6 +10,7 @@ import javafx.stage.Stage;
 public class AppFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
+        MainController controler = new MainController();
         Parent root = FXMLLoader.load(getClass().getResource("/clapetteChaussette/fxml/clapetteChaussette.fxml"));
         primaryStage.setTitle("Clapette Chaussette");
         primaryStage.setScene(new Scene(root, 600, 400));

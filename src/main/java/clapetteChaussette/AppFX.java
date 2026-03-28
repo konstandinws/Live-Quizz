@@ -44,19 +44,23 @@ public class AppFX extends Application implements MainViewFX.Listener {
         String correctAnswer = "17";
         QcmQuestion qcm = new QcmQuestion(question, answers, correctAnswer);
         try {
-            afficherQuestion(primaryStage, qcm);
+            afficherQuestion(qcm);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void afficherQuestion(Stage stage, Question question) throws Exception {
+    public void afficherQuestion(Question question) throws Exception {
         // creer la question avec le service normalement
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/clapetteChaussette/fxml/qcm.fxml")
         );
         Parent root = loader.load();
         QcmViewFX controller = loader.getController();
-        stage.setScene(new Scene(root, 900, 600));
+        controller.initQcm((QcmQuestion) question);
+        Stage nouvelleFenetre = new Stage();
+        nouvelleFenetre.setTitle("Question QCM");
+        nouvelleFenetre.setScene(new Scene(root, 900, 600));
+        nouvelleFenetre.show();
     }
 }

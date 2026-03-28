@@ -1,5 +1,6 @@
 package clapetteChaussette.view;
 
+import clapetteChaussette.model.question.QcmQuestion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -35,5 +36,12 @@ public class QcmViewFX {
         } else {
             System.out.println(source.getId() + " is unchecked");
         }
+    }
+
+    public void initQcm(QcmQuestion qcm){
+        CheckBox1.setText(qcm.getAnswers().get(0));
+        CheckBox2.setText(qcm.getAnswers().get(1));
+        CheckBox3.setText(qcm.getAnswers().get(2));
+        CheckBox4.setText(qcm.getAnswers().get(3));
     }
 }

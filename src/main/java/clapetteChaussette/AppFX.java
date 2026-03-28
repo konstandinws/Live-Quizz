@@ -60,7 +60,7 @@ public class AppFX extends Application implements MainViewFX.Listener {
         controller.initQcm((QcmQuestion) question);
         Stage nouvelleFenetre = new Stage();
         nouvelleFenetre.setTitle("Question QCM");
-        nouvelleFenetre.setScene(new Scene(root, 900, 600));
+        nouvelleFenetre.setScene(new Scene(root));
         nouvelleFenetre.show();
     }
 }

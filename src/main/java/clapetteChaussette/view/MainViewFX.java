@@ -9,11 +9,11 @@ import javafx.scene.control.Button;
 
 public class MainViewFX {
 
-    IListenerMain listener;
-
-    public void setListener(IListenerMain listener) {
-        this.listener = listener;
+    public interface Listener {
+        void onQcmLaunch();
     }
+
+    private Listener listener;
 
     @FXML
     private Label mainLabel;
@@ -29,16 +29,20 @@ public class MainViewFX {
 
     @FXML
     void launchQCM(ActionEvent event) {
-        listener.onQCMLaunch();
+        listener.onQcmLaunch();
     }
 
     @FXML
     void launchPoll(ActionEvent event) {
-        listener.onPollLaunch();
+
     }
 
     @FXML
     void launchFree(ActionEvent event) {
-        listener.onFreeLaunch();
+
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 }

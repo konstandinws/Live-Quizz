@@ -7,6 +7,7 @@ public   abstract  class Question {
      boolean hasTimer ;
 
 
+
      public Question(String question) {
           this.question = question;
           this.hasTimer = false;

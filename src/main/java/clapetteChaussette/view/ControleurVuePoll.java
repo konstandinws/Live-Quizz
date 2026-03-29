@@ -19,6 +19,6 @@ public class ControleurVuePoll {
     private Button choix4;
     @FXML
     void launchQCM(ActionEvent event) {
-        listener.onQCMLaunch();
+
     }
 }

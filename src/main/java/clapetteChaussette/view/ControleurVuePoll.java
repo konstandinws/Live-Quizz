@@ -17,8 +17,5 @@ public class ControleurVuePoll {
 
     @FXML
     private Button choix4;
-    @FXML
-    void launchPoll(ActionEvent event) {
 
-    }
 }

@@ -18,4 +18,8 @@ public class ControleurVuePoll {
     @FXML
     private Button choix4;
 
+
+    public void handleButtonClick(javafx.event.ActionEvent actionEvent) {
+        System.out.println("Bouton cliqué !");
+    }
 }

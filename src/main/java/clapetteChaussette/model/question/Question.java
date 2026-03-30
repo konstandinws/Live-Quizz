@@ -2,8 +2,8 @@ package clapetteChaussette.model.question;
 import java.util.ArrayList;
 
 public   abstract  class Question {
-    protected String question;
-    protected ArrayList<String> answers;
+     String question;
+     ArrayList<String> answers;
      boolean hasTimer ;
 
 

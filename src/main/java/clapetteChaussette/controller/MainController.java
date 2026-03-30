@@ -5,14 +5,15 @@ import java.util.List;
 
 import clapetteChaussette.model.question.QcmQuestion;
 import clapetteChaussette.model.question.Question;
-import clapetteChaussette.view.MainViewFX;
+import clapetteChaussette.view.IMainListener;
+import clapetteChaussette.view.IQcmView;
 import clapetteChaussette.view.QcmViewFX;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class MainController implements MainViewFX.Listener {
+public class MainController implements IMainListener {
 
     @Override
     public void onQcmLaunch() {
@@ -25,7 +26,7 @@ public class MainController implements MainViewFX.Listener {
         String correctAnswer = "17";
         QcmQuestion qcm = new QcmQuestion(question, answers, correctAnswer);
         try {
-            afficherQuestion(qcm);
+            afficherQcm(qcm);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -43,16 +44,17 @@ public class MainController implements MainViewFX.Listener {
         // launch new view
     }
 
-    public void afficherQuestion(Question question) throws Exception {
+    public void afficherQcm(Question question) throws Exception {
         // creer la question avec le service normalement
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/clapetteChaussette/fxml/qcm.fxml"));
         Parent root = loader.load();
         QcmViewFX controller = loader.getController();
-        controller.initQcm((QcmQuestion) question);
+        IQcmView viewController = new QcmController();
+        controller.initialize(viewController, (QcmQuestion) question);
         Stage nouvelleFenetre = new Stage();
         nouvelleFenetre.setTitle("Question QCM");
-        nouvelleFenetre.setScene(new Scene(root));
+        nouvelleFenetre.setScene(new Scene(root, 600, 400));
         nouvelleFenetre.show();
     }
 }

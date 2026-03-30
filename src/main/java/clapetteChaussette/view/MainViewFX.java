@@ -7,15 +7,7 @@ import javafx.scene.control.Button;
 
 public class MainViewFX {
 
-    public interface Listener {
-        void onQcmLaunch();
-
-        void onPollLaunch();
-
-        void onFreeLaunch();
-    }
-
-    private Listener listener;
+    private IMainListener listener;
 
     @FXML
     private Label mainLabel;
@@ -49,7 +41,7 @@ public class MainViewFX {
         mainLabel.setText("Hello world!");
     }
 
-    public void setController(Listener listener) {
+    public void setController(IMainListener listener) {
         this.listener = listener;
     }
 }

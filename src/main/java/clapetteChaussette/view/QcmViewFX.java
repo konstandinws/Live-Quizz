@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 public class QcmViewFX {
 
     private QcmQuestion qcm;
-
+    private IQcmView listener;
     @FXML
     private Label laQuestion;
 
@@ -28,32 +28,8 @@ public class QcmViewFX {
     private CheckBox CheckBox4;
 
     @FXML
-    private void initialize() {
-        // Initialisation si nécessaire
-    }
-
-    @FXML
-    private void CBisChecked(ActionEvent event) {
-        CheckBox source = (CheckBox) event.getSource();
-        if (source.isSelected()) {
-            verify(source);
-        }
-        else {
-            source.setTextFill(Color.BLACK);
-        }
-
-    }
-
-    private void verify(CheckBox source) {
-        if (source.getText().equals(qcm.getCorrectAnswer())) {
-            source.setTextFill(Color.GREEN);
-        }
-        else {
-            source.setTextFill(Color.RED);
-        }
-    }
-
-    public void initQcm(QcmQuestion qcm){
+    public void initialize(IQcmView listener, QcmQuestion qcm) {
+        this.listener = listener;
         this.qcm = qcm;
         CheckBox1.setText(qcm.getAnswers().get(0));
         CheckBox2.setText(qcm.getAnswers().get(1));
@@ -61,5 +37,20 @@ public class QcmViewFX {
         CheckBox4.setText(qcm.getAnswers().get(3));
 
         laQuestion.setText(qcm.getQuestion());
+    }
+
+    @FXML
+    private void CBisChecked(ActionEvent event) {
+        CheckBox source = (CheckBox) event.getSource();
+        if (source.isSelected()) {
+            verify(source);
+        } else {
+            source.setTextFill(Color.BLACK);
+        }
+
+    }
+
+    private void verify(CheckBox source) {
+        listener.verify(source, qcm);
     }
 }

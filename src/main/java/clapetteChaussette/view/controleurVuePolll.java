@@ -10,7 +10,7 @@ import static javafx.application.Application.launch;
 public class controleurVuePolll {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("clapetteChaussette/fxml/fxmlPoll.fxml"));
-        primaryStage.setTitle("QCM");
+        primaryStage.setTitle("Poll");
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
     }

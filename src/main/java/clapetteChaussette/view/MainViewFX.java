@@ -1,7 +1,5 @@
 package clapetteChaussette.view;
 
-import clapetteChaussette.controller.IListenerMain;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -9,11 +7,7 @@ import javafx.scene.control.Button;
 
 public class MainViewFX {
 
-    public interface Listener {
-        void onQcmLaunch();
-    }
-
-    private Listener listener;
+    private IMainListener listener;
 
     @FXML
     private Label mainLabel;
@@ -34,15 +28,20 @@ public class MainViewFX {
 
     @FXML
     void launchPoll(ActionEvent event) {
-
+        listener.onPollLaunch();
     }
 
     @FXML
     void launchFree(ActionEvent event) {
-
+        listener.onFreeLaunch();
     }
 
-    public void setListener(Listener listener) {
+    @FXML
+    private void initialize() {
+        mainLabel.setText("Hello world!");
+    }
+
+    public void setController(IMainListener listener) {
         this.listener = listener;
     }
 }

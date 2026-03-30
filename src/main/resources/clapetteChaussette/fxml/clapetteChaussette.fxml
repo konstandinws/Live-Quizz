@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clapetteChaussette.vue.mainMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clapetteChaussette.view.MainViewFX">
    <top>
-      <Label text="Clapette Chaussette" BorderPane.alignment="CENTER" fx:id="mainLabel">
+      <Label fx:id="mainLabel" text="Clapette Chaussette" BorderPane.alignment="CENTER">
          <font>
             <Font name="LMMono10-Regular" size="36.0" />
          </font>
@@ -17,9 +17,9 @@
    <center>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Button" />
-            <Button mnemonicParsing="false" text="Button" />
-            <Button mnemonicParsing="false" text="Button" />
+            <Button fx:id="qcmButton" mnemonicParsing="false" onAction="#launchQCM" text="QCM" />
+            <Button fx:id="pollButton" mnemonicParsing="false" onAction="#launchPoll" text="Poll" />
+            <Button fx:id="freeButton" mnemonicParsing="false" onAction="#launchFree" text="free" />
          </children>
       </HBox>
    </center>

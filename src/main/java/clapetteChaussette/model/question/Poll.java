@@ -7,9 +7,16 @@ public class Poll extends Question {
 
     private final List<Integer> voteCounts;
 
-    public Poll(String Question) {
-        super(Question);
+    public Poll(String question) {
+        super(question);
         this.voteCounts = new ArrayList<>();
+    }
+
+    public Poll(String Question, List<String> options) {
+        this(Question);
+        for (String option : options) {
+            addOption(option);
+        }
     }
 
     public void addOption(String option) {
@@ -23,6 +30,10 @@ public class Poll extends Question {
 
     public List<Integer> getVoteCounts() {
         return this.voteCounts;
+    }
+
+    public String getChoice(int index) {
+        return this.answers.get(index);
     }
 
     @Override

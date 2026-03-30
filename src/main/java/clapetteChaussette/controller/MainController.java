@@ -3,11 +3,14 @@ package clapetteChaussette.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import clapetteChaussette.model.question.Poll;
 import clapetteChaussette.model.question.QcmQuestion;
 import clapetteChaussette.model.question.Question;
 import clapetteChaussette.view.IMainListener;
-import clapetteChaussette.view.IQcmView;
+import clapetteChaussette.view.IQcmListener;
+import clapetteChaussette.view.IPoolListener;
 import clapetteChaussette.view.QcmViewFX;
+import clapetteChaussette.view.PollViewFX;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -34,8 +37,13 @@ public class MainController implements IMainListener {
 
     @Override
     public void onPollLaunch() {
-        System.out.println("Poll launched");
-        // launch new view
+        String question = "Quelle est votre couleur préférée ?";
+        Question poll = new Poll(question, List.of("Rouge", "Bleu", "Vert", "Jaune"));
+        try {
+            afficherPoll(poll);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -48,12 +56,26 @@ public class MainController implements IMainListener {
         // creer la question avec le service normalement
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/clapetteChaussette/fxml/qcm.fxml"));
+        IQcmListener viewController = new QcmController();
         Parent root = loader.load();
-        QcmViewFX controller = loader.getController();
-        IQcmView viewController = new QcmController();
-        controller.initialize(viewController, (QcmQuestion) question);
+        QcmViewFX qcmViewFX = loader.getController();
+        qcmViewFX.set(viewController, (QcmQuestion) question);
         Stage nouvelleFenetre = new Stage();
         nouvelleFenetre.setTitle("Question QCM");
+        nouvelleFenetre.setScene(new Scene(root, 600, 400));
+        nouvelleFenetre.show();
+    }
+
+    public void afficherPoll(Question question) throws Exception {
+        // creer la question avec le service normalement
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/clapetteChaussette/fxml/poll.fxml"));
+        IPoolListener viewController = new PollController();
+        Parent root = loader.load();
+        PollViewFX pollViewFX = loader.getController();
+        pollViewFX.set(viewController, (Poll) question);
+        Stage nouvelleFenetre = new Stage();
+        nouvelleFenetre.setTitle("Question Poll");
         nouvelleFenetre.setScene(new Scene(root, 600, 400));
         nouvelleFenetre.show();
     }

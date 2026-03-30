@@ -3,7 +3,6 @@ package clapetteChaussette.view;
 import clapetteChaussette.model.question.QcmQuestion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -11,7 +10,8 @@ import javafx.scene.paint.Color;
 public class QcmViewFX {
 
     private QcmQuestion qcm;
-    private IQcmView listener;
+    private IQcmListener listener;
+
     @FXML
     private Label laQuestion;
 
@@ -28,7 +28,10 @@ public class QcmViewFX {
     private CheckBox CheckBox4;
 
     @FXML
-    public void initialize(IQcmView listener, QcmQuestion qcm) {
+    private void initialize() {
+    }
+
+    public void set(IQcmListener listener, QcmQuestion qcm) {
         this.listener = listener;
         this.qcm = qcm;
         CheckBox1.setText(qcm.getAnswers().get(0));
@@ -37,6 +40,7 @@ public class QcmViewFX {
         CheckBox4.setText(qcm.getAnswers().get(3));
 
         laQuestion.setText(qcm.getQuestion());
+
     }
 
     @FXML

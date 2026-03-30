@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class mainMenuController {
 
-    Listener listener;
+    IListenerMain listener;
     @FXML
     private Label mainLabel;
 

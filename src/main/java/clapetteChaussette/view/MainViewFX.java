@@ -45,7 +45,11 @@ public class MainViewFX {
     }
 
     @FXML
-    public void initialize(Listener listener) {
+    private void initialize() {
+        mainLabel.setText("Hello world!");
+    }
+
+    public void setController(Listener listener) {
         this.listener = listener;
     }
 }

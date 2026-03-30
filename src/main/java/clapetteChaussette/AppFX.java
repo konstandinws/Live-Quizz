@@ -20,7 +20,7 @@ public class AppFX extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/clapetteChaussette.fxml"));
         Parent root = loader.load();
         MainViewFX viewController = loader.getController();
-        viewController.initialize(mainController);
+        viewController.setController(mainController);
         primaryStage.setTitle("Clapette Chaussette");
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();

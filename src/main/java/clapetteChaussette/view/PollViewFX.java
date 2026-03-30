@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 
 import java.awt.event.ActionEvent;
 
-public class ControleurfxmlVuePoll {
+public class PollViewFX {
     @FXML
     private Button choix1;
 
@@ -17,6 +17,7 @@ public class ControleurfxmlVuePoll {
 
     @FXML
     private Button choix4;
+
     @FXML
     private void choix1Action(ActionEvent event) {
 

@@ -1,11 +1,16 @@
 package clapetteChaussette.view;
 
+import clapetteChaussette.model.question.QcmQuestion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 public class QcmViewFX {
+
+    private QcmQuestion qcm;
 
     @FXML
     private Label laQuestion;
@@ -31,9 +36,30 @@ public class QcmViewFX {
     private void CBisChecked(ActionEvent event) {
         CheckBox source = (CheckBox) event.getSource();
         if (source.isSelected()) {
-            System.out.println(source.getId() + " is checked");
-        } else {
-            System.out.println(source.getId() + " is unchecked");
+            verify(source);
         }
+        else {
+            source.setTextFill(Color.BLACK);
+        }
+
+    }
+
+    private void verify(CheckBox source) {
+        if (source.getText().equals(qcm.getCorrectAnswer())) {
+            source.setTextFill(Color.GREEN);
+        }
+        else {
+            source.setTextFill(Color.RED);
+        }
+    }
+
+    public void initQcm(QcmQuestion qcm){
+        this.qcm = qcm;
+        CheckBox1.setText(qcm.getAnswers().get(0));
+        CheckBox2.setText(qcm.getAnswers().get(1));
+        CheckBox3.setText(qcm.getAnswers().get(2));
+        CheckBox4.setText(qcm.getAnswers().get(3));
+
+        laQuestion.setText(qcm.getQuestion());
     }
 }

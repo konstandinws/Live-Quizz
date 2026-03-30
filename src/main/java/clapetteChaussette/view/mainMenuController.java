@@ -1,5 +1,6 @@
 package clapetteChaussette.view;
 
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +14,7 @@ import java.io.IOException;
 
 public class mainMenuController {
 
-    Stage primaryStage ;
+    Listener listener;
     @FXML
     private Label mainLabel;
 
@@ -24,9 +25,7 @@ public class mainMenuController {
     public void launchQCM(ActionEvent event) {
         Stage stage = (Stage) mainLabel.getScene().getWindow();
     }
-    public void launchPoll(ActionEvent event) {
-        listener.onPollLaunch();
-    }
+    public void launchPoll(ActionEvent event) {listener.onPollLaunch();}
 
     public void launchFree(ActionEvent event) {
         Stage stage = (Stage) mainLabel.getScene().getWindow();

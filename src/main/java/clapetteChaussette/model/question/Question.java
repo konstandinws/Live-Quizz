@@ -1,11 +1,12 @@
 package clapetteChaussette.model.question;
+
 import java.util.ArrayList;
+import java.util.List;
 
-public   abstract  class Question {
+public abstract class Question {
      String question;
-     ArrayList<String> answers;
-     boolean hasTimer ;
-
+     List<String> answers;
+     boolean hasTimer;
 
      public Question(String question) {
           this.question = question;
@@ -16,7 +17,8 @@ public   abstract  class Question {
      public String getQuestion() {
           return question;
      }
-     public ArrayList<String> getAnswers() {
+
+     public List<String> getAnswers() {
           return answers;
      }
 }

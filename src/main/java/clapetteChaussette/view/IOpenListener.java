@@ -1,5 +1,5 @@
 package clapetteChaussette.view;
 
-public interface IFreeListener{
+public interface IOpenListener {
     public void validate(String aws);
 }

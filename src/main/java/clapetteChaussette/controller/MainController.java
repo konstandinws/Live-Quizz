@@ -5,12 +5,10 @@ import java.util.List;
 
 import clapetteChaussette.model.question.Poll;
 import clapetteChaussette.model.question.QcmQuestion;
+import clapetteChaussette.model.question.OpenQuestion;
 import clapetteChaussette.model.question.Question;
-import clapetteChaussette.view.IMainListener;
-import clapetteChaussette.view.IQcmListener;
-import clapetteChaussette.view.IPoolListener;
-import clapetteChaussette.view.QcmViewFX;
-import clapetteChaussette.view.PollViewFX;
+import clapetteChaussette.view.QuestionFreeViewFX;
+import clapetteChaussette.view.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -48,15 +46,21 @@ public class MainController implements IMainListener {
 
     @Override
     public void onFreeLaunch() {
+        OpenQuestion qst = new OpenQuestion("comment tu trouves brahim physiquement ?");
+        try{
+            afficherFree(qst);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
         System.out.println("Free launched");
-        // launch new view
+
     }
 
     public void afficherQcm(Question question) throws Exception {
         // creer la question avec le service normalement
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/clapetteChaussette/fxml/qcm.fxml"));
-        IQcmListener viewController = new QcmController();
+        IQcmListener viewController = new OpenController();
         Parent root = loader.load();
         QcmViewFX qcmViewFX = loader.getController();
         qcmViewFX.set(viewController, (QcmQuestion) question);
@@ -76,6 +80,24 @@ public class MainController implements IMainListener {
         pollViewFX.set(viewController, (Poll) question);
         Stage nouvelleFenetre = new Stage();
         nouvelleFenetre.setTitle("Question Poll");
+        nouvelleFenetre.setScene(new Scene(root, 600, 400));
+        nouvelleFenetre.show();
+    }
+
+    public void afficherFree(OpenQuestion question) throws Exception {
+        // Chemin vers le FXML
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/open.fxml"));
+        // viewController est une instance pour dire comment valider une réponse
+        IOpenListener viewController = new FreeController();
+
+        Parent root = loader.load();
+
+        // freeViewFx est une instance de questionfree il à l'accés au button,label,ect de mon fxml
+        QuestionFreeViewFX freeViewFx = loader.getController();
+        freeViewFx.set(viewController, question);
+
+        Stage nouvelleFenetre = new Stage();
+        nouvelleFenetre.setTitle("Question Free");
         nouvelleFenetre.setScene(new Scene(root, 600, 400));
         nouvelleFenetre.show();
     }

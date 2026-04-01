@@ -5,7 +5,7 @@ import clapetteChaussette.model.question.QcmQuestion;
 import javafx.scene.control.CheckBox;
 import javafx.scene.paint.Color;
 
-class QcmController implements IQcmListener {
+class OpenController implements IQcmListener {
     @Override
     public void verify(CheckBox source, QcmQuestion qcm) {
         if (source.getText().equals(qcm.getCorrectAnswer())) {

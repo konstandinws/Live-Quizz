@@ -1,7 +1,9 @@
 package clapetteChaussette;
 
 import clapetteChaussette.controller.MainController;
+import clapetteChaussette.model.question.Question;
 import clapetteChaussette.view.MainViewFX;
+import clapetteChaussette.view.QcmViewFX;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,5 +30,21 @@ public class AppFX extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    
+
+    public void afficherQuestion(Question question) throws Exception {
+        // creer la question avec le service normalement
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/clapetteChaussette/fxml/qcm.fxml")
+        );
+        Parent root = loader.load();
+        QcmViewFX controller = loader.getController();
+
+        Stage nouvelleFenetre = new Stage();
+        nouvelleFenetre.setTitle("Question QCM");
+        nouvelleFenetre.setScene(new Scene(root));
+        nouvelleFenetre.show();
     }
 }

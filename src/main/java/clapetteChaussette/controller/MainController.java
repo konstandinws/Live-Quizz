@@ -5,8 +5,9 @@ import java.util.List;
 
 import clapetteChaussette.model.question.Poll;
 import clapetteChaussette.model.question.QcmQuestion;
-import clapetteChaussette.model.question.OpenQuestion;
+import clapetteChaussette.model.question.QuestionFree;
 import clapetteChaussette.model.question.Question;
+import clapetteChaussette.view.QuestionFreeViewFX;
 import clapetteChaussette.view.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -45,7 +46,7 @@ public class MainController implements IMainListener {
 
     @Override
     public void onFreeLaunch() {
-        OpenQuestion qst = new OpenQuestion("comment tu trouves brahim physiquement ?");
+        QuestionFree qst = new QuestionFree("comment tu trouves brahim physiquement ?");
         try{
             afficherFree(qst);
         }catch (Exception e){
@@ -83,10 +84,14 @@ public class MainController implements IMainListener {
         nouvelleFenetre.show();
     }
 
-    public void afficherFree(OpenQuestion question) throws Exception {
+    public void afficherFree(QuestionFree question) throws Exception {
+        // Chemin vers le FXML
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/questionfree.fxml"));
         IFreeListener viewController = new FreeController();
+
         Parent root = loader.load();
+
+        // On récupère le contrôleur de la vue pour lui passer les infos
         QuestionFreeViewFX freeViewFx = loader.getController();
         freeViewFx.set(viewController, question);
 

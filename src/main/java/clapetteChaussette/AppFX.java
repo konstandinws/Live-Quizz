@@ -1,7 +1,9 @@
 package clapetteChaussette;
 
 import clapetteChaussette.controller.MainController;
+import clapetteChaussette.model.question.Question;
 import clapetteChaussette.view.MainViewFX;
+import clapetteChaussette.view.QcmViewFX;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

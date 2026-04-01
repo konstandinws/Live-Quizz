@@ -5,12 +5,9 @@ import java.util.List;
 
 import clapetteChaussette.model.question.Poll;
 import clapetteChaussette.model.question.QcmQuestion;
+import clapetteChaussette.model.question.OpenQuestion;
 import clapetteChaussette.model.question.Question;
-import clapetteChaussette.view.IMainListener;
-import clapetteChaussette.view.IQcmListener;
-import clapetteChaussette.view.IPoolListener;
-import clapetteChaussette.view.QcmViewFX;
-import clapetteChaussette.view.PollViewFX;
+import clapetteChaussette.view.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -48,6 +45,12 @@ public class MainController implements IMainListener {
 
     @Override
     public void onFreeLaunch() {
+        OpenQuestion qst = new OpenQuestion("comment tu trouves brahim physiquement ?");
+        try{
+            afficherFree(qst);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
         System.out.println("Free launched");
         // launch new view
     }
@@ -76,6 +79,19 @@ public class MainController implements IMainListener {
         pollViewFX.set(viewController, (Poll) question);
         Stage nouvelleFenetre = new Stage();
         nouvelleFenetre.setTitle("Question Poll");
+        nouvelleFenetre.setScene(new Scene(root, 600, 400));
+        nouvelleFenetre.show();
+    }
+
+    public void afficherFree(OpenQuestion question) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/questionfree.fxml"));
+        IFreeListener viewController = new FreeController();
+        Parent root = loader.load();
+        QuestionFreeViewFX freeViewFx = loader.getController();
+        freeViewFx.set(viewController, question);
+
+        Stage nouvelleFenetre = new Stage();
+        nouvelleFenetre.setTitle("Question Free");
         nouvelleFenetre.setScene(new Scene(root, 600, 400));
         nouvelleFenetre.show();
     }

@@ -54,8 +54,8 @@
    <bottom>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="addQuesionBTN" mnemonicParsing="false" text="+" />
-            <Button fx:id="saveQuestionBTN" mnemonicParsing="false" text="sauvegarder" />
+            <Button fx:id="addQuesionBTN" mnemonicParsing="false" onAction="#addNewAnswer" text="+" />
+            <Button fx:id="saveQuestionBTN" mnemonicParsing="false" onAction="#createQuestion" text="sauvegarder" />
          </children>
       </HBox>
    </bottom>

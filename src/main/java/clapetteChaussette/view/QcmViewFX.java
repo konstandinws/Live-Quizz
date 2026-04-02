@@ -55,6 +55,11 @@ public class QcmViewFX {
     }
 
     private void verify(CheckBox source) {
-        listener.verify(source, qcm);
+        boolean isCorrect = listener.verify(source, qcm);
+        if (isCorrect) {
+            source.setTextFill(Color.GREEN);
+        } else {
+            source.setTextFill(Color.RED);
+        }
     }
 }

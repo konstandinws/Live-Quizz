@@ -60,20 +60,31 @@ public class QcmEditorFX {
 
     List<CheckBox> correctAnswerCB = Arrays.asList(correctAnsw1, correctAnsw2, correctAnsw3, correctAnsw4);
     List<TextField> textFields = Arrays.asList(answ1Label, answ2Label, answ3Label, answ4Label);
+
     @FXML
     QcmQuestion createQuestion(ActionEvent event) {
         String question = qestionTitle.getText();
-        String answer1 = answ1Label.getText();
-        String answer2 = answ2Label.getText();
-        String answer3 = answ3Label.getText();
-        String answer4 = answ4Label.getText();
-        List<String> answers = Arrays.asList(answer1, answer2, answer3, answer4);
+        List<String> answers = getAnswers();
         String correctAnswer = getCorrectAnswer();
 
         return new QcmQuestion(question, answers, correctAnswer);
     }
 
+    @FXML
+    void addNewAnswer(ActionEvent event) {
+
+    }
+
+    List<String> getAnswers() {
+        List<String> answers = new ArrayList<>();
+        for(TextField field : textFields) {
+            answers.add(field.getText());
+        }
+        return answers;
+    }
+
     String getCorrectAnswer() {
+        // gérer le cas ou l'uitlisateur ne coche rien, surement renvoyer une erreur pour le controleur
         for(int i = 0; i < correctAnswerCB.size(); i++) {
             if(correctAnswerCB.get(i).isSelected()) {
                 return textFields.get(i).getText();

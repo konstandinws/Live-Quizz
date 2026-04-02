@@ -11,7 +11,7 @@ import javafx.event.ActionEvent;
 
 public class PollViewFX {
     private Poll poll;
-    private IPoolListener listener;
+    private IQuestionListener<String> listener;
 
     @FXML
     private Label title;
@@ -38,7 +38,7 @@ public class PollViewFX {
         listener.validate(((Button) event.getSource()).getText(), poll);
     }
 
-    public void setController(IPoolListener listener) {
+    public void setController(IQuestionListener<String> listener) {
         this.listener = listener;
     }
 

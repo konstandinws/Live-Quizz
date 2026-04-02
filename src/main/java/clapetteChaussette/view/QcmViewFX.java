@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 public class QcmViewFX {
 
     private QcmQuestion qcm;
-    private IQcmListener listener;
+    private IQuestionListener<String> listener;
 
     @FXML
     private Label laQuestion;
@@ -31,7 +31,7 @@ public class QcmViewFX {
     private void initialize() {
     }
 
-    public void setController(IQcmListener listener) {
+    public void setController(IQuestionListener<String> listener) {
         this.listener = listener;
     }
 

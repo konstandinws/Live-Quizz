@@ -5,9 +5,8 @@ import java.util.List;
 
 import clapetteChaussette.model.question.OpenQuestion;
 import clapetteChaussette.model.question.Poll;
-import clapetteChaussette.model.question.QcmQuestion;;
+import clapetteChaussette.model.question.QcmQuestion;
 import clapetteChaussette.model.question.Question;
-import clapetteChaussette.view.QuestionFreeViewFX;
 import clapetteChaussette.view.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -60,7 +59,7 @@ public class MainController implements IMainListener {
         // creer la question avec le service normalement
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/clapetteChaussette/fxml/qcm.fxml"));
-        IQcmListener viewController = new QcmController();
+        IQuestionListener<String> viewController = new QcmController();
         Parent root = loader.load();
         QcmViewFX qcmViewFX = loader.getController();
         qcmViewFX.setController(viewController);
@@ -76,7 +75,7 @@ public class MainController implements IMainListener {
         // creer la question avec le service normalement
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/clapetteChaussette/fxml/poll.fxml"));
-        IPoolListener viewController = new PollController();
+        IQuestionListener<String> viewController = new PollController();
         Parent root = loader.load();
         PollViewFX pollViewFX = loader.getController();
         pollViewFX.setController(viewController);
@@ -90,7 +89,7 @@ public class MainController implements IMainListener {
     public void afficherFree(OpenQuestion question) throws Exception {
         // Chemin vers le FXML
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/questionfree.fxml"));
-        IOpenListener viewController = new OpenController();
+        IQuestionListener<String> viewController = new OpenController();
 
         Parent root = loader.load();
 

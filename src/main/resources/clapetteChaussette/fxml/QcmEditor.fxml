@@ -29,21 +29,21 @@
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <CheckBox fx:id="correctAnsw1" mnemonicParsing="false" text="choix 2" />
+                  <CheckBox fx:id="correctAnsw2" mnemonicParsing="false" text="choix 2" />
                   <TextField fx:id="answ2Label" />
                   <Button fx:id="deleteAnsw2" mnemonicParsing="false" text="supprimer" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <CheckBox fx:id="correctAnsw1" mnemonicParsing="false" text="choix 3" />
+                  <CheckBox fx:id="correctAnsw3" mnemonicParsing="false" text="choix 3" />
                   <TextField fx:id="answ3Label" />
                   <Button fx:id="deleteAnsw3" mnemonicParsing="false" text="supprimer" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <CheckBox fx:id="correctAnsw1" mnemonicParsing="false" text="choix 4" />
+                  <CheckBox fx:id="correctAnsw4" mnemonicParsing="false" text="choix 4" />
                   <TextField fx:id="answ4Label" />
                   <Button fx:id="deleteAnsw4" mnemonicParsing="false" text="supprimer" />
                </children>

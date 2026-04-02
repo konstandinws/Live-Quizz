@@ -7,8 +7,7 @@ public abstract class Question {
      String question;
      List<String> answers;
      boolean hasTimer;
-
-
+     String answer;
 
      public Question(String question) {
           this.question = question;
@@ -22,5 +21,9 @@ public abstract class Question {
 
      public List<String> getAnswers() {
           return answers;
+     }
+
+     public void setAnswer(String answer) {
+          this.answer = answer;
      }
 }

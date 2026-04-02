@@ -59,12 +59,12 @@ public class MainController implements IMainListener {
         // creer la question avec le service normalement
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/clapetteChaussette/fxml/qcm.fxml"));
-        IQuestionListener<String> viewController = new QcmController();
+        IQuestionListener<String> qcmController = new QcmController();
         Parent root = loader.load();
         QcmViewFX qcmViewFX = loader.getController();
-        qcmViewFX.setController(viewController);
+        qcmViewFX.setController(qcmController);
         qcmViewFX.setQcm((QcmQuestion) question);
-        qcmViewFX.setController(viewController);
+        qcmViewFX.setController(qcmController);
         Stage nouvelleFenetre = new Stage();
         nouvelleFenetre.setTitle("Question QCM");
         nouvelleFenetre.setScene(new Scene(root, 600, 400));
@@ -75,10 +75,10 @@ public class MainController implements IMainListener {
         // creer la question avec le service normalement
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/clapetteChaussette/fxml/poll.fxml"));
-        IQuestionListener<String> viewController = new PollController();
+        IQuestionListener<String> pollController = new PollController();
         Parent root = loader.load();
         PollViewFX pollViewFX = loader.getController();
-        pollViewFX.setController(viewController);
+        pollViewFX.setController(pollController);
         pollViewFX.setPoll((Poll) question);
         Stage nouvelleFenetre = new Stage();
         nouvelleFenetre.setTitle("Question Poll");
@@ -89,13 +89,13 @@ public class MainController implements IMainListener {
     public void afficherFree(OpenQuestion question) throws Exception {
         // Chemin vers le FXML
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/questionfree.fxml"));
-        IQuestionListener<String> viewController = new OpenController();
+        IQuestionListener<String> openController = new OpenController();
 
         Parent root = loader.load();
 
         // On récupère le contrôleur de la vue pour lui passer les infos
         OpenQuestionFX freeViewFx = loader.getController();
-        freeViewFx.setController(viewController);
+        freeViewFx.setController(openController);
         freeViewFx.setOpenQuestion(question);
 
         Stage nouvelleFenetre = new Stage();

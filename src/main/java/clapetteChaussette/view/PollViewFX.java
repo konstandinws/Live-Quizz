@@ -29,11 +29,6 @@ public class PollViewFX {
     private Button choix4;
 
     @FXML
-    private void choix1Action(ActionEvent event) {
-
-    }
-
-    @FXML
     private void handleButtonClick(ActionEvent event) {
         listener.validate(((Button) event.getSource()).getText(), poll);
     }

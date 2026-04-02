@@ -14,6 +14,7 @@ public class OpenQuestionFX {
     private TextArea textArea; // Assure-toi que l'ID dans le FXML est bien "textArea"
 
     private IQuestionListener<String> listener;
+    private OpenQuestion open;
 
     @FXML
     private void initialize() {
@@ -28,6 +29,7 @@ public class OpenQuestionFX {
     }
 
     public void setOpenQuestion(OpenQuestion question) {
+        this.open = question;
         if (question != null && questionFree != null) {
             this.questionFree.setText(question.getQuestion());
         }
@@ -39,6 +41,8 @@ public class OpenQuestionFX {
      */
     @FXML
     private void handleSendAction() {
-
+        if (open != null && textArea != null) {
+            listener.validate(textArea.getText(), open);
+        }
     }
 }

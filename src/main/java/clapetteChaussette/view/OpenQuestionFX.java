@@ -1,11 +1,11 @@
 package clapetteChaussette.view;
 
-import clapetteChaussette.model.question.QuestionFree;
+import clapetteChaussette.model.question.OpenQuestion;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
-public class QuestionFreeViewFX {
+public class OpenQuestionFX {
 
     @FXML
     private Label questionFree; // Assure-toi que l'ID dans le FXML est bien "questionFree"
@@ -13,7 +13,7 @@ public class QuestionFreeViewFX {
     @FXML
     private TextArea textArea; // Assure-toi que l'ID dans le FXML est bien "textArea"
 
-    private IFreeListener listener;
+    private IQuestionListener<String> listener;
 
     @FXML
     private void initialize() {
@@ -23,8 +23,11 @@ public class QuestionFreeViewFX {
     /**
      * Cette méthode permet au MainController de passer les données à la vue
      */
-    public void set(IFreeListener listener, QuestionFree question) {
+    public void setController(IQuestionListener<String> listener) {
         this.listener = listener;
+    }
+
+    public void setOpenQuestion(OpenQuestion question) {
         if (question != null && questionFree != null) {
             this.questionFree.setText(question.getQuestion());
         }
@@ -36,8 +39,6 @@ public class QuestionFreeViewFX {
      */
     @FXML
     private void handleSendAction() {
-        if (listener != null && textArea != null) {
-            listener.validate(textArea.getText());
-        }
+
     }
 }

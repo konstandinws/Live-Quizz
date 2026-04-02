@@ -3,7 +3,9 @@ package clapetteChaussette.model.question;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Poll extends Question {
+import clapetteChaussette.service.IDisplayable;
+
+public class Poll extends Question implements IDisplayable {
 
     private final List<Integer> voteCounts;
 

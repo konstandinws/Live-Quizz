@@ -31,8 +31,11 @@ public class QcmViewFX {
     private void initialize() {
     }
 
-    public void set(IQcmListener listener, QcmQuestion qcm) {
+    public void setController(IQcmListener listener) {
         this.listener = listener;
+    }
+
+    public void setQcm(QcmQuestion qcm) {
         this.qcm = qcm;
         CheckBox1.setText(qcm.getAnswers().get(0));
         CheckBox2.setText(qcm.getAnswers().get(1));
@@ -40,21 +43,20 @@ public class QcmViewFX {
         CheckBox4.setText(qcm.getAnswers().get(3));
 
         laQuestion.setText(qcm.getQuestion());
-
     }
 
     @FXML
     private void CBisChecked(ActionEvent event) {
         CheckBox source = (CheckBox) event.getSource();
         if (source.isSelected()) {
-            verify(source);
+            verify(source.getText());
         } else {
             source.setTextFill(Color.BLACK);
         }
 
     }
 
-    private void verify(CheckBox source) {
-        listener.verify(source, qcm);
+    private void verify(String answer) {
+        listener.validate(answer, qcm);
     }
 }

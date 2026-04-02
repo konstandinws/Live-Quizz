@@ -2,7 +2,9 @@ package clapetteChaussette.model.question;
 
 import java.util.List;
 
-public class QcmQuestion extends Question {
+import clapetteChaussette.service.IDisplayable;
+
+public class QcmQuestion extends Question implements IDisplayable {
 
     String correctAnswer;
     List<String> correctAnswers;

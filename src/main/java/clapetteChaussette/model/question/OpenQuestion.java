@@ -1,12 +1,12 @@
 package clapetteChaussette.model.question;
 
-public class OpenQuestion extends Question {
+import clapetteChaussette.service.IDisplayable;
 
- public OpenQuestion(String question) {
-     super(question);
+public class OpenQuestion extends Question implements IDisplayable {
 
+    public OpenQuestion(String question) {
+        super(question);
 
- }
-
+    }
 
 }

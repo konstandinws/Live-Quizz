@@ -3,9 +3,9 @@ package clapetteChaussette.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import clapetteChaussette.model.question.OpenQuestion;
 import clapetteChaussette.model.question.Poll;
-import clapetteChaussette.model.question.QcmQuestion;
-import clapetteChaussette.model.question.QuestionFree;
+import clapetteChaussette.model.question.QcmQuestion;;
 import clapetteChaussette.model.question.Question;
 import clapetteChaussette.view.QuestionFreeViewFX;
 import clapetteChaussette.view.*;
@@ -46,10 +46,10 @@ public class MainController implements IMainListener {
 
     @Override
     public void onFreeLaunch() {
-        QuestionFree qst = new QuestionFree("comment tu trouves brahim physiquement ?");
-        try{
+        OpenQuestion qst = new OpenQuestion("comment tu trouves brahim physiquement ?");
+        try {
             afficherFree(qst);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         System.out.println("Free launched");
@@ -63,7 +63,9 @@ public class MainController implements IMainListener {
         IQcmListener viewController = new QcmController();
         Parent root = loader.load();
         QcmViewFX qcmViewFX = loader.getController();
-        qcmViewFX.set(viewController, (QcmQuestion) question);
+        qcmViewFX.setController(viewController);
+        qcmViewFX.setQcm((QcmQuestion) question);
+        qcmViewFX.setController(viewController);
         Stage nouvelleFenetre = new Stage();
         nouvelleFenetre.setTitle("Question QCM");
         nouvelleFenetre.setScene(new Scene(root, 600, 400));
@@ -77,23 +79,25 @@ public class MainController implements IMainListener {
         IPoolListener viewController = new PollController();
         Parent root = loader.load();
         PollViewFX pollViewFX = loader.getController();
-        pollViewFX.set(viewController, (Poll) question);
+        pollViewFX.setController(viewController);
+        pollViewFX.setPoll((Poll) question);
         Stage nouvelleFenetre = new Stage();
         nouvelleFenetre.setTitle("Question Poll");
         nouvelleFenetre.setScene(new Scene(root, 600, 400));
         nouvelleFenetre.show();
     }
 
-    public void afficherFree(QuestionFree question) throws Exception {
+    public void afficherFree(OpenQuestion question) throws Exception {
         // Chemin vers le FXML
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/questionfree.fxml"));
-        IFreeListener viewController = new FreeController();
+        IOpenListener viewController = new OpenController();
 
         Parent root = loader.load();
 
         // On récupère le contrôleur de la vue pour lui passer les infos
-        QuestionFreeViewFX freeViewFx = loader.getController();
-        freeViewFx.set(viewController, question);
+        OpenQuestionFX freeViewFx = loader.getController();
+        freeViewFx.setController(viewController);
+        freeViewFx.setOpenQuestion(question);
 
         Stage nouvelleFenetre = new Stage();
         nouvelleFenetre.setTitle("Question Free");

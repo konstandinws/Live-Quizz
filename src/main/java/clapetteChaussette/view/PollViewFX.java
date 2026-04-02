@@ -35,11 +35,14 @@ public class PollViewFX {
 
     @FXML
     private void handleButtonClick(ActionEvent event) {
-        System.out.println("Button clicked: " + event.getSource());
+        listener.validate(((Button) event.getSource()).getText(), poll);
     }
 
-    public void set(IPoolListener listener, Poll poll) {
+    public void setController(IPoolListener listener) {
         this.listener = listener;
+    }
+
+    public void setPoll(Poll poll) {
         this.poll = poll;
 
         this.title.setText(poll.getQuestion());

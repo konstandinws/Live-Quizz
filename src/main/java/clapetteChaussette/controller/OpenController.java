@@ -3,7 +3,7 @@ package clapetteChaussette.controller;
 import clapetteChaussette.model.question.Question;
 import clapetteChaussette.view.IQuestionListener;
 
-public class OpenController implements IQuestionListener<String> {
+public class OpenController implements IQuestionListener<String>, IController {
     @Override
     public void validate(String aws, Question question) {
         question.setAnswer(aws);

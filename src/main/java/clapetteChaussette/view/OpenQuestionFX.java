@@ -1,11 +1,16 @@
 package clapetteChaussette.view;
 
+import clapetteChaussette.controller.IController;
 import clapetteChaussette.model.question.OpenQuestion;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
-public class OpenQuestionFX {
+public class OpenQuestionFX implements IDisplayable {
+    @FXML
+    private Button envoyerBtn;
 
     @FXML
     private Label questionFree; // Assure-toi que l'ID dans le FXML est bien "questionFree"
@@ -44,5 +49,17 @@ public class OpenQuestionFX {
         if (open != null && textArea != null) {
             listener.validate(textArea.getText(), open);
         }
+    }
+
+    @Override
+    public Scene InitializeView(IController controller) throws Exception {
+        javafx.scene.Parent root = javafx.fxml.FXMLLoader
+                .load(getClass().getResource("/clapetteChaussette/fxml/open.fxml"));
+        if (controller instanceof IQuestionListener) {
+            setController((IQuestionListener<String>) controller);
+        } else {
+            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
+        }
+        return new Scene(root);
     }
 }

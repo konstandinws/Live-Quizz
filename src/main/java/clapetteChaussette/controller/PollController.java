@@ -3,7 +3,7 @@ package clapetteChaussette.controller;
 import clapetteChaussette.model.question.Question;
 import clapetteChaussette.view.IQuestionListener;
 
-public class PollController implements IQuestionListener<String> {
+public class PollController implements IQuestionListener<String>, IController {
     @Override
     public void validate(String answer, Question poll) {
         /**

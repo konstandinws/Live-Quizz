@@ -1,15 +1,15 @@
 package clapetteChaussette.view;
 
 import javafx.scene.control.Label;
-
+import clapetteChaussette.controller.IController;
 import clapetteChaussette.model.question.Poll;
-
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
 import javafx.event.ActionEvent;
 
-public class PollViewFX {
+public class PollViewFX implements IDisplayable {
     private Poll poll;
     private IQuestionListener<String> listener;
 
@@ -45,5 +45,17 @@ public class PollViewFX {
         this.choix2.setText(poll.getChoice(1));
         this.choix3.setText(poll.getChoice(2));
         this.choix4.setText(poll.getChoice(3));
+    }
+
+    @Override
+    public Scene InitializeView(IController controller) throws Exception {
+        javafx.scene.Parent root = javafx.fxml.FXMLLoader
+                .load(getClass().getResource("/clapetteChaussette/fxml/poll.fxml"));
+        if (controller instanceof IQuestionListener) {
+            setController((IQuestionListener<String>) controller);
+        } else {
+            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
+        }
+        return new Scene(root);
     }
 }

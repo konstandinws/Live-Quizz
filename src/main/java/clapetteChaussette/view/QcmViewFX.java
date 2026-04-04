@@ -1,13 +1,17 @@
 package clapetteChaussette.view;
 
+import clapetteChaussette.controller.IController;
 import clapetteChaussette.model.question.QcmQuestion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
+import javafx.scene.Scene;
 
-public class QcmViewFX {
+public class QcmViewFX implements IDisplayable {
 
     private QcmQuestion qcm;
     private IQuestionListener<String> listener;
@@ -43,6 +47,17 @@ public class QcmViewFX {
         CheckBox4.setText(qcm.getAnswers().get(3));
 
         laQuestion.setText(qcm.getQuestion());
+    }
+
+    public Scene InitializeView(IController controller) throws Exception {
+        Parent root = new FXMLLoader(
+                getClass().getResource("/clapetteChaussette/fxml/qcm.fxml")).load();
+        if (controller instanceof IQuestionListener) {
+            setController((IQuestionListener<String>) controller);
+        } else {
+            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
+        }
+        return new Scene(root);
     }
 
     @FXML

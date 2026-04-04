@@ -61,6 +61,8 @@ public class MainController implements IMainListener, IController {
             try {
                 IDisplayable qcmView = new QcmViewFX();
                 this.navigationService.navigateTo(qcmView, controller, title);
+                ((QcmViewFX) qcmView).setQcm((QcmQuestion) question);
+                ((QcmViewFX) qcmView).setController((IQuestionListener<String>) controller);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -69,6 +71,7 @@ public class MainController implements IMainListener, IController {
                 IDisplayable pollView = new PollViewFX();
                 this.navigationService.navigateTo(pollView, controller, title);
                 ((PollViewFX) pollView).setPoll((Poll) question);
+                ((PollViewFX) pollView).setController((IQuestionListener<String>) controller);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -76,6 +79,8 @@ public class MainController implements IMainListener, IController {
             try {
                 IDisplayable freeView = new OpenQuestionFX();
                 this.navigationService.navigateTo(freeView, controller, title);
+                ((OpenQuestionFX) freeView).setOpenQuestion((OpenQuestion) question);
+                ((OpenQuestionFX) freeView).setController((IQuestionListener<String>) controller);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

@@ -49,14 +49,11 @@ public class QcmViewFX implements IDisplayable {
         laQuestion.setText(qcm.getQuestion());
     }
 
-    public Scene InitializeView(IController controller) throws Exception {
-        Parent root = new FXMLLoader(
-                getClass().getResource("/clapetteChaussette/fxml/qcm.fxml")).load();
-        if (controller instanceof IQuestionListener) {
-            setController((IQuestionListener<String>) controller);
-        } else {
-            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
-        }
+    public Scene InitializeView() throws Exception {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/clapetteChaussette/fxml/qcm.fxml"));
+        loader.setControllerFactory(param -> this);
+        Parent root = loader.load();
         return new Scene(root);
     }
 

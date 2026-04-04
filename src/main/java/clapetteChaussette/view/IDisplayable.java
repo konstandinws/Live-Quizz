@@ -1,6 +1,5 @@
 package clapetteChaussette.view;
 
-import clapetteChaussette.controller.IController;
 import javafx.scene.Scene;
 
 public interface IDisplayable {
@@ -11,5 +10,5 @@ public interface IDisplayable {
      * Chaque IDisplayable doit avoir une méthode Initialize
      */
 
-    Scene InitializeView(IController controller) throws Exception;
+    Scene InitializeView() throws Exception;
 }

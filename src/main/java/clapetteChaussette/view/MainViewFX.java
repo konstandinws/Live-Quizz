@@ -47,18 +47,15 @@ public class MainViewFX implements IDisplayable {
 
     public void setController(IMainListener listener) {
         this.listener = listener;
-        System.out.println("Controller set in MainViewFX");
+        System.out.println("------------------\nController set in MainViewFX");
+        System.out.println("Listener: " + listener.getClass().getName() + "\n\n\n------------------");
     }
 
     @Override
-    public Scene InitializeView(IController controller) throws Exception {
+    public Scene InitializeView() throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/clapetteChaussette.fxml"));
+        loader.setControllerFactory(param -> this);
         Parent root = loader.load();
-        if (controller instanceof IMainListener) {
-            setController((IMainListener) controller);
-        } else {
-            throw new IllegalArgumentException("Controller must implement IMainListener");
-        }
         return new Scene(root);
     }
 }

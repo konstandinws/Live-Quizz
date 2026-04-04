@@ -3,6 +3,8 @@ package clapetteChaussette.view;
 import clapetteChaussette.controller.IController;
 import clapetteChaussette.model.question.OpenQuestion;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -52,14 +54,10 @@ public class OpenQuestionFX implements IDisplayable {
     }
 
     @Override
-    public Scene InitializeView(IController controller) throws Exception {
-        javafx.scene.Parent root = javafx.fxml.FXMLLoader
-                .load(getClass().getResource("/clapetteChaussette/fxml/open.fxml"));
-        if (controller instanceof IQuestionListener) {
-            setController((IQuestionListener<String>) controller);
-        } else {
-            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
-        }
+    public Scene InitializeView() throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/open.fxml"));
+        loader.setControllerFactory(param -> this);
+        Parent root = loader.load();
         return new Scene(root);
     }
 }

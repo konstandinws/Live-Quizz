@@ -16,7 +16,9 @@ public class AppFX extends Application {
         this.mainStage = mainstage;
         NavigationService navigationService = new NavigationService(mainstage);
         this.mainController = new MainController(navigationService);
-        navigationService.navigateTo(new MainViewFX(), mainController, "Main View");
+        MainViewFX mainView = new MainViewFX();
+        navigationService.navigateTo(mainView, mainController, "Main View");
+        mainView.setController(mainController);
     }
 
     public static void main(String[] args) {

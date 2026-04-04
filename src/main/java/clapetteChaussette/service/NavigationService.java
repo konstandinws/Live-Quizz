@@ -29,7 +29,7 @@ public class NavigationService {
         this.currentSceneIndex++;
         stage.setTitle(title);
         try {
-            Scene scene = diplayable.InitializeView(controller);
+            Scene scene = diplayable.InitializeView();
             stage.setScene(scene);
         } catch (Exception e) {
             throw new RuntimeException(e);

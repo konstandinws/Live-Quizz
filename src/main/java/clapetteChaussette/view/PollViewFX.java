@@ -4,6 +4,8 @@ import javafx.scene.control.Label;
 import clapetteChaussette.controller.IController;
 import clapetteChaussette.model.question.Poll;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
@@ -48,14 +50,10 @@ public class PollViewFX implements IDisplayable {
     }
 
     @Override
-    public Scene InitializeView(IController controller) throws Exception {
-        javafx.scene.Parent root = javafx.fxml.FXMLLoader
-                .load(getClass().getResource("/clapetteChaussette/fxml/poll.fxml"));
-        if (controller instanceof IQuestionListener) {
-            setController((IQuestionListener<String>) controller);
-        } else {
-            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
-        }
+    public Scene InitializeView() throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/poll.fxml"));
+        loader.setControllerFactory(param -> this);
+        Parent root = loader.load();
         return new Scene(root);
     }
 }

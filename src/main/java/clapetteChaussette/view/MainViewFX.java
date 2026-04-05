@@ -42,8 +42,13 @@ public class MainViewFX {
     }
 
     @FXML
-    private void initialize() {
-        mainLabel.setText("Hello world!");
+    private void initialize() {mainLabel.setText("Clapette Chaussette");
+        mainLabel.setStyle(
+                "-fx-background-color: #fff;" +
+                        "-fx-text-fill: purple;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 5px 10px;"
+        );
     }
 
     public void setController(IMainListener listener) {

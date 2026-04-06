@@ -9,23 +9,23 @@ import static org.junit.jupiter.api.Assertions.*;
 class QcmQuestionTest {
 
     @Test
-    void constructeur_question_reponse_unique() {
+    void unique_answer_constructor() {
 
         String title = "Que vaut 15 + 3";
         List<String> choices = Arrays.asList("12", "10", "18");
-        String correct = "18";
+        List<String> correct = Arrays.asList("18");
 
         QcmQuestion question = new QcmQuestion(title, choices, correct);
 
         assertEquals(title, question.getQuestion());
         assertEquals(choices, question.getAnswers());
-        assertEquals(correct, question.getCorrectAnswer());
+        assertEquals(correct, question.getCorrectAnswers());
 
-        assertFalse(question.isChoixMultiple());
+        assertFalse(question.isMultipleAnswers());
     }
 
     @Test
-    void constructeur_question_reponse_multiple() {
+    void multiple_answers_constructor() {
 
         String title = "Quels sont les nombres pairs ?";
         List<String> choices = Arrays.asList("1", "2", "3", "4");
@@ -37,6 +37,6 @@ class QcmQuestionTest {
         assertEquals(choices, question.getAnswers());
         assertEquals(corrects, question.getCorrectAnswers());
 
-        assertTrue(question.isChoixMultiple());
+        assertTrue(question.isMultipleAnswers());
     }
 }

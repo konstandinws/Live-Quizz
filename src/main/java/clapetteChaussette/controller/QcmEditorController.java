@@ -32,14 +32,8 @@ public class QcmEditorController {
         validateAnswers(answers);
         validateCorrectAnswer(correctAnswers);
 
-        if (correctAnswers.size() == 1){
-            String correctAnswer = correctAnswers.getFirst();
-            // remplacer le return par un appel au service
-            return new QcmQuestion(title, answers, correctAnswer);
-        }
-        else {
-            return new QcmQuestion(title, answers, correctAnswers);
-        }
+        // remplacer le return par un appel au service
+        return new QcmQuestion(title, answers, correctAnswers);
     }
 
     /**
@@ -72,4 +66,6 @@ public class QcmEditorController {
     private void validateCorrectAnswer(List<String> correctAnswers) throws InvalidQuestionException {
         if (correctAnswers.isEmpty()) throw new InvalidQuestionException("il faut au moins une réponse correcte");
     }
+
+    // ajouter peut-etre une validation de minimum 2 choix sinon erreur
 }

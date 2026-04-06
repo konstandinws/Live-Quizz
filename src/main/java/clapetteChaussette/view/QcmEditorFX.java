@@ -2,6 +2,7 @@ package clapetteChaussette.view;
 
 import clapetteChaussette.controller.QcmEditorController;
 
+import clapetteChaussette.exception.InvalidQuestionException;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,6 +26,7 @@ public class QcmEditorFX{
     private Button addAnswerBTN;
 
     final int MAX_ANSWERS = 6;
+    final int MIN_ANSWERS = 2;
     QcmEditorController controller = new QcmEditorController();
 
     private List<CheckBox> correctAnswerCB = new ArrayList<>();
@@ -57,9 +59,9 @@ public class QcmEditorFX{
         try{
             String title = getTitle();
             List<String> answers = getAnswers();
-            List<String> correcAnswers = getCorrectAnswers();
-            controller.createQcm(title, answers, correcAnswers);
-        } catch (Exception e){
+            List<String> correctAnswers = getCorrectAnswers();
+            controller.createQcm(title, answers, correctAnswers);
+        } catch (InvalidQuestionException e){
             showErrorPopup(e.getMessage());
         }
     }
@@ -100,23 +102,20 @@ public class QcmEditorFX{
 
 
         deleteBTN.setOnAction(e -> {
-            if (answersContainer.getChildren().size() > 2){
+            if (answersContainer.getChildren().size() > MIN_ANSWERS){
                 answersContainer.getChildren().remove(answerRow);
                 correctAnswerCB.remove(validAnswerCB);
                 textFields.remove(answerTF);
                 setAddAnswerBTNVisibility();
             }
-            else try {
-                throw new Exception("vous devez avoir au minimum 2 réponses");
-            } catch (Exception ex) {
-                showErrorPopup(ex.getMessage());
+            else {
+                showErrorPopup("Vous devez avoir au minimum 2 réponses.");
             }
         });
         answerRow.getChildren().addAll(validAnswerCB, answerTF, deleteBTN);
         return answerRow;
     }
 
-    // creer une exception personnalisee et afficher le message en pop-up
     List<String> getAnswers() {
         List<String> answers = new ArrayList<>();
         for(TextField field : textFields) {
@@ -135,7 +134,7 @@ public class QcmEditorFX{
         return correctAnswers;
     }
 
-    String getTitle() throws Exception {
+    String getTitle() {
         return questionTitle.getText();
     }
 

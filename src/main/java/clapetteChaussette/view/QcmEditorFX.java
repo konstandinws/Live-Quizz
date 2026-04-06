@@ -25,6 +25,9 @@ public class QcmEditorFX{
     @FXML
     private VBox answersContainer;
     public TextField questionTitle;
+    public Button addAnswerBTN;
+
+    final int MAX_ANSWERS = 6;
 
     private List<CheckBox> correctAnswerCB = new ArrayList<>();
     private List<TextField> textFields = new ArrayList<>();
@@ -38,7 +41,24 @@ public class QcmEditorFX{
 
     @FXML
     private void addNewAnswer() {
-        answersContainer.getChildren().add(createAnswerRow());
+            answersContainer.getChildren().add(createAnswerRow());
+            setAddAnswerBTNVisibility();
+    }
+
+    boolean checkMaxAnswers(){
+        if (answersContainer.getChildren().size() >= MAX_ANSWERS){
+            return true;
+        }
+        else return false;
+    }
+
+    void setAddAnswerBTNVisibility(){
+        if(checkMaxAnswers()){
+            addAnswerBTN.setDisable(true);
+        }
+        else {
+            addAnswerBTN.setDisable(false);
+        }
     }
 
 
@@ -86,6 +106,7 @@ public class QcmEditorFX{
                 answersContainer.getChildren().remove(answerRow);
                 correctAnswerCB.remove(validAnswerCB);
                 textFields.remove(answerTF);
+                setAddAnswerBTNVisibility();
             }
             else {
                 throw new RuntimeException("vous devez avoir au minimum 2 réponses");
@@ -104,13 +125,14 @@ public class QcmEditorFX{
         return answers;
     }
 
-    String getCorrectAnswer() {
+    List<String> getCorrectAnswers() {
+        List<String> correctAnswers = new ArrayList<>();
         // gérer le cas ou l'uitlisateur ne coche rien, surement renvoyer une erreur pour le controleur
         for(int i = 0; i < correctAnswerCB.size(); i++) {
             if(correctAnswerCB.get(i).isSelected()) {
-                return textFields.get(i).getText();
+                correctAnswers.add(textFields.get(i).getText());
             }
         }
-        return "Pas de réponse";
+        return correctAnswers;
     }
 }

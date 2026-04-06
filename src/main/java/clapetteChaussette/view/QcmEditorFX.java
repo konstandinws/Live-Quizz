@@ -16,6 +16,14 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contrôleur JavaFX de l'interface d'édition de questions QCM.
+ * <p>
+ * Gère l'affichage dynamique des lignes de réponses et collecte les données
+ * saisies par l'utilisateur avant de les transmettre à {@link QcmEditorController}.
+ * La validation métier est déléguée au controller ; cette classe ne gère
+ * que la validation visuelle (affichage des erreurs).
+ */
 public class QcmEditorFX{
 
     @FXML
@@ -25,13 +33,20 @@ public class QcmEditorFX{
     @FXML
     private Button addAnswerBTN;
 
+    /** Le nombre maximum de réponses autorisées pour un QCM. */
     final int MAX_ANSWERS = 6;
+    /** Le nombre minimum de réponses requises pour un QCM. */
     final int MIN_ANSWERS = 2;
+
     QcmEditorController controller = new QcmEditorController();
 
     private List<CheckBox> correctAnswerCB = new ArrayList<>();
     private List<TextField> textFields = new ArrayList<>();
 
+    /**
+     * Méthode appelée automatiquement par JavaFX après le chargement du fichier FXML.
+     * Initialise la vue avec 4 champs de réponses par défaut.
+     */
     @FXML
     public void initialize() {
         for(int i= 0; i < 4; i++) {
@@ -39,21 +54,38 @@ public class QcmEditorFX{
         }
     }
 
+    /**
+     * Ajoute une nouvelle ligne de réponse dans {@code answersContainer}.
+     * Désactive le bouton d'ajout si le nombre maximum de réponses est atteint.
+     * Lié au bouton "+" dans le FXML.
+     */
     @FXML
     private void addNewAnswer() {
             answersContainer.getChildren().add(createAnswerRow());
             setAddAnswerBTNVisibility();
     }
 
+    /**
+     * Vérifie si le nombre maximum de réponses autorisées est atteint.
+     *
+     * @return {@code true} si {@code answersContainer} contient {@value MAX_ANSWERS} réponses ou plus
+     */
     boolean checkMaxAnswers(){
         return answersContainer.getChildren().size() >= MAX_ANSWERS;
     }
 
+    /**
+     * Active ou désactive le bouton d'ajout de réponse selon {@link #checkMaxAnswers()}.
+     */
     void setAddAnswerBTNVisibility(){
         addAnswerBTN.setDisable(checkMaxAnswers());
     }
 
-
+    /**
+     * Collecte les données de la vue et demande au controller de créer la question.
+     * Affiche une popup d'erreur si la validation échoue.
+     * Lié au bouton "Sauvegarder" dans le FXML.
+     */
     @FXML
     private void createQuestion() {
         try{
@@ -67,23 +99,18 @@ public class QcmEditorFX{
     }
 
     /**
-     * Crée et configure une ligne d'interface graphique représentant une réponse possible pour un QCM.
+     * Crée et configure une ligne représentant une réponse possible pour le QCM.
      * <p>
-     * Cette ligne ({@link HBox}) contient :
-     * <ul>
-     * <li>Une {@link CheckBox} pour définir si cette réponse est la bonne.</li>
-     * <li>Un {@link TextField} pour saisir le texte de la réponse.</li>
-     * <li>Un {@link Button} "Supprimer" permettant de retirer cette réponse de la liste.</li>
-     * </ul>
+     * La ligne contient une {@link CheckBox} pour marquer la réponse comme correcte,
+     * un {@link TextField} pour saisir le texte, et un bouton "Supprimer".
      * <p>
-     * <b>Effets de bord :</b> L'appel à cette méthode ajoute automatiquement la CheckBox
-     * et le TextField générés aux listes de suivi internes ({@code correctAnswerCB} et {@code textFields}).
+     * La {@link CheckBox} et le {@link TextField} sont automatiquement ajoutés
+     * aux listes internes {@code correctAnswerCB} et {@code textFields}.
      * <p>
-     * <b>Comportement de suppression :</b> Lors du clic sur le bouton "Supprimer", la ligne est retirée
-     * du conteneur parent ({@code answersContainer}) et les éléments sont retirés des listes de suivi.
-     * Si le conteneur possède 2 réponses ou moins, la suppression est bloquée et une {@link RuntimeException} est levée.
+     * La suppression est bloquée et une popup est affichée si le nombre de réponses
+     * est inférieur ou égal à {@value MIN_ANSWERS}.
      *
-     * @return un objet {@link HBox} contenant les éléments visuels de la nouvelle réponse, prêt à être ajouté à la vue.
+     * @return un {@link HBox} prêt à être ajouté à {@code answersContainer}
      */
     private HBox createAnswerRow() {
         HBox answerRow = new HBox();
@@ -116,6 +143,11 @@ public class QcmEditorFX{
         return answerRow;
     }
 
+    /**
+     * Retourne le texte saisi dans chaque champ de réponse.
+     *
+     * @return la liste des textes de toutes les réponses, dans l'ordre d'affichage
+     */
     List<String> getAnswers() {
         List<String> answers = new ArrayList<>();
         for(TextField field : textFields) {
@@ -124,6 +156,11 @@ public class QcmEditorFX{
         return answers;
     }
 
+    /**
+     * Retourne le texte des réponses dont la {@link CheckBox} est cochée.
+     *
+     * @return la liste des textes des réponses marquées comme correctes
+     */
     List<String> getCorrectAnswers() {
         List<String> correctAnswers = new ArrayList<>();
         for(int i = 0; i < correctAnswerCB.size(); i++) {
@@ -134,10 +171,21 @@ public class QcmEditorFX{
         return correctAnswers;
     }
 
+    /**
+     * Retourne le texte saisi dans le champ titre de la question.
+     *
+     * @return le titre de la question, peut être vide
+     */
     String getTitle() {
         return questionTitle.getText();
     }
 
+    /**
+     * Affiche une popup d'erreur modale avec le message fourni.
+     * L'application est mise en pause jusqu'à la fermeture de la popup.
+     *
+     * @param message le message d'erreur à afficher à l'utilisateur
+     */
     private void showErrorPopup(String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
         alert.setTitle("Erreur de saisie");

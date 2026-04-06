@@ -6,8 +6,11 @@ import clapetteChaussette.model.question.QcmQuestion;
 import java.util.List;
 
 /**
- * Contrôleur responsable de la logique métier et de la validation lors de la création d'un QCM.
- * Il assure que les données saisies depuis l'interface sont valides avant de créer l'objet modèle.
+ * Contrôleur responsable de la création et de la validation des questions QCM.
+ * <p>
+ * Fait le lien entre la vue {@link clapetteChaussette.view.QcmEditorFX} et
+ * le service de persistance (à intégrer). Toute la logique de validation
+ * métier est centralisée ici.
  */
 public class QcmEditorController {
 

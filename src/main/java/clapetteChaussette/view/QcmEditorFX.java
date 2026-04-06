@@ -41,10 +41,31 @@ public class QcmEditorFX{
         answersContainer.getChildren().add(createAnswerRow());
     }
 
+
     @FXML
-    private void createQuestion() {}
+    private void createQuestion() {
 
+    }
 
+    /**
+     * Crée et configure une ligne d'interface graphique représentant une réponse possible pour un QCM.
+     * <p>
+     * Cette ligne ({@link HBox}) contient :
+     * <ul>
+     * <li>Une {@link CheckBox} pour définir si cette réponse est la bonne.</li>
+     * <li>Un {@link TextField} pour saisir le texte de la réponse.</li>
+     * <li>Un {@link Button} "Supprimer" permettant de retirer cette réponse de la liste.</li>
+     * </ul>
+     * <p>
+     * <b>Effets de bord :</b> L'appel à cette méthode ajoute automatiquement la CheckBox
+     * et le TextField générés aux listes de suivi internes ({@code correctAnswerCB} et {@code textFields}).
+     * <p>
+     * <b>Comportement de suppression :</b> Lors du clic sur le bouton "Supprimer", la ligne est retirée
+     * du conteneur parent ({@code answersContainer}) et les éléments sont retirés des listes de suivi.
+     * Si le conteneur possède 2 réponses ou moins, la suppression est bloquée et une {@link RuntimeException} est levée.
+     *
+     * @return un objet {@link HBox} contenant les éléments visuels de la nouvelle réponse, prêt à être ajouté à la vue.
+     */
     private HBox createAnswerRow() {
         HBox answerRow = new HBox();
         answerRow.setAlignment(Pos.CENTER_LEFT);

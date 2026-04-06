@@ -4,24 +4,38 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clapetteChaussette.view.QcmEditorFX">
    <top>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="question" />
-            <TextField fx:id="questionTitle" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <TextField fx:id="questionTitle" alignment="TOP_CENTER" layoutX="157.0" layoutY="61.0" prefWidth="300.0" promptText="veuillez ecrire votre question" />
+                  <Label layoutX="228.0" layoutY="15.0" text="Nouveau QCM">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
          </children>
       </HBox>
    </top>
    <bottom>
-      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="addAnswerBTN" mnemonicParsing="false" onAction="#addNewAnswer" text="+" />
-            <Button fx:id="saveQuestionBTN" mnemonicParsing="false" onAction="#createQuestion" text="sauvegarder" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button fx:id="addAnswerBTN" layoutX="42.0" layoutY="38.0" mnemonicParsing="false" onAction="#addNewAnswer" text="+" />
+                  <Button fx:id="saveQuestionBTN" alignment="CENTER_RIGHT" layoutX="481.0" layoutY="38.0" mnemonicParsing="false" onAction="#createQuestion" text="sauvegarder" />
+               </children>
+            </AnchorPane>
          </children>
       </HBox>
    </bottom>

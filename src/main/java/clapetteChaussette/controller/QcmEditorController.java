@@ -34,9 +34,8 @@ public class QcmEditorController {
 
         if (correctAnswers.size() == 1){
             String correctAnswer = correctAnswers.getFirst();
-            QcmQuestion qcm = new QcmQuestion(title, answers, correctAnswer);
-            System.out.printf("qcm creer -> QCM { %s - %s - %s}%n", title, answers, correctAnswer);
-            return qcm;
+            // remplacer le return par un appel au service
+            return new QcmQuestion(title, answers, correctAnswer);
         }
         else {
             return new QcmQuestion(title, answers, correctAnswers);

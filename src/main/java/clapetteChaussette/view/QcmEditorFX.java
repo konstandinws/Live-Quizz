@@ -4,12 +4,15 @@ import clapetteChaussette.model.question.Question;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 
@@ -17,45 +20,58 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class QcmEditorFX implements IDisplayable{
+public class QcmEditorFX{
 
     @FXML
-    private VBox answerContainer;
-    private TextField questionTitle;
+    private VBox answersContainer;
+    public TextField questionTitle;
 
-    List<CheckBox> correctAnswerCB;
-    List<TextField> textFields;
+    private List<CheckBox> correctAnswerCB = new ArrayList<>();
+    private List<TextField> textFields = new ArrayList<>();
 
     @FXML
     public void initialize() {
         for(int i= 0; i < 4; i++) {
-
+            answersContainer.getChildren().add(createAnswerRow());
         }
     }
 
     @FXML
     private void addNewAnswer() {
-        createAnswerRow();
+        answersContainer.getChildren().add(createAnswerRow());
     }
+
+    @FXML
+    private void createQuestion() {}
 
 
     private HBox createAnswerRow() {
         HBox answerRow = new HBox();
+        answerRow.setAlignment(Pos.CENTER_LEFT);
+        answerRow.setPadding(new Insets(5, 10, 5, 10));
 
         CheckBox validAnswerCB = new CheckBox();
+
         TextField answerTF = new TextField();
-        Button deleteBTN = new Button();
+        HBox.setHgrow(answerTF, Priority.ALWAYS);
+
+        Button deleteBTN = new Button("Supprimer");
+
+        correctAnswerCB.add(validAnswerCB);
+        textFields.add(answerTF);
 
         deleteBTN.setOnAction(e -> {
-            if (answerContainer.getChildren().size() > 2){
-                answerContainer.getChildren().remove(answerRow);
+            if (answersContainer.getChildren().size() > 2){
+                answersContainer.getChildren().remove(answerRow);
+                correctAnswerCB.remove(validAnswerCB);
+                textFields.remove(answerTF);
             }
             else {
                 throw new RuntimeException("vous devez avoir au minimum 2 réponses");
             }
         });
 
-        answerContainer.getChildren().addAll(validAnswerCB, answerTF, deleteBTN);
+        answerRow.getChildren().addAll(validAnswerCB, answerTF, deleteBTN);
         return answerRow;
     }
 
@@ -75,13 +91,5 @@ public class QcmEditorFX implements IDisplayable{
             }
         }
         return "Pas de réponse";
-    }
-
-    @Override
-    public Scene InitializeView() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/QcmEditor.fxml"));
-        loader.setControllerFactory(param -> this);
-        Parent root = loader.load();
-        return new Scene(root);
     }
 }

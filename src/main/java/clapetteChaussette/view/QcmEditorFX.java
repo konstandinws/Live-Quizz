@@ -44,19 +44,11 @@ public class QcmEditorFX{
     }
 
     boolean checkMaxAnswers(){
-        if (answersContainer.getChildren().size() >= MAX_ANSWERS){
-            return true;
-        }
-        else return false;
+        return answersContainer.getChildren().size() >= MAX_ANSWERS;
     }
 
     void setAddAnswerBTNVisibility(){
-        if(checkMaxAnswers()){
-            addAnswerBTN.setDisable(true);
-        }
-        else {
-            addAnswerBTN.setDisable(false);
-        }
+        addAnswerBTN.setDisable(checkMaxAnswers());
     }
 
 
@@ -117,7 +109,7 @@ public class QcmEditorFX{
             else try {
                 throw new Exception("vous devez avoir au minimum 2 réponses");
             } catch (Exception ex) {
-                throw new RuntimeException(ex);
+                showErrorPopup(ex.getMessage());
             }
         });
         answerRow.getChildren().addAll(validAnswerCB, answerTF, deleteBTN);
@@ -125,29 +117,26 @@ public class QcmEditorFX{
     }
 
     // creer une exception personnalisee et afficher le message en pop-up
-    List<String> getAnswers() throws Exception {
+    List<String> getAnswers() {
         List<String> answers = new ArrayList<>();
         for(TextField field : textFields) {
-            if (field.getText().isEmpty()) throw new Exception("Un reponse ne peut pas etre vide");
             answers.add(field.getText());
         }
         return answers;
     }
 
-    List<String> getCorrectAnswers() throws Exception {
+    List<String> getCorrectAnswers() {
         List<String> correctAnswers = new ArrayList<>();
         for(int i = 0; i < correctAnswerCB.size(); i++) {
             if(correctAnswerCB.get(i).isSelected()) {
                 correctAnswers.add(textFields.get(i).getText());
             }
         }
-        if (correctAnswers.isEmpty()) throw new Exception("il faut choisir au moins une reponse valide");
         return correctAnswers;
     }
 
     String getTitle() throws Exception {
-        if (questionTitle.getText().isEmpty()) throw new Exception("il ne faut pas que la question posée soit vide");
-        else return questionTitle.getText();
+        return questionTitle.getText();
     }
 
     private void showErrorPopup(String message) {

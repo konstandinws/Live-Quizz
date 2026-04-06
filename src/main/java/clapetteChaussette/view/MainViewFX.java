@@ -37,6 +37,11 @@ public class MainViewFX {
     }
 
     @FXML
+    void launchQuestionnaire(ActionEvent event) {
+        listener.onQuestionnaireLaunch();
+    }
+
+    @FXML
     private void initialize() {
         mainLabel.setText("Hello world!");
     }

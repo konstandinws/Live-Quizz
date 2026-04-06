@@ -1,78 +1,62 @@
 package clapetteChaussette.view;
 import clapetteChaussette.model.question.QcmQuestion;
 import clapetteChaussette.model.question.Question;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
-import java.awt.event.ActionEvent;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class QcmEditorFX {
+public class QcmEditorFX implements IDisplayable{
 
     @FXML
-    private Button addQuesionBTN;
+    private VBox answerContainer;
+    private TextField questionTitle;
+
+    List<CheckBox> correctAnswerCB;
+    List<TextField> textFields;
 
     @FXML
-    private TextField answ1Label;
+    public void initialize() {
+        for(int i= 0; i < 4; i++) {
 
-    @FXML
-    private TextField answ2Label;
-
-    @FXML
-    private TextField answ3Label;
-
-    @FXML
-    private TextField answ4Label;
-
-    @FXML
-    private CheckBox correctAnsw1;
-
-    @FXML
-    private CheckBox correctAnsw2;
-
-    @FXML
-    private CheckBox correctAnsw3;
-
-    @FXML
-    private CheckBox correctAnsw4;
-
-    @FXML
-    private Button deleteAnsw1;
-
-    @FXML
-    private Button deleteAnsw2;
-
-    @FXML
-    private Button deleteAnsw3;
-
-    @FXML
-    private Button deleteAnsw4;
-
-    @FXML
-    private TextField qestionTitle;
-
-    @FXML
-    private Button saveQuestionBTN;
-
-    List<CheckBox> correctAnswerCB = Arrays.asList(correctAnsw1, correctAnsw2, correctAnsw3, correctAnsw4);
-    List<TextField> textFields = Arrays.asList(answ1Label, answ2Label, answ3Label, answ4Label);
-
-    @FXML
-    QcmQuestion createQuestion(ActionEvent event) {
-        String question = qestionTitle.getText();
-        List<String> answers = getAnswers();
-        String correctAnswer = getCorrectAnswer();
-
-        return new QcmQuestion(question, answers, correctAnswer);
+        }
     }
 
     @FXML
-    void addNewAnswer(ActionEvent event) {
+    private void addNewAnswer() {
+        createAnswerRow();
+    }
 
+
+    private HBox createAnswerRow() {
+        HBox answerRow = new HBox();
+
+        CheckBox validAnswerCB = new CheckBox();
+        TextField answerTF = new TextField();
+        Button deleteBTN = new Button();
+
+        deleteBTN.setOnAction(e -> {
+            if (answerContainer.getChildren().size() > 2){
+                answerContainer.getChildren().remove(answerRow);
+            }
+            else {
+                throw new RuntimeException("vous devez avoir au minimum 2 réponses");
+            }
+        });
+
+        answerContainer.getChildren().addAll(validAnswerCB, answerTF, deleteBTN);
+        return answerRow;
     }
 
     List<String> getAnswers() {
@@ -91,5 +75,13 @@ public class QcmEditorFX {
             }
         }
         return "Pas de réponse";
+    }
+
+    @Override
+    public Scene InitializeView() throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/QcmEditor.fxml"));
+        loader.setControllerFactory(param -> this);
+        Parent root = loader.load();
+        return new Scene(root);
     }
 }

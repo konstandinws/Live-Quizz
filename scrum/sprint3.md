@@ -22,6 +22,17 @@
     | fait par 
 * [ ] **Open:** Implement "Valid Keywords" definition logic for the teacher
     | fait par
+### Story 4: Improve CSS for different pages
+* Harmonize the visual design to provide a modern and fluid user experience.*
+* [ ] **Global Theming:** Create a `style.css` file with the app's color palette (Main color, Background)
+    | fait par :
+* [ ] **Visual Feedback:** Implement CSS classes for success (green) and error (red) states
+    | fait par :
+### Story 5: Project Monitoring (Agile Tracking)
+*Track the progress and rythm of the team during the sprint.*
+* [ ] **Burndown Chart:** Create a chart tracking "Remaining Effort" vs. "Time".
+
+
 
 
 

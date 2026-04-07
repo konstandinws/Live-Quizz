@@ -1,20 +1,23 @@
 package clapetteChaussette.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import clapetteChaussette.model.question.OpenQuestion;
 import clapetteChaussette.model.question.Poll;
 import clapetteChaussette.model.question.QcmQuestion;
-import clapetteChaussette.model.question.OpenQuestion;
 import clapetteChaussette.model.question.Question;
-import clapetteChaussette.view.QuestionFreeViewFX;
+import clapetteChaussette.service.NavigationService;
 import clapetteChaussette.view.*;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
-public class MainController implements IMainListener {
+public class MainController implements IMainListener, IController {
+
+    private NavigationService navigationService;
+
+    public MainController(NavigationService navigationService) {
+        this.navigationService = navigationService;
+    }
 
     @Override
     public void onQcmLaunch() {
@@ -24,10 +27,10 @@ public class MainController implements IMainListener {
         answers.add("12");
         answers.add("15");
         answers.add("17");
-        String correctAnswer = "17";
+        List<String> correctAnswer = Arrays.asList("17");
         QcmQuestion qcm = new QcmQuestion(question, answers, correctAnswer);
         try {
-            afficherQcm(qcm);
+            afficherQuestion(qcm, new QcmController(), "QCM");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -38,7 +41,7 @@ public class MainController implements IMainListener {
         String question = "Quelle est votre couleur préférée ?";
         Question poll = new Poll(question, List.of("Rouge", "Bleu", "Vert", "Jaune"));
         try {
-            afficherPoll(poll);
+            afficherQuestion(poll, new PollController(), "Poll");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -47,58 +50,52 @@ public class MainController implements IMainListener {
     @Override
     public void onFreeLaunch() {
         OpenQuestion qst = new OpenQuestion("comment tu trouves brahim physiquement ?");
-        try{
-            afficherFree(qst);
-        }catch (Exception e){
+        try {
+            afficherQuestion(qst, new OpenController(), "Free");
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Free launched");
-
     }
 
-    public void afficherQcm(Question question) throws Exception {
-        // creer la question avec le service normalement
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/clapetteChaussette/fxml/qcm.fxml"));
-        IQcmListener viewController = new OpenController();
-        Parent root = loader.load();
-        QcmViewFX qcmViewFX = loader.getController();
-        qcmViewFX.set(viewController, (QcmQuestion) question);
-        Stage nouvelleFenetre = new Stage();
-        nouvelleFenetre.setTitle("Question QCM");
-        nouvelleFenetre.setScene(new Scene(root, 600, 400));
-        nouvelleFenetre.show();
+    @Override
+    public void onQuestionnaireLaunch() {
+        return;
     }
 
-    public void afficherPoll(Question question) throws Exception {
-        // creer la question avec le service normalement
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/clapetteChaussette/fxml/poll.fxml"));
-        IPoolListener viewController = new PollController();
-        Parent root = loader.load();
-        PollViewFX pollViewFX = loader.getController();
-        pollViewFX.set(viewController, (Poll) question);
-        Stage nouvelleFenetre = new Stage();
-        nouvelleFenetre.setTitle("Question Poll");
-        nouvelleFenetre.setScene(new Scene(root, 600, 400));
-        nouvelleFenetre.show();
-    }
-
-    public void afficherFree(OpenQuestion question) throws Exception {
-        // Chemin vers le FXML
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/open.fxml"));
-        // viewController est une instance pour dire comment valider une réponse
-        IOpenListener viewController = new FreeController();
-
-        Parent root = loader.load();
-
-        // freeViewFx est une instance de questionfree il à l'accés au button,label,ect de mon fxml
-        QuestionFreeViewFX freeViewFx = loader.getController();
-        freeViewFx.set(viewController, question);
-
-        Stage nouvelleFenetre = new Stage();
-        nouvelleFenetre.setTitle("Question Free");
-        nouvelleFenetre.setScene(new Scene(root, 600, 400));
-        nouvelleFenetre.show();
+    private void afficherQuestion(Question question, IController controller, String title) {
+        /**
+         * TODO : faire une classe mere View de quel toute les vues héritent pour
+         * factoriser le code de navigation et d'affichage des questions.
+         */
+        if (question instanceof QcmQuestion) {
+            try {
+                IDisplayable qcmView = new QcmViewFX();
+                this.navigationService.navigateTo(qcmView, title);
+                ((QcmViewFX) qcmView).setQcm((QcmQuestion) question);
+                ((QcmViewFX) qcmView).setController((IQuestionListener<String>) controller);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else if (question instanceof Poll) {
+            try {
+                IDisplayable pollView = new PollViewFX();
+                this.navigationService.navigateTo(pollView, title);
+                ((PollViewFX) pollView).setPoll((Poll) question);
+                ((PollViewFX) pollView).setController((IQuestionListener<String>) controller);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else if (question instanceof OpenQuestion) {
+            try {
+                IDisplayable freeView = new OpenQuestionFX();
+                this.navigationService.navigateTo(freeView, title);
+                ((OpenQuestionFX) freeView).setOpenQuestion((OpenQuestion) question);
+                ((OpenQuestionFX) freeView).setController((IQuestionListener<String>) controller);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new IllegalArgumentException("Type de question non supporté");
+        }
     }
 }

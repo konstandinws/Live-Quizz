@@ -1,0 +1,73 @@
+.card-blue {
+    -fx-background-color: #e8f0fe;
+    -fx-background-radius: 16;
+    -fx-padding: 30;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.card-blue:hover {
+    -fx-background-color: #d0e4fd;
+}
+
+.card-purple {
+    -fx-background-color: #f3e8fe;
+    -fx-background-radius: 16;
+    -fx-padding: 30;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.card-purple:hover {
+    -fx-background-color: #e8d0fd;
+}
+
+.card-green {
+    -fx-background-color: #e8fef0;
+    -fx-background-radius: 16;
+    -fx-padding: 30;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.card-green:hover {
+    -fx-background-color: #d0fde0;
+}
+
+.icon-blue {
+    -fx-background-color: #4285f4;
+    -fx-background-radius: 50;
+    -fx-min-width: 70;
+    -fx-min-height: 70;
+    -fx-max-width: 70;
+    -fx-max-height: 70;
+}
+
+.icon-purple {
+    -fx-background-color: #9b3df5;
+    -fx-background-radius: 50;
+    -fx-min-width: 70;
+    -fx-min-height: 70;
+    -fx-max-width: 70;
+    -fx-max-height: 70;
+}
+
+.icon-green {
+    -fx-background-color: #2ecc71;
+    -fx-background-radius: 50;
+    -fx-min-width: 70;
+    -fx-min-height: 70;
+    -fx-max-width: 70;
+    -fx-max-height: 70;
+}
+
+.card-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a2e;
+}
+
+.card-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #888888;
+}

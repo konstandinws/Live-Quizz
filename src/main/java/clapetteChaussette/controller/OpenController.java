@@ -1,17 +1,11 @@
 package clapetteChaussette.controller;
 
-import clapetteChaussette.view.IQcmListener;
-import clapetteChaussette.model.question.QcmQuestion;
-import javafx.scene.control.CheckBox;
-import javafx.scene.paint.Color;
+import clapetteChaussette.model.question.Question;
+import clapetteChaussette.view.IQuestionListener;
 
-class OpenController implements IQcmListener {
+public class OpenController implements IQuestionListener<String>, IController {
     @Override
-    public void verify(CheckBox source, QcmQuestion qcm) {
-        if (source.getText().equals(qcm.getCorrectAnswer())) {
-            source.setTextFill(Color.GREEN);
-        } else {
-            source.setTextFill(Color.RED);
-        }
+    public void validate(String aws, Question question) {
+        question.setAnswer(aws);
     }
 }

@@ -19,6 +19,7 @@ public abstract class Question {
           return question;
      }
 
+
      public List<String> getAnswers() {
           return answers;
      }

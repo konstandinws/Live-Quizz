@@ -1,6 +1,7 @@
 package clapetteChaussette.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import clapetteChaussette.model.question.OpenQuestion;
@@ -26,7 +27,7 @@ public class MainController implements IMainListener, IController {
         answers.add("12");
         answers.add("15");
         answers.add("17");
-        String correctAnswer = "17";
+        List<String> correctAnswer = Arrays.asList("17");
         QcmQuestion qcm = new QcmQuestion(question, answers, correctAnswer);
         try {
             afficherQuestion(qcm, new QcmController(), "QCM");

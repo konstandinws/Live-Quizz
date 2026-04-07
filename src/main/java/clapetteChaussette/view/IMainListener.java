@@ -6,4 +6,6 @@ public interface IMainListener {
     void onPollLaunch();
 
     void onFreeLaunch();
+
+    void onQuestionnaireLaunch();
 }

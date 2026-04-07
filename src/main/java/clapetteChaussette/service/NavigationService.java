@@ -3,7 +3,6 @@ package clapetteChaussette.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import clapetteChaussette.controller.IController;
 import clapetteChaussette.view.IDisplayable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,7 +19,7 @@ public class NavigationService {
         this.currentSceneIndex = -1;
     }
 
-    public void navigateTo(IDisplayable diplayable, IController controller, String title) {
+    public void navigateTo(IDisplayable diplayable, String title) {
         // save the state of the current scene before navigating to the new one
         Scene oldScene = this.stage.getScene();
         if (oldScene != null) {

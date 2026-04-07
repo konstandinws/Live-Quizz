@@ -14,7 +14,7 @@ public class QuestionnaireFX implements IDisplayable {
     private IQuestionnaireListener listener;
 
     // méthode pour brancher le vrai contrôleur
-    public void setListener(IQuestionnaireListener listener) {
+    public void setController(IQuestionnaireListener listener) {
         this.listener = listener;
     }
 
@@ -36,28 +36,28 @@ public class QuestionnaireFX implements IDisplayable {
     // méthodes pour les evenements des clics sur les boutons
     @FXML
     void onPollClick(ActionEvent event) {
-        if(listener != null){
+        if (listener != null) {
             listener.onAddPollRequested();
         }
     }
 
     @FXML
     void onQcmClick(ActionEvent event) {
-        if(listener != null){
+        if (listener != null) {
             listener.onAddQcmRequested();
         }
     }
 
     @FXML
     void onQuestionFreeClick(ActionEvent event) {
-        if(listener != null){
+        if (listener != null) {
             listener.onAddQuestionFreeRequested();
         }
     }
 
     @FXML
     void onSaveClick(ActionEvent event) {
-        if(listener != null){
+        if (listener != null) {
             listener.onSaveRequested();
         }
     }

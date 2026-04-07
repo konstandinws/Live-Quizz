@@ -4,8 +4,11 @@ import clapetteChaussette.controller.QcmEditorController;
 
 import clapetteChaussette.exception.InvalidQuestionException;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -20,11 +23,12 @@ import java.util.List;
  * Contrôleur JavaFX de l'interface d'édition de questions QCM.
  * <p>
  * Gère l'affichage dynamique des lignes de réponses et collecte les données
- * saisies par l'utilisateur avant de les transmettre à {@link QcmEditorController}.
+ * saisies par l'utilisateur avant de les transmettre à
+ * {@link QcmEditorController}.
  * La validation métier est déléguée au controller ; cette classe ne gère
  * que la validation visuelle (affichage des erreurs).
  */
-public class QcmEditorFX{
+public class QcmEditorFX implements IDisplayable {
 
     @FXML
     private VBox answersContainer;
@@ -38,18 +42,19 @@ public class QcmEditorFX{
     /** Le nombre minimum de réponses requises pour un QCM. */
     final int MIN_ANSWERS = 2;
 
-    QcmEditorController controller = new QcmEditorController();
+    QcmEditorController controller;
 
     private List<CheckBox> correctAnswerCB = new ArrayList<>();
     private List<TextField> textFields = new ArrayList<>();
 
     /**
-     * Méthode appelée automatiquement par JavaFX après le chargement du fichier FXML.
+     * Méthode appelée automatiquement par JavaFX après le chargement du fichier
+     * FXML.
      * Initialise la vue avec 4 champs de réponses par défaut.
      */
     @FXML
     public void initialize() {
-        for(int i= 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             answersContainer.getChildren().add(createAnswerRow());
         }
     }
@@ -61,23 +66,25 @@ public class QcmEditorFX{
      */
     @FXML
     private void addNewAnswer() {
-            answersContainer.getChildren().add(createAnswerRow());
-            setAddAnswerBTNVisibility();
+        answersContainer.getChildren().add(createAnswerRow());
+        setAddAnswerBTNVisibility();
     }
 
     /**
      * Vérifie si le nombre maximum de réponses autorisées est atteint.
      *
-     * @return {@code true} si {@code answersContainer} contient {@value MAX_ANSWERS} réponses ou plus
+     * @return {@code true} si {@code answersContainer} contient
+     *         {@value MAX_ANSWERS} réponses ou plus
      */
-    boolean checkMaxAnswers(){
+    boolean checkMaxAnswers() {
         return answersContainer.getChildren().size() >= MAX_ANSWERS;
     }
 
     /**
-     * Active ou désactive le bouton d'ajout de réponse selon {@link #checkMaxAnswers()}.
+     * Active ou désactive le bouton d'ajout de réponse selon
+     * {@link #checkMaxAnswers()}.
      */
-    void setAddAnswerBTNVisibility(){
+    void setAddAnswerBTNVisibility() {
         addAnswerBTN.setDisable(checkMaxAnswers());
     }
 
@@ -88,12 +95,12 @@ public class QcmEditorFX{
      */
     @FXML
     private void createQuestion() {
-        try{
+        try {
             String title = getTitle();
             List<String> answers = getAnswers();
             List<String> correctAnswers = getCorrectAnswers();
             controller.createQcm(title, answers, correctAnswers);
-        } catch (InvalidQuestionException e){
+        } catch (InvalidQuestionException e) {
             showErrorPopup(e.getMessage());
         }
     }
@@ -101,7 +108,8 @@ public class QcmEditorFX{
     /**
      * Crée et configure une ligne représentant une réponse possible pour le QCM.
      * <p>
-     * La ligne contient une {@link CheckBox} pour marquer la réponse comme correcte,
+     * La ligne contient une {@link CheckBox} pour marquer la réponse comme
+     * correcte,
      * un {@link TextField} pour saisir le texte, et un bouton "Supprimer".
      * <p>
      * La {@link CheckBox} et le {@link TextField} sont automatiquement ajoutés
@@ -127,15 +135,13 @@ public class QcmEditorFX{
         correctAnswerCB.add(validAnswerCB);
         textFields.add(answerTF);
 
-
         deleteBTN.setOnAction(e -> {
-            if (answersContainer.getChildren().size() > MIN_ANSWERS){
+            if (answersContainer.getChildren().size() > MIN_ANSWERS) {
                 answersContainer.getChildren().remove(answerRow);
                 correctAnswerCB.remove(validAnswerCB);
                 textFields.remove(answerTF);
                 setAddAnswerBTNVisibility();
-            }
-            else {
+            } else {
                 showErrorPopup("Vous devez avoir au minimum 2 réponses.");
             }
         });
@@ -150,7 +156,7 @@ public class QcmEditorFX{
      */
     List<String> getAnswers() {
         List<String> answers = new ArrayList<>();
-        for(TextField field : textFields) {
+        for (TextField field : textFields) {
             answers.add(field.getText());
         }
         return answers;
@@ -163,8 +169,8 @@ public class QcmEditorFX{
      */
     List<String> getCorrectAnswers() {
         List<String> correctAnswers = new ArrayList<>();
-        for(int i = 0; i < correctAnswerCB.size(); i++) {
-            if(correctAnswerCB.get(i).isSelected()) {
+        for (int i = 0; i < correctAnswerCB.size(); i++) {
+            if (correctAnswerCB.get(i).isSelected()) {
                 correctAnswers.add(textFields.get(i).getText());
             }
         }
@@ -192,5 +198,17 @@ public class QcmEditorFX{
         alert.setHeaderText("Impossible de sauvegarder la question");
         alert.setContentText(message);
         alert.showAndWait(); // Met l'application en pause jusqu'à ce que l'utilisateur clique sur OK
+    }
+
+    public void setController(QcmEditorController controller) {
+        this.controller = controller;
+    }
+
+    @Override
+    public Scene InitializeView() throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/QcmEditor.fxml"));
+        loader.setControllerFactory(param -> this);
+        Parent root = loader.load();
+        return new Scene(root);
     }
 }

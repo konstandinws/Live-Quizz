@@ -57,11 +57,20 @@ public class MainController implements IMainListener, IController {
         }
     }
 
+    @Override
+    public void onQuestionnaireLaunch() {
+        return;
+    }
+
     private void afficherQuestion(Question question, IController controller, String title) {
+        /**
+         * TODO : faire une classe mere View de quel toute les vues héritent pour
+         * factoriser le code de navigation et d'affichage des questions.
+         */
         if (question instanceof QcmQuestion) {
             try {
                 IDisplayable qcmView = new QcmViewFX();
-                this.navigationService.navigateTo(qcmView, controller, title);
+                this.navigationService.navigateTo(qcmView, title);
                 ((QcmViewFX) qcmView).setQcm((QcmQuestion) question);
                 ((QcmViewFX) qcmView).setController((IQuestionListener<String>) controller);
             } catch (Exception e) {
@@ -70,7 +79,7 @@ public class MainController implements IMainListener, IController {
         } else if (question instanceof Poll) {
             try {
                 IDisplayable pollView = new PollViewFX();
-                this.navigationService.navigateTo(pollView, controller, title);
+                this.navigationService.navigateTo(pollView, title);
                 ((PollViewFX) pollView).setPoll((Poll) question);
                 ((PollViewFX) pollView).setController((IQuestionListener<String>) controller);
             } catch (Exception e) {
@@ -79,7 +88,7 @@ public class MainController implements IMainListener, IController {
         } else if (question instanceof OpenQuestion) {
             try {
                 IDisplayable freeView = new OpenQuestionFX();
-                this.navigationService.navigateTo(freeView, controller, title);
+                this.navigationService.navigateTo(freeView, title);
                 ((OpenQuestionFX) freeView).setOpenQuestion((OpenQuestion) question);
                 ((OpenQuestionFX) freeView).setController((IQuestionListener<String>) controller);
             } catch (Exception e) {

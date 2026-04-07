@@ -1,7 +1,6 @@
 package clapetteChaussette.view;
 
 import javafx.scene.control.Label;
-import clapetteChaussette.controller.IController;
 import clapetteChaussette.model.question.Poll;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -55,5 +54,9 @@ public class PollViewFX implements IDisplayable {
         loader.setControllerFactory(param -> this);
         Parent root = loader.load();
         return new Scene(root);
+    }
+
+    @FXML
+    private void initialize() {
     }
 }

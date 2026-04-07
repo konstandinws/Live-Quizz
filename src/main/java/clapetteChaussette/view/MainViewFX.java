@@ -54,7 +54,6 @@ public class MainViewFX implements IDisplayable{
     @FXML
     private void initialize() {mainLabel.setText("Clapette Chaussette");
         mainLabel.setStyle(
-                "-fx-background-color: #fff;" +
                         "-fx-text-fill: purple;" +
                         "-fx-font-weight: bold;" +
                         "-fx-padding: 5px 10px;"

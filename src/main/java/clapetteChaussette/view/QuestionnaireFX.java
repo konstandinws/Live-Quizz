@@ -2,10 +2,13 @@ package clapetteChaussette.view;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-public class QuestionnaireFX {
+public class QuestionnaireFX implements IDisplayable {
 
     // l'interface pour appeler le vrai contrôleur
     private IQuestionnaireListener listener;
@@ -57,6 +60,13 @@ public class QuestionnaireFX {
         if(listener != null){
             listener.onSaveRequested();
         }
+    }
+
+    public Scene InitializeView() throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/questionnaire.fxml"));
+        loader.setControllerFactory(param -> this);
+        Parent root = loader.load();
+        return new Scene(root);
     }
 
 }

@@ -29,6 +29,8 @@ import java.util.List;
  * que la validation visuelle (affichage des erreurs).
  */
 public class QcmEditorFX implements IDisplayable {
+    @FXML
+    private Button saveQuestionBTN;
 
     @FXML
     private VBox answersContainer;

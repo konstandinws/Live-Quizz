@@ -6,6 +6,7 @@ import clapetteChaussette.model.question.Questionnaire; // importer le modèle
 import clapetteChaussette.service.NavigationService;
 import clapetteChaussette.view.IQuestionnaireListener;
 import clapetteChaussette.view.QcmEditorFX;
+import clapetteChaussette.view.OpenEditorFX;
 import java.util.ArrayList;
 
 // Controleur de l'édition du questionnaire, c'est lui qui manipulera le modèle
@@ -35,8 +36,10 @@ public class QuestionnaireController implements IQuestionnaireListener, IControl
 
     @Override
     public void onAddQuestionFreeRequested() {
-        OpenQuestion nouvelleQuestion = new OpenQuestion("Nouvelle question libre");
-        sessionEnCours.addQuestion(nouvelleQuestion);
+        OpenEditorController openCtrl = new OpenEditorController();
+        OpenEditorFX view = new OpenEditorFX();
+        view.setController(openCtrl);
+        navigationService.navigateTo(view, "Éditeur Question Libre");
     }
 
     @Override

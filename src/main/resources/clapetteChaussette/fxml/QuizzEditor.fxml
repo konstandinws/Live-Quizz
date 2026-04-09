@@ -12,7 +12,7 @@
    <children>
       <Label text="Création du Questionnaire" />
       <ScrollPane prefHeight="200.0" prefWidth="200.0" />
-      <VBox fx:id="listeQuestionsBox" prefHeight="200.0" prefWidth="100.0" />
+      <VBox fx:id="VboxListe" prefHeight="200.0" prefWidth="100.0" />
       <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
          <children>
             <Button fx:id="mcqButton" mnemonicParsing="false" onAction="#onMcqClick" prefHeight="107.0" prefWidth="107.0" styleClass="card-purple">

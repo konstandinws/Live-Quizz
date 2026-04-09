@@ -2,10 +2,13 @@ package clapetteChaussette.model.question;
 
 import org.junit.jupiter.api.Test;
 
+import be.helha.clapetteChaussette.model.question.QcmQuestion;
+
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class QcmQuestionTest {
 
     @Test

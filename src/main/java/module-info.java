@@ -2,7 +2,7 @@ module clapelleChausette {
     requires javafx.controls;
     requires javafx.fxml;
 
-    opens clapetteChaussette.view to javafx.fxml;
+    opens be.helha.clapetteChaussette.view to javafx.fxml;
 
-    exports clapetteChaussette;
+    exports be.helha.clapetteChaussette;
 }

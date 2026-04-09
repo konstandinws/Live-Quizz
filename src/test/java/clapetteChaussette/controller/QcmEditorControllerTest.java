@@ -1,7 +1,9 @@
 package clapetteChaussette.controller;
 
-import clapetteChaussette.exception.InvalidQuestionException;
 import org.junit.jupiter.api.Test;
+
+import be.helha.clapetteChaussette.controller.QcmEditorController;
+import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,9 +20,7 @@ class QcmEditorControllerTest {
         List<String> answers = Arrays.asList("A", "B");
         List<String> correctAnswers = List.of("A");
 
-        assertThrows(InvalidQuestionException.class, () ->
-                controller.createQcm("   ", answers, correctAnswers)
-        );
+        assertThrows(InvalidQuestionException.class, () -> controller.createQcm("   ", answers, correctAnswers));
     }
 
     @Test
@@ -29,9 +29,7 @@ class QcmEditorControllerTest {
         List<String> answers = Arrays.asList("A", "  ");
         List<String> correctAnswers = List.of("A");
 
-        assertThrows(InvalidQuestionException.class, () ->
-                controller.createQcm(title, answers, correctAnswers)
-        );
+        assertThrows(InvalidQuestionException.class, () -> controller.createQcm(title, answers, correctAnswers));
     }
 
     @Test
@@ -40,8 +38,6 @@ class QcmEditorControllerTest {
         List<String> answers = Arrays.asList("A", "B");
         List<String> correctAnswers = Collections.emptyList();
 
-        assertThrows(InvalidQuestionException.class, () ->
-                controller.createQcm(title, answers, correctAnswers)
-        );
+        assertThrows(InvalidQuestionException.class, () -> controller.createQcm(title, answers, correctAnswers));
     }
 }

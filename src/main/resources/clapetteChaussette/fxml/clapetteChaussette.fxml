@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="616.0" prefWidth="840.0" stylesheets="@css/clapettecss.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clapetteChaussette.view.MainViewFX">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="616.0" prefWidth="840.0" stylesheets="@css/clapettecss.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.helha.clapetteChaussette.view.MainViewFX">
    <top>
       <Label fx:id="mainLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="104.0" prefWidth="708.0" text="Clapette Chaussette" BorderPane.alignment="CENTER">
          <font>

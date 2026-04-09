@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.geometry.Insets?>
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" stylesheets="@css/clapettecss.css" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.helha.clapetteChaussette.view.editor.QuizzEditorFX">
    <children>
       <Label text="Création du Questionnaire" />
@@ -15,37 +14,46 @@
       <VBox fx:id="listeQuestionsBox" prefHeight="200.0" prefWidth="100.0" />
       <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
          <children>
-            <Button fx:id="mcqButton" mnemonicParsing="false" onAction="#onMcqClick" prefHeight="107.0" prefWidth="107.0" styleClass="card-purple">
+            <Button fx:id="qcmButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#onQcmClick" prefHeight="107.0" prefWidth="107.0" styleClass="card-purple">
                <graphic>
                   <VBox alignment="CENTER" prefWidth="180" spacing="12">
-                     <Label minHeight="-Infinity" minWidth="-Infinity" styleClass="card-title" text="QCM" />
+                     <Label alignment="CENTER" minHeight="-Infinity" minWidth="80.0" styleClass="card-title" text="QCM" textAlignment="CENTER" />
                   </VBox>
                </graphic>
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="pollButton" mnemonicParsing="false" onAction="#onPollClick" prefHeight="151.0" prefWidth="118.0" styleClass="card-blue">
+            <Button fx:id="pollButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#onPollClick" prefHeight="151.0" prefWidth="118.0" styleClass="card-blue">
                <graphic>
                   <VBox alignment="CENTER" prefWidth="180.0" spacing="12">
-                     <Label minHeight="-Infinity" minWidth="-Infinity" styleClass="card-title" text="Poll" />
+                     <Label alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="80.0" styleClass="card-title" text="Poll" textAlignment="CENTER" />
                   </VBox>
                </graphic>
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="freeButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onQuestionFreeClick" prefHeight="151.0" prefWidth="125.0" styleClass="card-green" textAlignment="JUSTIFY">
+            <Button fx:id="freeButton" alignment="CENTER" contentDisplay="CENTER" minWidth="-Infinity" mnemonicParsing="false" onAction="#onQuestionFreeClick" prefHeight="151.0" prefWidth="125.0" styleClass="card-green" textAlignment="JUSTIFY">
                <graphic>
                   <VBox alignment="CENTER" prefWidth="180" spacing="12">
-                     <Label minHeight="-Infinity" minWidth="-Infinity" styleClass="card-title" text="Free Question" />
+                     <Label minWidth="80.0" styleClass="card-title" text="Free Question" />
                   </VBox>
                </graphic>
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnSauvegarder" layoutX="62.0" layoutY="10.0" mnemonicParsing="false" onAction="#onSaveClick" text="Sauvegarder" />
+            <Button fx:id="btnSauvegarder" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="100.0" mnemonicParsing="false" onAction="#onSaveClick" prefWidth="200.0" styleClass="card-blue" textAlignment="CENTER">
+               <graphic>
+                  <VBox alignment="CENTER" prefWidth="180" spacing="12">
+                     <Label minWidth="80.0" styleClass="card-title" text="Sauvegarder" />
+                  </VBox>
+               </graphic>
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </Button>
          </children>
       </HBox>
    </children>

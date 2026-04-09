@@ -69,6 +69,7 @@ public class QuestionnaireFX implements IDisplayable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/questionnaire.fxml"));
         loader.setControllerFactory(param -> this);
         Parent root = loader.load();
+        this.VboxListe();
         return new Scene(root);
     }
     private void VboxListe() {

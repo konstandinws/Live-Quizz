@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -17,31 +18,31 @@
             <Button fx:id="mcqButton" mnemonicParsing="false" onAction="#onMcqClick" prefHeight="107.0" prefWidth="107.0" styleClass="card-purple">
                <graphic>
                   <VBox alignment="CENTER" prefWidth="180" spacing="12">
-                     <Label prefHeight="30.0" prefWidth="46.0" styleClass="card-title" text="QCM" />
+                     <Label minHeight="-Infinity" minWidth="-Infinity" styleClass="card-title" text="QCM" />
                   </VBox>
                </graphic>
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
             <Button fx:id="pollButton" mnemonicParsing="false" onAction="#onPollClick" prefHeight="151.0" prefWidth="118.0" styleClass="card-blue">
                <graphic>
-                  <VBox alignment="CENTER" prefHeight="143.0" prefWidth="105.0" spacing="12">
-                     <Label styleClass="card-title" text="Poll" />
+                  <VBox alignment="CENTER" prefWidth="180.0" spacing="12">
+                     <Label minHeight="-Infinity" minWidth="-Infinity" styleClass="card-title" text="Poll" />
                   </VBox>
                </graphic>
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
             <Button fx:id="freeButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onQuestionFreeClick" prefHeight="151.0" prefWidth="125.0" styleClass="card-green" textAlignment="JUSTIFY">
                <graphic>
                   <VBox alignment="CENTER" prefWidth="180" spacing="12">
-                     <Label styleClass="card-title" text="Free Question" />
+                     <Label minHeight="-Infinity" minWidth="-Infinity" styleClass="card-title" text="Free Question" />
                   </VBox>
                </graphic>
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
             <Button fx:id="btnSauvegarder" layoutX="62.0" layoutY="10.0" mnemonicParsing="false" onAction="#onSaveClick" text="Sauvegarder" />

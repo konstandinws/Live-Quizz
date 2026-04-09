@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clapetteChaussette.view.PollViewFX">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.helha.clapetteChaussette.view.PollViewFX">
    <children>
       <Button fx:id="choix1" layoutX="121.0" layoutY="151.0" mnemonicParsing="false" text="Button" onAction="#handleButtonClick"/>
       <Button fx:id="choix3" layoutX="121.0" layoutY="243.0" mnemonicParsing="false" text="Button" onAction="#handleButtonClick"/>

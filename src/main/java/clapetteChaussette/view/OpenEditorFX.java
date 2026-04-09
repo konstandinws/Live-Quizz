@@ -79,7 +79,7 @@ public class OpenEditorFX implements IDisplayable {
 
             OpenQuestion q = controller.createOpenQuestion(title, validAnswers, hasPoints);
             System.out.println("Question sauvegardée : " + q.getQuestion() + " (Points: " + hasPoints + ")");
-            // Ici, tu pourras appeler ton service pour l'ajouter au questionnaire global
+
 
         } catch (InvalidQuestionException e) {
             showError(e.getMessage());

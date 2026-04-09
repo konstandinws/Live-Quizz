@@ -2,9 +2,9 @@ package be.helha.clapetteChaussette.controller;
 
 import java.util.ArrayList;
 
+import be.helha.clapetteChaussette.model.Questionnaire;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
 import be.helha.clapetteChaussette.model.question.Poll;
-import be.helha.clapetteChaussette.model.question.Questionnaire;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.view.IQuestionnaireListener;
 import be.helha.clapetteChaussette.view.OpenEditorFX;

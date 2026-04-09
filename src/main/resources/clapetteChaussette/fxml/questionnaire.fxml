@@ -7,16 +7,45 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clapetteChaussette.view.QuestionnaireFX">
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.geometry.Insets?>
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" stylesheets="@css/clapettecss.css" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clapetteChaussette.view.QuestionnaireFX">
    <children>
       <Label text="Création du Questionnaire" />
       <ScrollPane prefHeight="200.0" prefWidth="200.0" />
       <VBox fx:id="listeQuestionsBox" prefHeight="200.0" prefWidth="100.0" />
       <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
          <children>
-            <Button fx:id="btnAjouterQcm" mnemonicParsing="false" onAction="#onQcmClick" text="Ajouter QCM" />
-            <Button fx:id="btnAjouterSondage" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#onPollClick" text="Ajouter Sondage" />
-            <Button fx:id="btnAjouterQuestionLibre" layoutX="259.0" layoutY="10.0" mnemonicParsing="false" onAction="#onQuestionFreeClick" text="Ajouter Question libre" />
+            <Button fx:id="qcmButton" mnemonicParsing="false" onAction="#onQcmClick" prefHeight="107.0" prefWidth="107.0" styleClass="card-purple">
+               <graphic>
+                  <VBox alignment="CENTER" prefWidth="180" spacing="12">
+                     <Label styleClass="card-title" text="QCM" />
+                  </VBox>
+               </graphic>
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="pollButton" mnemonicParsing="false" onAction="#onPollClick" prefHeight="151.0" prefWidth="118.0" styleClass="card-blue">
+               <graphic>
+                  <VBox alignment="CENTER" prefHeight="143.0" prefWidth="105.0" spacing="12">
+                     <Label styleClass="card-title" text="Poll" />
+                  </VBox>
+               </graphic>
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="freeButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onQuestionFreeClick" prefHeight="151.0" prefWidth="125.0" styleClass="card-green" textAlignment="JUSTIFY">
+               <graphic>
+                  <VBox alignment="CENTER" prefWidth="180" spacing="12">
+                     <Label styleClass="card-title" text="Free Question" />
+                  </VBox>
+               </graphic>
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
             <Button fx:id="btnSauvegarder" layoutX="62.0" layoutY="10.0" mnemonicParsing="false" onAction="#onSaveClick" text="Sauvegarder" />
          </children>
       </HBox>

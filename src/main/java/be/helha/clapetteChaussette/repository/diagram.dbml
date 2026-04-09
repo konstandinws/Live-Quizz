@@ -1,0 +1,7 @@
+Table teacher {
+    id UUID [primary key]
+    name VARCHAR(255) [not null]
+    password_hash VARCHAR(255) [not null]
+    created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+

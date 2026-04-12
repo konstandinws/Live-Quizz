@@ -1,7 +1,7 @@
 CREATE TABLE "teacher" (
   "uuid" UUID PRIMARY KEY,
-  "name" "VARCHAR(255)" NOT NULL,
-  "password_hash" "VARCHAR(255)" NOT NULL,
+  "name" VARCHAR(255) NOT NULL,
+  "password_hash" VARCHAR(255) NOT NULL,
   "created_at" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
 );
 

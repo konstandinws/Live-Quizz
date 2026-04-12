@@ -4,7 +4,7 @@ import be.helha.clapetteChaussette.model.enums.QuestionType;
 
 import java.util.List;
 
-public class QcmQuestion extends Question {
+public class QcmQuestion extends Question implements Answerable {
 
     List<String> correctAnswers;
     private boolean choixMultiple;

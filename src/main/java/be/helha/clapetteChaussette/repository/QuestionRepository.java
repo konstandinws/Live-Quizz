@@ -1,43 +1,39 @@
 package be.helha.clapetteChaussette.repository;
 
-import be.helha.clapetteChaussette.model.question.Answerable;
-import be.helha.clapetteChaussette.model.question.Question;
+import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 
 import java.sql.*;
-import java.util.UUID;
 
 public class QuestionRepository {
 
-    public void save(Question question) {
+    public void save(QuestionDTO question) {
 
         String query = "INSERT INTO question (quuid, questionnaire_uuid, content, type) values (?, ?, ?, ?)";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query)) {
 
-            statement.setObject(1, question.getQuuid());
-            statement.setObject(2, question.getQuestionnaireUuid());
-            statement.setString(3, question.getQuestion());
-            statement.setString(4, question.getType().toString());
+            statement.setObject(1, question.uuid());
+            statement.setObject(2, question.quuid());
+            statement.setString(3, question.titre());
+            statement.setString(4, question.type().name());
             statement.executeUpdate();
 
-            // we verify because open question can have no correct answers
-            if(!question.getAnswers().isEmpty()) {
+            saveAnswers(question, connection);
 
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void saveAnswers(Question question, Connection connection) throws SQLException {
+    private void saveAnswers(QuestionDTO question, Connection connection) throws SQLException {
         String query = "INSERT INTO reponse_question (question_uuid, reponse, bonne_reponse) values (?, ?, ?)";
         try(PreparedStatement statement = connection.prepareStatement(query)){
-            for(String answer : question.getAnswers()) {
-                statement.setObject(1, question.getQuuid());
+            for(String answer : question.answers()) {
+                statement.setObject(1, question.uuid());
                 statement.setString(2, answer);
-
-                // a continuer c'est chaud la faut le modele
+                statement.setBoolean(3, question.correctAnswers().contains(answer));
+                statement.executeUpdate();
             }
         }
     }

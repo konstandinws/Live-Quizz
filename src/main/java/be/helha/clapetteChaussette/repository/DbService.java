@@ -11,6 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+// Cette classe sert uniquement pour les tests vers la Database. Elle permet de voir si les
+// commandes s'exécutent correctement
+// Elle sera effacée une fois la DB finie
+
 public class DbService {
 
     static void main() {

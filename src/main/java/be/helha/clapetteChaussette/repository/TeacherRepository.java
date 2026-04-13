@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-// TODO Gérer les exceptions, surement en faire des persos
+// TODO Gérer les exceptions, surement en faire des persos + javadoc
 
 // je l'appelle teacher repo mais on pourrait aussi l'appeler TeacherDAO (data access objet), en gros celui qui parle a la db (je crois)
 public class TeacherRepository {

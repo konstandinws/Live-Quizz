@@ -20,7 +20,7 @@ import be.helha.clapetteChaussette.controller.OpenEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
 
-public class OpenEditorFX implements IDisplayable {
+public class OpenEditorFX extends ViewFX {
 
     @FXML
     private TextField questionTitle; // c'est ici que le prof va mettre la question
@@ -101,10 +101,7 @@ public class OpenEditorFX implements IDisplayable {
     }
 
     @Override
-    public Scene InitializeView() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/OpenEditor.fxml"));
-        loader.setControllerFactory(param -> this);
-        Parent root = loader.load();
-        return new Scene(root);
+    protected String getFXMLPath() {
+        return "OpenEditor.fxml";
     }
 }

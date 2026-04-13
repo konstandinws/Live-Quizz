@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import be.helha.clapetteChaussette.model.question.Poll;
 import javafx.event.ActionEvent;
 
-public class PollViewFX implements IDisplayable {
+public class PollViewFX extends ViewFX {
     private Poll poll;
     private IQuestionListener<String> listener;
 
@@ -48,11 +48,8 @@ public class PollViewFX implements IDisplayable {
     }
 
     @Override
-    public Scene InitializeView() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/poll.fxml"));
-        loader.setControllerFactory(param -> this);
-        Parent root = loader.load();
-        return new Scene(root);
+    protected String getFXMLPath() {
+        return "poll.fxml";
     }
 
     @FXML

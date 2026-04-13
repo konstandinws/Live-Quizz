@@ -2,13 +2,10 @@ package be.helha.clapetteChaussette.view;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-public class QuestionnaireFX implements IDisplayable {
+public class QuestionnaireFX extends ViewFX {
 
     // l'interface pour appeler le vrai contrôleur
     private IQuestionnaireListener listener;
@@ -19,13 +16,13 @@ public class QuestionnaireFX implements IDisplayable {
     }
 
     @FXML
-    private Button btnAjouterQcm;
+    private Button qcmButton;
 
     @FXML
-    private Button btnAjouterQuestionLibre;
+    private Button pollButton;
 
     @FXML
-    private Button btnAjouterSondage;
+    private Button freeButton;
 
     @FXML
     private Button btnSauvegarder;
@@ -62,11 +59,25 @@ public class QuestionnaireFX implements IDisplayable {
         }
     }
 
-    public Scene InitializeView() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/questionnaire.fxml"));
-        loader.setControllerFactory(param -> this);
-        Parent root = loader.load();
-        return new Scene(root);
+    @Override
+    protected String getFXMLPath() {
+        return "questionnaire.fxml";
     }
 
+    @FXML
+    private void initialize() {
+        // Hint: initialize() will be called when the associated FXML has been
+        // completely loaded.
+    }
+
+    public interface IQuestionnaireListener {
+        void onAddQcmRequested();
+
+        void onAddPollRequested();
+
+        void onAddQuestionFreeRequested();
+
+        void onSaveRequested(); // quand l'éditeur a fini d'ajouter des questions.
+
+    }
 }

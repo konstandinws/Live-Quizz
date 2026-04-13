@@ -3,6 +3,7 @@ package be.helha.clapetteChaussette.repository;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 
 import java.sql.*;
+import java.util.Optional;
 
 public class QuestionRepository {
 
@@ -14,7 +15,7 @@ public class QuestionRepository {
             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setObject(1, question.uuid());
-            statement.setObject(2, question.quuid());
+            statement.setObject(2, question.questionnaireUuid());
             statement.setString(3, question.titre());
             statement.setString(4, question.type().name());
             statement.executeUpdate();
@@ -42,4 +43,6 @@ public class QuestionRepository {
             statement.executeBatch();
         }
     }
+
+
 }

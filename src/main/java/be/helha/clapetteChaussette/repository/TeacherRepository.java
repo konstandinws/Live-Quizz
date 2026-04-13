@@ -1,7 +1,7 @@
 package be.helha.clapetteChaussette.repository;
 
-import be.helha.clapetteChaussette.model.Teacher;
-import be.helha.clapetteChaussette.model.dao.TeacherDAO;
+import be.helha.clapetteChaussette.model.dto.Credentials;
+import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,18 +10,22 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
+
+// TODO Gérer les exceptions, surement en faire des persos
+
+// je l'appelle teacher repo mais on pourrait aussi l'appeler TeacherDAO (data access objet), en gros celui qui parle a la db (je crois)
 public class TeacherRepository {
 
-    public void save(Teacher teacher) {
+    public void save(TeacherDTO teacher) {
 
         String query = "INSERT INTO teacher (uuid, name, password_hash) values (?, ?, ?)";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query)) {
 
-            statement.setObject(1, teacher.getUuid());
-            statement.setString(2, teacher.getName());
-            statement.setString(3, teacher.getHashed_password());
+            statement.setObject(1, teacher.uuid());
+            statement.setString(2, teacher.name());
+            statement.setString(3, teacher.hashed_password());
 
             statement.executeUpdate();
 
@@ -30,28 +34,24 @@ public class TeacherRepository {
         }
     }
 
-    public Optional<TeacherDAO> find(String user, String hashed_password) {
+    public Optional<TeacherDTO> find(Credentials cred) {
 
         String query = "SELECT uuid, name, password_hash FROM teacher WHERE name = ? AND password_hash = ?";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query)) {
 
-            statement.setString(1, user);
-            statement.setString(2, hashed_password);
+            statement.setString(1, cred.name());
+            statement.setString(2, cred.hashed_password());
 
-            ResultSet resultSet = statement.executeQuery();
-
-            UUID uuid;
-            String name;
-            String h_password;
-
-            if(resultSet.next()) {
-                uuid = resultSet.getObject("uuid", UUID.class);
-                name = resultSet.getString("name");
-                h_password = resultSet.getString("hashed_password");
-
-                return Optional.of(new TeacherDAO(uuid, name, h_password));
+            try(ResultSet resultSet = statement.executeQuery()){
+                if(resultSet.next()) {
+                    UUID uuid = resultSet.getObject("uuid", UUID.class);
+                    String name = resultSet.getString("name");
+                    // je veux pas renvoyer le hash du mdp fix degeu pour l'instant
+                    // je pourrait faire 2 DTO dinstinct un pour l'envoi et un pour la reception
+                    return Optional.of(new TeacherDTO(uuid, name, ""));
+                }
             }
 
         } catch (SQLException e) {

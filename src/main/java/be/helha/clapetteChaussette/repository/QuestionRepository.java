@@ -26,15 +26,20 @@ public class QuestionRepository {
         }
     }
 
+
+    // cette methode va etre appele dans save pour ecrire en cascade les choix possibles d'une question
+    // QuestionDTO est super important ici c'est ca qui m'a permis de generaliser la creation sans devoir modifier tous les models
     private void saveAnswers(QuestionDTO question, Connection connection) throws SQLException {
         String query = "INSERT INTO reponse_question (question_uuid, reponse, bonne_reponse) values (?, ?, ?)";
+
         try(PreparedStatement statement = connection.prepareStatement(query)){
             for(String answer : question.answers()) {
                 statement.setObject(1, question.uuid());
                 statement.setString(2, answer);
                 statement.setBoolean(3, question.correctAnswers().contains(answer));
-                statement.executeUpdate();
+                statement.addBatch();
             }
+            statement.executeBatch();
         }
     }
 }

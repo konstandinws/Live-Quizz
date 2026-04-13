@@ -1,11 +1,13 @@
 package be.helha.clapetteChaussette.model;
 
 import java.util.List;
+import java.util.UUID;
 
 import be.helha.clapetteChaussette.model.question.Question;
 
 // on stocke le choix des questions du mode d'édition
 public class Questionnaire {
+    private UUID uuid;
     private List<Question> questions;
 
     public Questionnaire(List<Question> questions) {
@@ -25,6 +27,8 @@ public class Questionnaire {
     public void addQuestion(Question question) {
         this.questions.add(question);
     }
+
+    public UUID getUuid() { return uuid;}
 
     @Override
     public String toString() {

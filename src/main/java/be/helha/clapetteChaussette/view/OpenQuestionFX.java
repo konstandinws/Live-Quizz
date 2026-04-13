@@ -52,4 +52,8 @@ public class OpenQuestionFX extends ViewFX {
     protected String getFXMLPath() {
         return "open.fxml";
     }
+
+    public interface IOpenListener extends IQuestionListener<String> {
+        public void validate(String aws);
+    }
 }

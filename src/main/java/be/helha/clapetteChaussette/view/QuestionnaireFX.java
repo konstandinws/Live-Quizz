@@ -69,4 +69,20 @@ public class QuestionnaireFX implements IDisplayable {
         return new Scene(root);
     }
 
+    @FXML
+    private void initialize() {
+        // Hint: initialize() will be called when the associated FXML has been
+        // completely loaded.
+    }
+
+    public interface IQuestionnaireListener {
+        void onAddQcmRequested();
+
+        void onAddPollRequested();
+
+        void onAddQuestionFreeRequested();
+
+        void onSaveRequested(); // quand l'éditeur a fini d'ajouter des questions.
+
+    }
 }

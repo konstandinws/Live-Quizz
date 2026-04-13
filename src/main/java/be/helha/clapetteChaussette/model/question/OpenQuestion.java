@@ -5,7 +5,7 @@ import be.helha.clapetteChaussette.model.enums.QuestionType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenQuestion extends Question implements Answerable {
+public class OpenQuestion extends Question {
 
     // La liste de réponses que le prof attend
     private List<String> correctAnswers;

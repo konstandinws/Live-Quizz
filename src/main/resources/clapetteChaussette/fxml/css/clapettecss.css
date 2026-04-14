@@ -60,7 +60,9 @@
     -fx-max-width: 70;
     -fx-max-height: 70;
 }
-
+.root-racine {
+    -fx-background-color: #f5f6fa;
+}
 .card-title {
     -fx-font-size: 20px;
     -fx-font-weight: bold;

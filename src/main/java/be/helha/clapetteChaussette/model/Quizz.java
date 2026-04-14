@@ -6,11 +6,11 @@ import java.util.UUID;
 import be.helha.clapetteChaussette.model.question.Question;
 
 // on stocke le choix des questions du mode d'édition
-public class Questionnaire {
+public class Quizz {
     private UUID uuid;
     private List<Question> questions;
 
-    public Questionnaire(List<Question> questions) {
+    public Quizz(List<Question> questions) {
         this.questions = questions;
     }
 

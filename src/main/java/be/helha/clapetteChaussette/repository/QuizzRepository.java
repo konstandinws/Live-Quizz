@@ -14,21 +14,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-// TODO ajouter un nom dans la table du questionnaire
+// TODO modifier les parametres des questions pour voir si il faut mettre des DTO specifiques au quizz
 
 public class QuizzRepository {
 
     // il faudra rajouter un nom pour le quizz dans sa table dans la DB, comme ca quand on recupere grace au réseau on
     // afficher le nom du quizz.
-    public void save(UUID uuid, UUID teacherUuid, String Name) {
+    public void save(UUID uuid, UUID teacherUuid, String name) {
 
-        String query = "INSERT INTO questionnaire(quuid, teacher_uuid) values (?, ?)";
+        String query = "INSERT INTO questionnaire(quuid, teacher_uuid, name) values (?, ?, ?)";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query)){
 
             statement.setObject(1, uuid);
             statement.setObject(2, teacherUuid);
+            statement.setString(3, name);
 
             statement.executeUpdate();
 

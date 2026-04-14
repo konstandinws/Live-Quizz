@@ -1,5 +1,6 @@
 package be.helha.clapetteChaussette.repository;
 
+import be.helha.clapetteChaussette.exception.DatabaseException;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 import be.helha.clapetteChaussette.model.enums.QuestionType;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-// TODO ameliorer la gestion des exceptions + javadoc
+// TODO ameliorer la javadoc
 
 // Je pense que c'est possible de faire un grosse requete avec un join au lieu de faire plusieurs petites requetes comme ici
 
@@ -32,7 +33,8 @@ public class QuestionRepository {
             saveAnswers(question, connection);
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("Error while saving the question in the Database", e);
+
         }
     }
 
@@ -79,7 +81,8 @@ public class QuestionRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("Error while finding the question in the Database", e);
+
         }
 
         return Optional.empty();

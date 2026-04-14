@@ -1,5 +1,6 @@
 package be.helha.clapetteChaussette.repository;
 
+import be.helha.clapetteChaussette.exception.DatabaseException;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 import be.helha.clapetteChaussette.model.enums.QuestionType;
@@ -14,7 +15,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 // TODO ajouter un nom dans la table du questionnaire
-// TODO gérer les exceptions
 
 public class QuizzRepository {
 
@@ -33,7 +33,7 @@ public class QuizzRepository {
             statement.executeUpdate();
 
         } catch ( SQLException e) {
-
+            throw new DatabaseException("Error while saving the quizz in the Database", e);
         }
     }
 
@@ -59,7 +59,7 @@ public class QuizzRepository {
             }
 
         } catch ( SQLException e) {
-
+            throw new DatabaseException("Error while finding the name of quizz in the Database", e);
         }
 
         return Optional.empty();
@@ -67,8 +67,10 @@ public class QuizzRepository {
 
     // obligé de retourner un optionnal ? au pire la liste est juste vide
     // je laisse comme ca dans pour avoir "protocole" pour traiter les données
+
+    // retourne tous les questionnaires qui appartiennent a un prof
     public Optional<List<QuizzDTO>> findAll(UUID teacherUuid) {
-        String query = "Select name FROM questionnaire WHERE teacher_uuid = ?";
+        String query = "Select quuid, name FROM questionnaire WHERE teacher_uuid = ?";
         List<QuizzDTO> quizzes = new ArrayList<>();
 
         try(Connection connection = DatabaseConnection.getConnection();
@@ -76,7 +78,7 @@ public class QuizzRepository {
 
             statement.setObject(1, teacherUuid);
 
-            statement.executeUpdate();
+            statement.executeQuery();
 
             try(ResultSet resultSet = statement.executeQuery()){
                 while(resultSet.next()) {
@@ -88,7 +90,7 @@ public class QuizzRepository {
             }
 
         } catch ( SQLException e) {
-
+            throw new DatabaseException("Error while finding all the quizzes of a teacher in the Database", e);
         }
         return Optional.of(quizzes);
     }

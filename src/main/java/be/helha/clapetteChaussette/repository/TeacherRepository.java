@@ -1,5 +1,6 @@
 package be.helha.clapetteChaussette.repository;
 
+import be.helha.clapetteChaussette.exception.DatabaseException;
 import be.helha.clapetteChaussette.model.dto.Credentials;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 
@@ -11,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-// TODO Gérer les exceptions, surement en faire des persos + javadoc
+// TODO javadoc
 
 // je l'appelle teacher repo mais on pourrait aussi l'appeler TeacherDAO (data access objet), en gros celui qui parle a la db (je crois)
 public class TeacherRepository {
@@ -30,7 +31,8 @@ public class TeacherRepository {
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("Error while saving the teacher in the Database", e);
+
         }
     }
 
@@ -55,7 +57,8 @@ public class TeacherRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("Error while finding the teacher in the Database", e);
+
         }
 
         return Optional.empty();

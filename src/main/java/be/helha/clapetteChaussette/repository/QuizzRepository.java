@@ -49,7 +49,7 @@ public class QuizzRepository {
 
             statement.setObject(1, uuid);
 
-            statement.executeUpdate();
+            statement.executeQuery();
 
             try(ResultSet resultSet = statement.executeQuery()){
                 if(resultSet.next()) {

@@ -73,12 +73,13 @@ public class DbService {
 //                IO.print(question.get());
 
                 // quizz
-                   //quizzRepo.save(quizzUUID, teacherUUID, quizzName);
-                   //Optional<String> nameOfTheQuizz = quizzRepo.findNameByUuid(quizzUUID);
-                    //IO.println(nameOfTheQuizz.get());
-                Optional<List<QuizzDTO>> allQuizzes = quizzRepo.findAll(teacherUUID);
-                allQuizzes.get().forEach( q -> IO.println(q));
+                 //quizzRepo.save(quizzUUID, teacherUUID, quizzName);
 
+//                 Optional<String> nameOfTheQuizz = quizzRepo.findNameByUuid(quizzUUID);
+//                 IO.println(nameOfTheQuizz.get());
+
+//                 Optional<List<QuizzDTO>> allQuizzes = quizzRepo.findAll(teacherUUID);
+//                 allQuizzes.get().forEach( q -> IO.println(q));
 
 
             } catch (Exception e) {
@@ -100,8 +101,8 @@ les methodes secondaires fonctionnent aussi (saveAnswers et findAnswers)
 - QuizzRepository
 
 save() - Ok
-findNameByUuid() - Pas ok
-findAll() - ok
+findNameByUuid() - Ok
+findAll() - Ok
 
 - TeacherRepository
 

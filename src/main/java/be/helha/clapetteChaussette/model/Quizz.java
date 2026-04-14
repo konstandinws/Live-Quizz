@@ -33,6 +33,8 @@ public class Quizz {
 
     public UUID getUuid() { return uuid;}
 
+    public String getName() {return name;}
+
     @Override
     public String toString() {
         return "QuestionsEdit [questions=" + questions + "]";

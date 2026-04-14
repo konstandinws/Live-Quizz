@@ -17,7 +17,7 @@ public class QuestionnaireController implements IQuestionnaireListener, IControl
     // au démarrage on crée un questionnaire vide
     public QuestionnaireController(NavigationService navigationService) {
         this.navigationService = navigationService;
-        this.sessionEnCours = new Quizz(new ArrayList<>());
+        this.sessionEnCours = new Quizz("test", new ArrayList<>());
     }
 
     @Override

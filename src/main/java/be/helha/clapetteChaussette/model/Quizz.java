@@ -8,10 +8,13 @@ import be.helha.clapetteChaussette.model.question.Question;
 // on stocke le choix des questions du mode d'édition
 public class Quizz {
     private UUID uuid;
+    String name;
     private List<Question> questions;
 
-    public Quizz(List<Question> questions) {
+    public Quizz(String name, List<Question> questions) {
+        this.name = name;
         this.questions = questions;
+        this.uuid = UUID.randomUUID();
     }
 
     public List<Question> getQuestions() {

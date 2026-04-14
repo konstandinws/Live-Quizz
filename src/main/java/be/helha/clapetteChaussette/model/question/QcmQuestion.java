@@ -1,5 +1,7 @@
 package be.helha.clapetteChaussette.model.question;
 
+import be.helha.clapetteChaussette.model.enums.QuestionType;
+
 import java.util.List;
 
 public class QcmQuestion extends Question {
@@ -9,7 +11,7 @@ public class QcmQuestion extends Question {
 
     // Vrai QCM avec plusieurs bonnes réponses
     public QcmQuestion(String question, List<String> answers, List<String> correctAnswers) {
-        super(question);
+        super(question, QuestionType.QCM);
         this.answers = answers;
         this.correctAnswers = correctAnswers;
         this.choixMultiple = isMultipleAnswers();

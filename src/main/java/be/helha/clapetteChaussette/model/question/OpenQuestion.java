@@ -1,5 +1,7 @@
 package be.helha.clapetteChaussette.model.question;
 
+import be.helha.clapetteChaussette.model.enums.QuestionType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +12,9 @@ public class OpenQuestion extends Question {
     // Savoir si la question compte pour des point
     private boolean pointsEnabled;
 
+
     public OpenQuestion(String question) {
-        super(question);
+        super(question, QuestionType.OPEN);
         this.correctAnswers = new ArrayList<>();
         this.pointsEnabled = false;
     }
@@ -37,4 +40,6 @@ public class OpenQuestion extends Question {
     public void setPointsEnabled(boolean pointsEnabled) {
         this.pointsEnabled = pointsEnabled;
     }
+
+
 }

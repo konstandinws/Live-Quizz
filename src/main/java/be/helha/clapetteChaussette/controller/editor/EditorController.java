@@ -85,11 +85,12 @@ public class EditorController {
     }
 
     private List<QuestionDTO> createQuestionDTOs(List<Question> questions) {
+        UUID quizzUuid = quizz.getUuid();
         List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();
         for (Question question : quizz.getQuestions()) {
             QuestionDTO questionDTO = new QuestionDTO(
                     UUID.randomUUID(),
-                    quizz.getUuid(),
+                    quizzUuid,
                     question.getQuestion(),
                     question.getAnswers(),
                     question.getType());

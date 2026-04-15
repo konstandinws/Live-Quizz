@@ -159,7 +159,7 @@ public class QcmEditorFX extends ViewFX {
         int i = 0;
         for (TextField field : textFields) {
             boolean isCorrect = false;
-            if (!textFields.get(i).getText().trim().isEmpty()) {
+            if (correctAnswerCB.get(i).isSelected()) {
                 isCorrect = true;
             }
             answers.add(new Anwser(field.getText(), isCorrect));

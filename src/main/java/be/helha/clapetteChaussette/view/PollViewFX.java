@@ -2,9 +2,6 @@ package be.helha.clapetteChaussette.view;
 
 import javafx.scene.control.Label;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.model.question.Poll;

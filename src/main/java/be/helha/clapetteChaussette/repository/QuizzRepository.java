@@ -1,9 +1,7 @@
 package be.helha.clapetteChaussette.repository;
 
 import be.helha.clapetteChaussette.exception.DatabaseException;
-import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
-import be.helha.clapetteChaussette.model.enums.QuestionType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -3,9 +3,6 @@ package be.helha.clapetteChaussette.view;
 import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -25,7 +22,8 @@ public class OpenQuestionFX extends ViewFX {
 
     @FXML
     private void initialize() {
-        // The question is no longer created here; we wait for it to be provided by the MainController
+        // The question is no longer created here; we wait for it to be provided by the
+        // MainController
     }
 
     /**

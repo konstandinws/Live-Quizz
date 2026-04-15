@@ -2,7 +2,6 @@ package be.helha.clapetteChaussette.repository;
 
 import be.helha.clapetteChaussette.exception.DatabaseException;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
-import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 import be.helha.clapetteChaussette.model.enums.QuestionType;
 import be.helha.clapetteChaussette.model.question.Anwser;
 

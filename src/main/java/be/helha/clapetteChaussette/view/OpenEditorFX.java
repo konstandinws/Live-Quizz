@@ -17,7 +17,6 @@ import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.controller.editor.OpenEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.question.Anwser;
-import be.helha.clapetteChaussette.model.question.OpenQuestion;
 
 public class OpenEditorFX extends ViewFX {
 
@@ -82,7 +81,6 @@ public class OpenEditorFX extends ViewFX {
             }
 
             controller.createOpenQuestion(title, validAnswers, hasPoints);
-            System.out.println("Question sauvegardée : " + title + " (Points: " + hasPoints + ")");
 
         } catch (InvalidQuestionException e) {
             showError(e.getMessage());

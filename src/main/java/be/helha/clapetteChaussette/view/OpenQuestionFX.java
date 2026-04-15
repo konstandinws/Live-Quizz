@@ -24,11 +24,11 @@ public class OpenQuestionFX extends ViewFX {
 
     @FXML
     private void initialize() {
-        // On ne crée plus la question ici, on attend qu'elle vienne du MainController
+        // The question is no longer created here; we wait for it to be provided by the MainController
     }
 
     /**
-     * Cette méthode permet au MainController de passer les données à la vue
+     * This method allows the MainController to pass data to the view
      */
     public void setController(IQuestionListener<String> listener) {
         this.listener = listener;

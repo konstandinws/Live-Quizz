@@ -23,21 +23,21 @@ import be.helha.clapetteChaussette.model.question.OpenQuestion;
 public class OpenEditorFX extends ViewFX {
 
     @FXML
-    private TextField questionTitle; // c'est ici que le prof va mettre la question
+    private TextField questionTitle; // Field where the teacher will enter the question
     @FXML
-    private VBox answersContainer; // c'est ici que j'empile les réponses creer
+    private VBox answersContainer; // Container where the created answers are stacked
     @FXML
-    private CheckBox pointsCheckBox;// case à cocher sur des point ou pas;
+    private CheckBox pointsCheckBox; // Checkbox to enable or disable points
     @FXML
-    private Button addAnswerBTN; // le buttons pour ajouter une réponses
-    // faire le lien avec le controlleur
+    private Button addAnswerBTN; // Button to add a new answer variant
+
+    // Link to the controller
     private OpenEditorController controller;
     private List<TextField> answerFields = new ArrayList<>();
 
-    // quand la page ce lance j'appelle la methode addNewAnswer
+    // Called when the page initializes to add a first answer field
     @FXML
     public void initialize() {
-
         addNewAnswer();
     }
 
@@ -53,7 +53,7 @@ public class OpenEditorFX extends ViewFX {
         row.setPadding(new Insets(5));
 
         TextField tf = new TextField();
-        tf.setPromptText("Variante de réponse acceptée...");
+        tf.setPromptText("Accepted answer variant...");
         HBox.setHgrow(tf, Priority.ALWAYS);
         answerFields.add(tf);
 
@@ -83,7 +83,7 @@ public class OpenEditorFX extends ViewFX {
             }
 
             OpenQuestion q = controller.createOpenQuestion(title, validAnswers, hasPoints);
-            System.out.println("Question sauvegardée : " + q.getQuestion() + " (Points: " + hasPoints + ")");
+            System.out.println("Question saved: " + q.getQuestion() + " (Points: " + hasPoints + ")");
 
         } catch (InvalidQuestionException e) {
             showError(e.getMessage());

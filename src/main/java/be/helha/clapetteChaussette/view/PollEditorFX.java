@@ -1,5 +1,7 @@
 package be.helha.clapetteChaussette.view;
 
+import be.helha.clapetteChaussette.controller.IViewController;
+import be.helha.clapetteChaussette.controller.editor.QcmEditorController;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -139,5 +141,14 @@ public class PollEditorFX extends ViewFX {
     @Override
     protected String getFXMLPath() {
         return "PollEditor.fxml";
+    }
+
+    @Override
+    public void setOwnViewController(IViewController controller) {
+        if (controller instanceof PollEditorController) {
+            this.controller = (PollEditorController) controller;
+        } else {
+            throw new IllegalArgumentException("Controller must be an instance of PollEditorController");
+        }
     }
 }

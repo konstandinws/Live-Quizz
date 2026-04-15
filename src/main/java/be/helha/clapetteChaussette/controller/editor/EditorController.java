@@ -92,7 +92,6 @@ public class EditorController {
                     quizz.getUuid(),
                     question.getQuestion(),
                     question.getAnswers(),
-                    question.getAnswers(), // to fix
                     question.getType());
             questionsDTO.add(questionDTO);
         }

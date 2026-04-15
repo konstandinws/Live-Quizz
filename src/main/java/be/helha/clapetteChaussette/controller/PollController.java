@@ -10,6 +10,6 @@ public class PollController implements IQuestionListener<String>, IViewControlle
          * by default, we return true cause a poll question is always valid, the answer
          * is not important
          */
-        poll.setAnswer(answer);
+        poll.setResponse(answer);
     }
 }

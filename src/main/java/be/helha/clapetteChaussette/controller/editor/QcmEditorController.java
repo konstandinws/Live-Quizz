@@ -1,7 +1,8 @@
-package be.helha.clapetteChaussette.controller;
+package be.helha.clapetteChaussette.controller.editor;
 
 import java.util.List;
 
+import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.question.QcmQuestion;
 import be.helha.clapetteChaussette.service.NavigationService;

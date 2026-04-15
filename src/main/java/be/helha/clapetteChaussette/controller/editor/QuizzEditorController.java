@@ -1,4 +1,4 @@
-package be.helha.clapetteChaussette.controller;
+package be.helha.clapetteChaussette.controller.editor;
 
 import java.util.ArrayList;
 
@@ -10,12 +10,12 @@ import be.helha.clapetteChaussette.view.OpenEditorFX;
 import be.helha.clapetteChaussette.view.QcmEditorFX;
 
 // Controleur de l'édition du questionnaire, c'est lui qui manipulera le modèle
-public class QuizzController implements IQuestionnaireListener {
+public class QuizzEditorController implements IQuestionnaireListener {
     private Quizz sessionEnCours; // le modele
     private NavigationService navigationService;
 
     // au démarrage on crée un questionnaire vide
-    public QuizzController(NavigationService navigationService) {
+    public QuizzEditorController(NavigationService navigationService) {
         this.navigationService = navigationService;
         this.sessionEnCours = new Quizz();
     }

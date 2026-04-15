@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.OpenEditorController;
+import be.helha.clapetteChaussette.controller.editor.OpenEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
 

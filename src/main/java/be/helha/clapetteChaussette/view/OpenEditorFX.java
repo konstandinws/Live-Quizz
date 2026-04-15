@@ -1,11 +1,8 @@
 package be.helha.clapetteChaussette.view;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -16,8 +13,10 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.OpenEditorController;
+import be.helha.clapetteChaussette.controller.IViewController;
+import be.helha.clapetteChaussette.controller.editor.OpenEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.model.question.Anwser;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
 
 public class OpenEditorFX extends ViewFX {
@@ -75,15 +74,15 @@ public class OpenEditorFX extends ViewFX {
             String title = questionTitle.getText();
             boolean hasPoints = pointsCheckBox.isSelected();
 
-            List<String> validAnswers = new ArrayList<>();
+            List<Anwser> validAnswers = new ArrayList<Anwser>();
             for (TextField tf : answerFields) {
                 if (!tf.getText().isBlank()) {
-                    validAnswers.add(tf.getText());
+                    validAnswers.add(new Anwser(tf.getText(), true));
                 }
             }
 
-            OpenQuestion q = controller.createOpenQuestion(title, validAnswers, hasPoints);
-            System.out.println("Question saved: " + q.getQuestion() + " (Points: " + hasPoints + ")");
+            controller.createOpenQuestion(title, validAnswers, hasPoints);
+            System.out.println("Question sauvegardée : " + title + " (Points: " + hasPoints + ")");
 
         } catch (InvalidQuestionException e) {
             showError(e.getMessage());
@@ -96,12 +95,17 @@ public class OpenEditorFX extends ViewFX {
         alert.show();
     }
 
-    public void setController(OpenEditorController controller) {
-        this.controller = controller;
-    }
-
     @Override
     protected String getFXMLPath() {
         return "OpenEditor.fxml";
+    }
+
+    @Override
+    public void setOwnViewController(IViewController controller) {
+        if (controller instanceof OpenEditorController) {
+            this.controller = (OpenEditorController) controller;
+        } else {
+            throw new IllegalArgumentException("Controller must be an instance of OpenEditorController");
+        }
     }
 }

@@ -1,8 +1,10 @@
-package be.helha.clapetteChaussette.controller;
+package be.helha.clapetteChaussette.controller.editor;
 
 import java.util.List;
 
+import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.model.question.Anwser;
 import be.helha.clapetteChaussette.model.question.QcmQuestion;
 
 /**
@@ -13,7 +15,7 @@ import be.helha.clapetteChaussette.model.question.QcmQuestion;
  * le service de persistance (à intégrer). Toute la logique de validation
  * métier est centralisée ici.
  */
-public class QcmEditorController implements IController {
+public class QcmEditorController implements IViewController {
 
     /**
      * Valide les données fournies et crée une nouvelle instance de
@@ -32,15 +34,29 @@ public class QcmEditorController implements IController {
      * @throws InvalidQuestionException Si la validation échoue (titre vide, réponse
      *                                  vide, ou aucune bonne réponse).
      */
-    public QcmQuestion createQcm(String title, List<String> answers, List<String> correctAnswers)
+
+    EditorController mainController;
+
+    public void setController(EditorController mainController) {
+        this.mainController = mainController;
+    }
+
+    public void createQcm(String title, List<Anwser> answers)
             throws InvalidQuestionException {
 
         validateTitle(title);
         validateAnswers(answers);
+
+        List<String> correctAnswers = answers.stream()
+                .filter(Anwser::isCorrect)
+                .map(Anwser::getAnwser)
+                .toList();
+
         validateCorrectAnswer(correctAnswers);
 
         // remplacer le return par un appel au service
-        return new QcmQuestion(title, answers, correctAnswers);
+        mainController.addQuestionToQuizz(new QcmQuestion(title, answers));
+        mainController.navigateToQuizzEditor();
     }
 
     /**
@@ -62,9 +78,9 @@ public class QcmEditorController implements IController {
      * @param answers La liste des réponses à valider.
      * @throws InvalidQuestionException Si au moins une réponse est invalide.
      */
-    private void validateAnswers(List<String> answers) throws InvalidQuestionException {
-        for (String answer : answers) {
-            if (answer.isBlank())
+    private void validateAnswers(List<Anwser> answers) throws InvalidQuestionException {
+        for (Anwser answer : answers) {
+            if (answer.getAnwser().isBlank())
                 throw new InvalidQuestionException("une reponse ne peut pas etre vide");
         }
     }

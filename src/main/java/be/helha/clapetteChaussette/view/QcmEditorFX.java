@@ -1,11 +1,8 @@
 package be.helha.clapetteChaussette.view;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -16,8 +13,10 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.QcmEditorController;
+import be.helha.clapetteChaussette.controller.IViewController;
+import be.helha.clapetteChaussette.controller.editor.QcmEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.model.question.Anwser;
 
 /**
  * Contrôleur JavaFX de l'interface d'édition de questions QCM.
@@ -99,9 +98,8 @@ public class QcmEditorFX extends ViewFX {
     private void createQuestion() {
         try {
             String title = getTitle();
-            List<String> answers = getAnswers();
-            List<String> correctAnswers = getCorrectAnswers();
-            controller.createQcm(title, answers, correctAnswers);
+            List<Anwser> answers = getAnswers();
+            controller.createQcm(title, answers);
         } catch (InvalidQuestionException e) {
             showErrorPopup(e.getMessage());
         }
@@ -156,10 +154,16 @@ public class QcmEditorFX extends ViewFX {
      *
      * @return la liste des textes de toutes les réponses, dans l'ordre d'affichage
      */
-    List<String> getAnswers() {
-        List<String> answers = new ArrayList<>();
+    List<Anwser> getAnswers() {
+        List<Anwser> answers = new ArrayList<>();
+        int i = 0;
         for (TextField field : textFields) {
-            answers.add(field.getText());
+            boolean isCorrect = false;
+            if (!textFields.get(i).getText().trim().isEmpty()) {
+                isCorrect = true;
+            }
+            answers.add(new Anwser(field.getText(), isCorrect));
+            i++;
         }
         return answers;
     }
@@ -202,12 +206,17 @@ public class QcmEditorFX extends ViewFX {
         alert.showAndWait(); // Met l'application en pause jusqu'à ce que l'utilisateur clique sur OK
     }
 
-    public void setController(QcmEditorController controller) {
-        this.controller = controller;
-    }
-
     @Override
     protected String getFXMLPath() {
         return "QcmEditor.fxml";
+    }
+
+    @Override
+    public void setOwnViewController(IViewController controller) {
+        if (controller instanceof QcmEditorController) {
+            this.controller = (QcmEditorController) controller;
+        } else {
+            throw new IllegalArgumentException("Controller must be an instance of QcmEditorController");
+        }
     }
 }

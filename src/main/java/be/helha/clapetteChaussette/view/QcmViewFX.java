@@ -1,15 +1,12 @@
 package be.helha.clapetteChaussette.view;
 
-import be.helha.clapetteChaussette.controller.IController;
+import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.model.question.QcmQuestion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
-import javafx.scene.Scene;
 
 public class QcmViewFX extends ViewFX {
 
@@ -41,10 +38,10 @@ public class QcmViewFX extends ViewFX {
 
     public void setQcm(QcmQuestion qcm) {
         this.qcm = qcm;
-        CheckBox1.setText(qcm.getAnswers().get(0));
-        CheckBox2.setText(qcm.getAnswers().get(1));
-        CheckBox3.setText(qcm.getAnswers().get(2));
-        CheckBox4.setText(qcm.getAnswers().get(3));
+        CheckBox1.setText(qcm.getAnswers().get(0).getAnwser());
+        CheckBox2.setText(qcm.getAnswers().get(1).getAnwser());
+        CheckBox3.setText(qcm.getAnswers().get(2).getAnwser());
+        CheckBox4.setText(qcm.getAnswers().get(3).getAnwser());
 
         laQuestion.setText(qcm.getQuestion());
     }
@@ -67,6 +64,15 @@ public class QcmViewFX extends ViewFX {
 
     private void verify(String answer) {
         listener.validate(answer, qcm);
+    }
+
+    @Override
+    public void setOwnViewController(IViewController controller) {
+        if (controller instanceof IQuestionListener) {
+            this.listener = (IQuestionListener<String>) controller;
+        } else {
+            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
+        }
     }
 
     public interface IQcmListener extends IQuestionListener<String> {

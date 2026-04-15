@@ -3,6 +3,7 @@ package be.helha.clapetteChaussette.model.question;
 import be.helha.clapetteChaussette.model.enums.QuestionType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Poll extends Question {
@@ -11,17 +12,17 @@ public class Poll extends Question {
 
     public Poll(String question) {
         super(question, QuestionType.POLL);
-        this.voteCounts = new ArrayList<>();
+        this.voteCounts = new ArrayList<Integer>();
     }
 
-    public Poll(String Question, List<String> options) {
+    public Poll(String Question, List<Anwser> options) {
         this(Question);
-        for (String option : options) {
+        for (Anwser option : options) {
             addOption(option);
         }
     }
 
-    public void addOption(String option) {
+    public void addOption(Anwser option) {
         this.answers.add(option);
         this.voteCounts.add(0);
     }
@@ -31,11 +32,11 @@ public class Poll extends Question {
     }
 
     public List<Integer> getVoteCounts() {
-        return this.voteCounts;
+        return Collections.unmodifiableList(this.voteCounts);
     }
 
     public String getChoice(int index) {
-        return this.answers.get(index);
+        return this.answers.get(index).getAnwser();
     }
 
     @Override

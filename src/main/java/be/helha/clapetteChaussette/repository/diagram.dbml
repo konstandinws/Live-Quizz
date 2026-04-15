@@ -1,0 +1,37 @@
+Table teacher {
+    uuid UUID [primary key]
+    name VARCHAR(255) [not null]
+    password_hash VARCHAR(255) [not null]
+    created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+
+Table teacher_questionnaire{
+    teacher_uuid UUID [not null, ref: > teacher.uuid]
+    questionnaire_uuid UUID [not null, ref: > questionnaire.quuid]
+}
+
+Table questionnaire {
+    quuid UUID [primary key]
+    teacher_uuid UUID [not null, ref: > teacher.uuid]
+    created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+
+}
+
+Table questionnaire_question {
+    questionnaire_uuid UUID [not null, ref: > questionnaire.quuid]
+    question_uuid UUID [not null, ref: > question.quuid]
+}
+
+Table question {
+    quuid UUID [primary key]
+    questionnaire_uuid UUID [not null, ref: > questionnaire.quuid]
+    content TEXT [not null]
+    type TEXT [not null]
+    created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+
+Table reponse_question {
+    question_uuid UUID [not null, ref: > question.quuid]
+    reponse TEXT [not null]
+    bonne_reponse BOOLEAN [not null]
+}

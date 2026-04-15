@@ -1,6 +1,6 @@
 package be.helha.clapetteChaussette.view;
 
-import be.helha.clapetteChaussette.controller.IController;
+import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.model.question.QcmQuestion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,7 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.Scene;
 
-public class QcmViewFX implements IDisplayable {
+public class QcmViewFX extends ViewFX {
 
     private QcmQuestion qcm;
     private IQuestionListener<String> listener;
@@ -49,12 +49,9 @@ public class QcmViewFX implements IDisplayable {
         laQuestion.setText(qcm.getQuestion());
     }
 
-    public Scene InitializeView() throws Exception {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/clapetteChaussette/fxml/qcm.fxml"));
-        loader.setControllerFactory(param -> this);
-        Parent root = loader.load();
-        return new Scene(root);
+    @Override
+    protected String getFXMLPath() {
+        return "qcm.fxml";
     }
 
     @FXML
@@ -70,5 +67,18 @@ public class QcmViewFX implements IDisplayable {
 
     private void verify(String answer) {
         listener.validate(answer, qcm);
+    }
+
+    @Override
+    public void setOwnViewController(IViewController controller) {
+        if (controller instanceof IQuestionListener) {
+            this.listener = (IQuestionListener<String>) controller;
+        } else {
+            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
+        }
+    }
+
+    public interface IQcmListener extends IQuestionListener<String> {
+        public boolean verify(CheckBox source, QcmQuestion qcm);
     }
 }

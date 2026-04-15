@@ -4,6 +4,7 @@ import java.util.List;
 
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.question.QcmQuestion;
+import be.helha.clapetteChaussette.service.NavigationService;
 
 /**
  * Contrôleur responsable de la création et de la validation des questions QCM.
@@ -13,7 +14,7 @@ import be.helha.clapetteChaussette.model.question.QcmQuestion;
  * le service de persistance (à intégrer). Toute la logique de validation
  * métier est centralisée ici.
  */
-public class QcmEditorController implements IController {
+public class QcmEditorController implements IViewController {
 
     /**
      * Valide les données fournies et crée une nouvelle instance de
@@ -32,6 +33,13 @@ public class QcmEditorController implements IController {
      * @throws InvalidQuestionException Si la validation échoue (titre vide, réponse
      *                                  vide, ou aucune bonne réponse).
      */
+
+    NavigationService navigationService;
+
+    public void setNavigationService(NavigationService navigationService) {
+        this.navigationService = navigationService;
+    }
+
     public QcmQuestion createQcm(String title, List<String> answers, List<String> correctAnswers)
             throws InvalidQuestionException {
 

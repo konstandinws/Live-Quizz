@@ -5,7 +5,7 @@ import java.util.List;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
 
-public class OpenEditorController implements IController {
+public class OpenEditorController implements IViewController {
 
     public OpenQuestion createOpenQuestion(String title, List<String> correctAnswers, boolean hasPoints)
             throws InvalidQuestionException {

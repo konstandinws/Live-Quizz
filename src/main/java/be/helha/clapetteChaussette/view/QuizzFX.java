@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-public class QuestionnaireFX extends ViewFX {
+public class QuizzFX extends ViewFX {
 
     // l'interface pour appeler le vrai contrôleur
     private IQuestionnaireListener listener;

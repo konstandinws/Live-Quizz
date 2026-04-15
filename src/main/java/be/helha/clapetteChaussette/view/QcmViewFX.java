@@ -1,6 +1,6 @@
 package be.helha.clapetteChaussette.view;
 
-import be.helha.clapetteChaussette.controller.IController;
+import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.model.question.QcmQuestion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

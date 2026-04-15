@@ -1,6 +1,7 @@
 package be.helha.clapetteChaussette.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,11 +25,7 @@ public class Quizz {
     }
 
     public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
+        return Collections.unmodifiableList(questions);
     }
 
     // méthode pour ajouter une question de n'importe quel type car les types de

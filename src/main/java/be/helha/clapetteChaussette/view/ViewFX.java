@@ -1,10 +1,13 @@
 package be.helha.clapetteChaussette.view;
 
+import be.helha.clapetteChaussette.controller.IViewController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 public abstract class ViewFX implements IDisplayable {
+
+    protected IViewController controller;
 
     protected abstract String getFXMLPath();
 
@@ -14,5 +17,9 @@ public abstract class ViewFX implements IDisplayable {
         loader.setControllerFactory(param -> this);
         Parent root = loader.load();
         return new Scene(root);
+    }
+
+    public void setOwnController(IViewController controller) {
+        this.controller = controller;
     }
 }

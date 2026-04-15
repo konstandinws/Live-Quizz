@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.model.question.Poll;
 import be.helha.clapetteChaussette.service.NavigationService;
-import be.helha.clapetteChaussette.view.QuestionnaireFX.IQuestionnaireListener;
+import be.helha.clapetteChaussette.view.QuizzFX.IQuestionnaireListener;
 import be.helha.clapetteChaussette.view.OpenEditorFX;
 import be.helha.clapetteChaussette.view.QcmEditorFX;
 
 // Controleur de l'édition du questionnaire, c'est lui qui manipulera le modèle
-public class QuizzController implements IQuestionnaireListener, IController {
+public class QuizzController implements IQuestionnaireListener, IViewController {
     private Quizz sessionEnCours; // le modele
     private NavigationService navigationService;
 
@@ -24,7 +24,7 @@ public class QuizzController implements IQuestionnaireListener, IController {
     public void onAddQcmRequested() {
         QcmEditorController qcmController = new QcmEditorController();
         QcmEditorFX QcmEditorFX = new QcmEditorFX();
-        QcmEditorFX.setController(qcmController);
+        QcmEditorFX.setOwnController(qcmController);
         navigationService.navigateTo(QcmEditorFX, "QCM Editor");
     }
 
@@ -38,7 +38,7 @@ public class QuizzController implements IQuestionnaireListener, IController {
     public void onAddQuestionFreeRequested() {
         OpenEditorController openCtrl = new OpenEditorController();
         OpenEditorFX view = new OpenEditorFX();
-        view.setController(openCtrl);
+        view.setOwnController(openCtrl);
         navigationService.navigateTo(view, "Éditeur Question Libre");
     }
 

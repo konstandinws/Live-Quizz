@@ -202,10 +202,6 @@ public class QcmEditorFX extends ViewFX {
         alert.showAndWait(); // Met l'application en pause jusqu'à ce que l'utilisateur clique sur OK
     }
 
-    public void setController(QcmEditorController controller) {
-        this.controller = controller;
-    }
-
     @Override
     protected String getFXMLPath() {
         return "QcmEditor.fxml";

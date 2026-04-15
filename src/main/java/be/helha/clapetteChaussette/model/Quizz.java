@@ -13,7 +13,8 @@ public class Quizz {
     String name;
     private List<Question> questions;
 
-    public Quizz() {
+    public Quizz(String name) {
+        this.name = name;
         this.questions = new ArrayList<Question>();
         this.uuid = UUID.randomUUID();
     }

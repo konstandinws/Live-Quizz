@@ -1,7 +1,7 @@
 CREATE TABLE "teacher" (
   "uuid" UUID PRIMARY KEY,
-  "name" "VARCHAR(255)" NOT NULL,
-  "password_hash" "VARCHAR(255)" NOT NULL,
+  "name" TEXT NOT NULL,
+  "password_hash" TEXT NOT NULL,
   "created_at" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
 );
 
@@ -13,12 +13,8 @@ CREATE TABLE "teacher_questionnaire" (
 CREATE TABLE "questionnaire" (
   "quuid" UUID PRIMARY KEY,
   "teacher_uuid" UUID NOT NULL,
+  "name" TEXT NOT NULL,
   "created_at" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
-);
-
-CREATE TABLE "questionnaire_question" (
-  "questionnaire_uuid" UUID NOT NULL,
-  "question_uuid" UUID NOT NULL
 );
 
 CREATE TABLE "question" (
@@ -40,10 +36,6 @@ ALTER TABLE "teacher_questionnaire" ADD FOREIGN KEY ("teacher_uuid") REFERENCES 
 ALTER TABLE "teacher_questionnaire" ADD FOREIGN KEY ("questionnaire_uuid") REFERENCES "questionnaire" ("quuid");
 
 ALTER TABLE "questionnaire" ADD FOREIGN KEY ("teacher_uuid") REFERENCES "teacher" ("uuid");
-
-ALTER TABLE "questionnaire_question" ADD FOREIGN KEY ("questionnaire_uuid") REFERENCES "questionnaire" ("quuid");
-
-ALTER TABLE "questionnaire_question" ADD FOREIGN KEY ("question_uuid") REFERENCES "question" ("quuid");
 
 ALTER TABLE "question" ADD FOREIGN KEY ("questionnaire_uuid") REFERENCES "questionnaire" ("quuid");
 

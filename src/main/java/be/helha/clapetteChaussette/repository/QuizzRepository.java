@@ -18,14 +18,15 @@ import java.util.UUID;
 
 public class QuizzRepository {
 
-    // il faudra rajouter un nom pour le quizz dans sa table dans la DB, comme ca quand on recupere grace au réseau on
+    // il faudra rajouter un nom pour le quizz dans sa table dans la DB, comme ca
+    // quand on recupere grace au réseau on
     // afficher le nom du quizz.
     public void save(UUID uuid, UUID teacherUuid, String name) {
 
         String query = "INSERT INTO questionnaire(quuid, teacher_uuid, name) values (?, ?, ?)";
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query)){
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setObject(1, uuid);
             statement.setObject(2, teacherUuid);
@@ -33,33 +34,33 @@ public class QuizzRepository {
 
             statement.executeUpdate();
 
-        } catch ( SQLException e) {
+        } catch (SQLException e) {
             throw new DatabaseException("Error while saving the quizz in the Database", e);
         }
     }
 
-
     // cette methode sert peut etre a rien
-    // elle retourne le nom d'un questionnaire en prenant son uuid (mais pour avoir son uuid, on deja recu le nom)
+    // elle retourne le nom d'un questionnaire en prenant son uuid (mais pour avoir
+    // son uuid, on deja recu le nom)
     public Optional<String> findNameByUuid(UUID uuid) {
         String query = "Select name FROM questionnaire WHERE quuid = ?";
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query)){
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setObject(1, uuid);
 
             statement.executeQuery();
 
-            try(ResultSet resultSet = statement.executeQuery()){
-                if(resultSet.next()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
                     String name = resultSet.getString("name");
 
                     return Optional.of(name);
                 }
             }
 
-        } catch ( SQLException e) {
+        } catch (SQLException e) {
             throw new DatabaseException("Error while finding the name of quizz in the Database", e);
         }
 
@@ -74,23 +75,23 @@ public class QuizzRepository {
         String query = "Select quuid, name FROM questionnaire WHERE teacher_uuid = ?";
         List<QuizzDTO> quizzes = new ArrayList<>();
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query)){
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setObject(1, teacherUuid);
 
             statement.executeQuery();
 
-            try(ResultSet resultSet = statement.executeQuery()){
-                while(resultSet.next()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
                     UUID quuid = resultSet.getObject("quuid", UUID.class);
                     String name = resultSet.getString("name");
 
-                    quizzes.add(new QuizzDTO(quuid, name));
+                    quizzes.add(new QuizzDTO(quuid, name, teacherUuid));
                 }
             }
 
-        } catch ( SQLException e) {
+        } catch (SQLException e) {
             throw new DatabaseException("Error while finding all the quizzes of a teacher in the Database", e);
         }
         return Optional.of(quizzes);

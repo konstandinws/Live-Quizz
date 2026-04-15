@@ -1,6 +1,7 @@
 package be.helha.clapetteChaussette;
 
 import be.helha.clapetteChaussette.controller.editor.EditorController;
+import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.service.NavigationService;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -12,7 +13,8 @@ public class AppFX extends Application {
     @Override
     public void start(Stage mainstage) throws Exception {
         NavigationService navigationService = new NavigationService(mainstage);
-        editorController = new EditorController();
+        Quizz quizz = new Quizz("placeholder");
+        editorController = new EditorController(quizz);
         editorController.setNavigationService(navigationService);
         editorController.navigateToQuizzEditor();
     }

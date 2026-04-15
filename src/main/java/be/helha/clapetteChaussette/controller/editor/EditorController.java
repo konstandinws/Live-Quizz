@@ -1,7 +1,16 @@
 package be.helha.clapetteChaussette.controller.editor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import be.helha.clapetteChaussette.model.Quizz;
+import be.helha.clapetteChaussette.model.dto.QuestionDTO;
+import be.helha.clapetteChaussette.model.dto.QuizzDTO;
+import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 import be.helha.clapetteChaussette.model.question.Question;
+import be.helha.clapetteChaussette.repository.TeacherRepository;
+import be.helha.clapetteChaussette.service.DbService;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.view.OpenEditorFX;
 import be.helha.clapetteChaussette.view.QcmEditorFX;
@@ -16,9 +25,16 @@ public class EditorController {
      */
     NavigationService navigationService;
     Quizz quizz;
+    TeacherDTO teacher;
 
-    public EditorController() {
-        quizz = new Quizz();
+    public EditorController(Quizz quizz) {
+        this.quizz = quizz;
+        teacher = new TeacherDTO(
+                UUID.randomUUID(),
+                "test_prof_1",
+                "mot_de_passe_haché");
+        TeacherRepository teacherRepository = new TeacherRepository();
+        teacherRepository.save(teacher);
     }
 
     public void setNavigationService(NavigationService navigationService) {
@@ -62,6 +78,24 @@ public class EditorController {
     }
 
     public void saveQuizz() {
+        DbService dbService = new DbService();
+        QuizzDTO quizzDTO = new QuizzDTO(quizz.getUuid(), quizz.getName(), teacher.uuid());
+        dbService.saveQuizz(quizzDTO);
+        dbService.saveQuestions(createQuestionDTOs(quizz.getQuestions()));
     }
 
+    private List<QuestionDTO> createQuestionDTOs(List<Question> questions) {
+        List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();
+        for (Question question : quizz.getQuestions()) {
+            QuestionDTO questionDTO = new QuestionDTO(
+                    UUID.randomUUID(),
+                    quizz.getUuid(),
+                    question.getQuestion(),
+                    question.getAnswers(),
+                    question.getAnswers(), // to fix
+                    question.getType());
+            questionsDTO.add(questionDTO);
+        }
+        return questionsDTO;
+    }
 }

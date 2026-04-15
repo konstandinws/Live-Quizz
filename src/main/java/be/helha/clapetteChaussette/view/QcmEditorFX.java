@@ -28,7 +28,7 @@ import be.helha.clapetteChaussette.exception.InvalidQuestionException;
  * La validation métier est déléguée au controller ; cette classe ne gère
  * que la validation visuelle (affichage des erreurs).
  */
-public class QcmEditorFX implements IDisplayable {
+public class QcmEditorFX extends ViewFX {
     @FXML
     private Button saveQuestionBTN;
 
@@ -207,10 +207,7 @@ public class QcmEditorFX implements IDisplayable {
     }
 
     @Override
-    public Scene InitializeView() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/QcmEditor.fxml"));
-        loader.setControllerFactory(param -> this);
-        Parent root = loader.load();
-        return new Scene(root);
+    protected String getFXMLPath() {
+        return "QcmEditor.fxml";
     }
 }

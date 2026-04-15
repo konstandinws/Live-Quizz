@@ -5,9 +5,9 @@ import java.util.List;
 
 public class OpenQuestion extends Question {
 
-    // La liste de réponses que le prof attend
+    // List of answers expected by the teacher
     private List<String> correctAnswers;
-    // Savoir si la question compte pour des point
+    // Indicates if the question is worth points
     private boolean pointsEnabled;
 
     public OpenQuestion(String question) {
@@ -16,24 +16,30 @@ public class OpenQuestion extends Question {
         this.pointsEnabled = false;
     }
 
-    // ici j'ai mets "guetteur" et "setteur" qui gères les bonne réponses
+    public OpenQuestion(String question, List<String> correctAnswers, boolean pointsEnabled) {
+        super(question); // Pass the title to the parent class 'Question'
+        this.correctAnswers = correctAnswers;
+        this.pointsEnabled = pointsEnabled;
+    }
 
-    // cette methode va permettre de lire la liste de bonne réponses du prof
+    // Getters and setters to manage correct answers
+
+    // Retrieves the list of correct answers defined by the teacher
     public List<String> getCorrectAnswers() {
         return correctAnswers;
     }
 
-    // cette ligne va permettre d'enregistrer les bonne réponses du prof
+    // Stores the correct answers defined by the teacher
     public void setCorrectAnswers(List<String> correctAnswers) {
         this.correctAnswers = correctAnswers;
     }
 
-    // si cette methode qui dit si oui ou non c'est pour des point
+    // Returns whether the question is for points or not
     public boolean isPointsEnabled() {
         return pointsEnabled;
     }
 
-    // si je coche la case avec des point cette methode renvoi true
+    // Sets whether the question should award points
     public void setPointsEnabled(boolean pointsEnabled) {
         this.pointsEnabled = pointsEnabled;
     }

@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
-public class OpenQuestionFX implements IDisplayable {
+public class OpenQuestionFX extends ViewFX {
     @FXML
     private Button envoyerBtn;
 
@@ -24,11 +24,11 @@ public class OpenQuestionFX implements IDisplayable {
 
     @FXML
     private void initialize() {
-        // On ne crée plus la question ici, on attend qu'elle vienne du MainController
+        // The question is no longer created here; we wait for it to be provided by the MainController
     }
 
     /**
-     * Cette méthode permet au MainController de passer les données à la vue
+     * This method allows the MainController to pass data to the view
      */
     public void setController(IQuestionListener<String> listener) {
         this.listener = listener;
@@ -49,10 +49,11 @@ public class OpenQuestionFX implements IDisplayable {
     }
 
     @Override
-    public Scene InitializeView() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/open.fxml"));
-        loader.setControllerFactory(param -> this);
-        Parent root = loader.load();
-        return new Scene(root);
+    protected String getFXMLPath() {
+        return "open.fxml";
+    }
+
+    public interface IOpenListener extends IQuestionListener<String> {
+        public void validate(String aws);
     }
 }

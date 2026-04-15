@@ -1,6 +1,8 @@
-package be.helha.clapetteChaussette.model.question;
+package be.helha.clapetteChaussette.model;
 
 import java.util.List;
+
+import be.helha.clapetteChaussette.model.question.Question;
 
 // on stocke le choix des questions du mode d'édition
 public class Questionnaire {

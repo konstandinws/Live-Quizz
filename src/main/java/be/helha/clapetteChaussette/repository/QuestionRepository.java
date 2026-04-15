@@ -50,7 +50,7 @@ public class QuestionRepository {
             for (Anwser answer : question.anwsers()) {
                 statement.setObject(1, question.uuid());
                 statement.setString(2, answer.getAnwser());
-                statement.setBoolean(3, question.type() == QuestionType.QCM && answer.isCorrect());
+                statement.setBoolean(3, answer.isCorrect());
                 statement.addBatch();
             }
             statement.executeBatch();

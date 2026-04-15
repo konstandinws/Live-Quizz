@@ -21,7 +21,7 @@ public class OpenQuestionTest {
 
         // 3. Vérification : est-ce que l'objet a bien enregistré les infos ?
         assertEquals(titre, q.getQuestion(), "Le titre devrait être correct");
-        assertEquals(reponses, q.getCorrectAnswers(), "Les réponses devraient être enregistrées");
+        assertEquals(reponses, q.getAnswers(), "Les réponses devraient être enregistrées");
         assertTrue(q.isPointsEnabled(), "Les points devraient être activés");
     }
 }

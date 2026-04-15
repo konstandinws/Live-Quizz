@@ -22,10 +22,7 @@ public class OpenEditorController implements IViewController {
             throw new InvalidQuestionException("La question ne peut pas être vide.");
         }
 
-        OpenQuestion oq = new OpenQuestion(title);
-        oq.setCorrectAnswers(correctAnswers);
-        oq.setPointsEnabled(hasPoints);
-
+        OpenQuestion oq = new OpenQuestion(title, correctAnswers, hasPoints);
         mainController.addQuestionToQuizz(oq);
         mainController.navigateToQuizzEditor();
     }

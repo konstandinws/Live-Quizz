@@ -2,7 +2,6 @@ package be.helha.clapetteChaussette.model.question;
 
 import be.helha.clapetteChaussette.model.enums.QuestionType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OpenQuestion extends Question {
@@ -10,10 +9,10 @@ public class OpenQuestion extends Question {
     private List<Anwser> correctAnswers;
     private boolean pointsEnabled;
 
-    public OpenQuestion(String question) {
+    public OpenQuestion(String question, List<Anwser> correctAnswers, boolean pointsEnabled) {
         super(question, QuestionType.OPEN);
-        this.correctAnswers = new ArrayList<Anwser>();
-        this.pointsEnabled = false;
+        this.correctAnswers = correctAnswers;
+        this.pointsEnabled = pointsEnabled;
     }
 
     public List<Anwser> getCorrectAnswers() {

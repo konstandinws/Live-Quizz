@@ -57,7 +57,7 @@ public class QuizzFX extends ViewFX {
 
     @Override
     protected String getFXMLPath() {
-        return "questionnaire.fxml";
+        return "QuizzEditor.fxml";
     }
 
     @FXML

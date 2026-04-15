@@ -1,19 +1,14 @@
 package be.helha.clapetteChaussette.view;
 
+import be.helha.clapetteChaussette.controller.IViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-public class QuestionnaireFX extends ViewFX {
-
+public class QuizzFX extends ViewFX {
+    private IQuestionnaireListener controller;
     // l'interface pour appeler le vrai contrôleur
-    private IQuestionnaireListener listener;
-
-    // méthode pour brancher le vrai contrôleur
-    public void setController(IQuestionnaireListener listener) {
-        this.listener = listener;
-    }
 
     @FXML
     private Button qcmButton;
@@ -33,35 +28,39 @@ public class QuestionnaireFX extends ViewFX {
     // méthodes pour les evenements des clics sur les boutons
     @FXML
     void onPollClick(ActionEvent event) {
-        if (listener != null) {
-            listener.onAddPollRequested();
-        }
+        controller.onAddPollRequested();
+
     }
 
     @FXML
     void onQcmClick(ActionEvent event) {
-        if (listener != null) {
-            listener.onAddQcmRequested();
-        }
+        controller.onAddQcmRequested();
+
     }
 
     @FXML
     void onQuestionFreeClick(ActionEvent event) {
-        if (listener != null) {
-            listener.onAddQuestionFreeRequested();
-        }
+        controller.onAddQuestionFreeRequested();
+
     }
 
     @FXML
     void onSaveClick(ActionEvent event) {
-        if (listener != null) {
-            listener.onSaveRequested();
-        }
+        controller.onSaveRequested();
     }
 
     @Override
     protected String getFXMLPath() {
-        return "questionnaire.fxml";
+        return "QuizzEditor.fxml";
+    }
+
+    @Override
+    public void setOwnViewController(IViewController controller) {
+        if (controller instanceof IQuestionnaireListener) {
+            this.controller = (IQuestionnaireListener) controller;
+        } else {
+            throw new IllegalArgumentException("Controller must implement IQuestionnaireListener");
+        }
     }
 
     @FXML
@@ -70,7 +69,7 @@ public class QuestionnaireFX extends ViewFX {
         // completely loaded.
     }
 
-    public interface IQuestionnaireListener {
+    public interface IQuestionnaireListener extends IViewController {
         void onAddQcmRequested();
 
         void onAddPollRequested();

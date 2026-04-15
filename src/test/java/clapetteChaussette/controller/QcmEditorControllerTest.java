@@ -2,7 +2,7 @@ package clapetteChaussette.controller;
 
 import org.junit.jupiter.api.Test;
 
-import be.helha.clapetteChaussette.controller.QcmEditorController;
+import be.helha.clapetteChaussette.controller.editor.QcmEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 
 import java.util.Arrays;

@@ -1,5 +1,7 @@
 package be.helha.clapetteChaussette.model.question;
 
+import be.helha.clapetteChaussette.model.enums.QuestionType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ public class Poll extends Question {
     private final List<Integer> voteCounts;
 
     public Poll(String question) {
-        super(question);
+        super(question, QuestionType.POLL);
         this.voteCounts = new ArrayList<>();
     }
 

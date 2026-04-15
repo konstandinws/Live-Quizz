@@ -5,7 +5,6 @@ import java.util.List;
 import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.question.QcmQuestion;
-import be.helha.clapetteChaussette.service.NavigationService;
 
 /**
  * Contrôleur responsable de la création et de la validation des questions QCM.
@@ -35,13 +34,13 @@ public class QcmEditorController implements IViewController {
      *                                  vide, ou aucune bonne réponse).
      */
 
-    NavigationService navigationService;
+    EditorController mainController;
 
-    public void setNavigationService(NavigationService navigationService) {
-        this.navigationService = navigationService;
+    public void setController(EditorController mainController) {
+        this.mainController = mainController;
     }
 
-    public QcmQuestion createQcm(String title, List<String> answers, List<String> correctAnswers)
+    public void createQcm(String title, List<String> answers, List<String> correctAnswers)
             throws InvalidQuestionException {
 
         validateTitle(title);
@@ -49,7 +48,8 @@ public class QcmEditorController implements IViewController {
         validateCorrectAnswer(correctAnswers);
 
         // remplacer le return par un appel au service
-        return new QcmQuestion(title, answers, correctAnswers);
+        mainController.addQuestionToQuizz(new QcmQuestion(title, answers, correctAnswers));
+        mainController.navigateToQuizzEditor();
     }
 
     /**

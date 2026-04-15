@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
+import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.controller.editor.OpenEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
@@ -79,8 +80,8 @@ public class OpenEditorFX extends ViewFX {
                 }
             }
 
-            OpenQuestion q = controller.createOpenQuestion(title, validAnswers, hasPoints);
-            System.out.println("Question sauvegardée : " + q.getQuestion() + " (Points: " + hasPoints + ")");
+            controller.createOpenQuestion(title, validAnswers, hasPoints);
+            System.out.println("Question sauvegardée : " + title + " (Points: " + hasPoints + ")");
 
         } catch (InvalidQuestionException e) {
             showError(e.getMessage());
@@ -96,5 +97,14 @@ public class OpenEditorFX extends ViewFX {
     @Override
     protected String getFXMLPath() {
         return "OpenEditor.fxml";
+    }
+
+    @Override
+    public void setOwnViewController(IViewController controller) {
+        if (controller instanceof OpenEditorController) {
+            this.controller = (OpenEditorController) controller;
+        } else {
+            throw new IllegalArgumentException("Controller must be an instance of OpenEditorController");
+        }
     }
 }

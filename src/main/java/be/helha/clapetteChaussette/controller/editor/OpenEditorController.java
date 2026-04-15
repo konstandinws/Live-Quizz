@@ -8,7 +8,13 @@ import be.helha.clapetteChaussette.model.question.OpenQuestion;
 
 public class OpenEditorController implements IViewController {
 
-    public OpenQuestion createOpenQuestion(String title, List<String> correctAnswers, boolean hasPoints)
+    EditorController mainController;
+
+    public void setController(EditorController mainController) {
+        this.mainController = mainController;
+    }
+
+    public void createOpenQuestion(String title, List<String> correctAnswers, boolean hasPoints)
             throws InvalidQuestionException {
 
         if (title == null || title.isBlank()) {
@@ -19,6 +25,8 @@ public class OpenEditorController implements IViewController {
         oq.setCorrectAnswers(correctAnswers);
         oq.setPointsEnabled(hasPoints);
 
-        return oq;
+        mainController.addQuestionToQuizz(oq);
+        mainController.navigateToQuizzEditor();
     }
+
 }

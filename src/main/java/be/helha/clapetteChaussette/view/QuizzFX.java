@@ -7,9 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
 public class QuizzFX extends ViewFX {
-
+    private IQuestionnaireListener controller;
     // l'interface pour appeler le vrai contrôleur
-    private IQuestionnaireListener listener;
 
     @FXML
     private Button qcmButton;
@@ -29,35 +28,39 @@ public class QuizzFX extends ViewFX {
     // méthodes pour les evenements des clics sur les boutons
     @FXML
     void onPollClick(ActionEvent event) {
-        if (listener != null) {
-            listener.onAddPollRequested();
-        }
+        controller.onAddPollRequested();
+
     }
 
     @FXML
     void onQcmClick(ActionEvent event) {
-        if (listener != null) {
-            listener.onAddQcmRequested();
-        }
+        controller.onAddQcmRequested();
+
     }
 
     @FXML
     void onQuestionFreeClick(ActionEvent event) {
-        if (listener != null) {
-            listener.onAddQuestionFreeRequested();
-        }
+        controller.onAddQuestionFreeRequested();
+
     }
 
     @FXML
     void onSaveClick(ActionEvent event) {
-        if (listener != null) {
-            listener.onSaveRequested();
-        }
+        controller.onSaveRequested();
     }
 
     @Override
     protected String getFXMLPath() {
         return "QuizzEditor.fxml";
+    }
+
+    @Override
+    public void setOwnViewController(IViewController controller) {
+        if (controller instanceof IQuestionnaireListener) {
+            this.controller = (IQuestionnaireListener) controller;
+        } else {
+            throw new IllegalArgumentException("Controller must implement IQuestionnaireListener");
+        }
     }
 
     @FXML

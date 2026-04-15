@@ -7,8 +7,6 @@ import javafx.scene.Scene;
 
 public abstract class ViewFX implements IDisplayable {
 
-    protected IViewController controller;
-
     protected abstract String getFXMLPath();
 
     public Scene InitializeView() throws Exception {
@@ -19,7 +17,5 @@ public abstract class ViewFX implements IDisplayable {
         return new Scene(root);
     }
 
-    public void setOwnViewController(IViewController controller) {
-        this.controller = controller;
-    }
+    abstract public void setOwnViewController(IViewController controller);
 }

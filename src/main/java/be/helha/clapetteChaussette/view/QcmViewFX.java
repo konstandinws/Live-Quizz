@@ -69,6 +69,15 @@ public class QcmViewFX extends ViewFX {
         listener.validate(answer, qcm);
     }
 
+    @Override
+    public void setOwnViewController(IViewController controller) {
+        if (controller instanceof IQuestionListener) {
+            this.listener = (IQuestionListener<String>) controller;
+        } else {
+            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
+        }
+    }
+
     public interface IQcmListener extends IQuestionListener<String> {
         public boolean verify(CheckBox source, QcmQuestion qcm);
     }

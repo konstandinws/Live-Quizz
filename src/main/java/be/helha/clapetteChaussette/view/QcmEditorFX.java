@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
+import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.controller.editor.QcmEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 
@@ -202,5 +203,14 @@ public class QcmEditorFX extends ViewFX {
     @Override
     protected String getFXMLPath() {
         return "QcmEditor.fxml";
+    }
+
+    @Override
+    public void setOwnViewController(IViewController controller) {
+        if (controller instanceof QcmEditorController) {
+            this.controller = (QcmEditorController) controller;
+        } else {
+            throw new IllegalArgumentException("Controller must be an instance of QcmEditorController");
+        }
     }
 }

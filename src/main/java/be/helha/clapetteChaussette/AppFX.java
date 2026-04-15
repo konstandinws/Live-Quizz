@@ -18,7 +18,7 @@ public class AppFX extends Application {
         this.questionnaireController = new QuizzController(navigationService);
         QuizzFX questionnaireView = new QuizzFX();
         navigationService.navigateTo(questionnaireView, "Editeur de questionnaire");
-        questionnaireView.setController(questionnaireController);
+        questionnaireView.setOwnViewController(questionnaireController);
     }
 
     public static void main(String[] args) {

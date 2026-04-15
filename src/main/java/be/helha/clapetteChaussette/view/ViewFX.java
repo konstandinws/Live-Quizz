@@ -19,7 +19,7 @@ public abstract class ViewFX implements IDisplayable {
         return new Scene(root);
     }
 
-    public void setOwnController(IViewController controller) {
+    public void setOwnViewController(IViewController controller) {
         this.controller = controller;
     }
 }

@@ -10,7 +10,7 @@ import be.helha.clapetteChaussette.view.OpenEditorFX;
 import be.helha.clapetteChaussette.view.QcmEditorFX;
 
 // Controleur de l'édition du questionnaire, c'est lui qui manipulera le modèle
-public class QuizzController implements IQuestionnaireListener, IViewController {
+public class QuizzController implements IQuestionnaireListener {
     private Quizz sessionEnCours; // le modele
     private NavigationService navigationService;
 
@@ -24,7 +24,7 @@ public class QuizzController implements IQuestionnaireListener, IViewController 
     public void onAddQcmRequested() {
         QcmEditorController qcmController = new QcmEditorController();
         QcmEditorFX QcmEditorFX = new QcmEditorFX();
-        QcmEditorFX.setOwnController(qcmController);
+        QcmEditorFX.setOwnViewController(qcmController);
         navigationService.navigateTo(QcmEditorFX, "QCM Editor");
     }
 
@@ -38,7 +38,7 @@ public class QuizzController implements IQuestionnaireListener, IViewController 
     public void onAddQuestionFreeRequested() {
         OpenEditorController openCtrl = new OpenEditorController();
         OpenEditorFX view = new OpenEditorFX();
-        view.setOwnController(openCtrl);
+        view.setOwnViewController(openCtrl);
         navigationService.navigateTo(view, "Éditeur Question Libre");
     }
 

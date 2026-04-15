@@ -1,5 +1,6 @@
 package be.helha.clapetteChaussette.view;
 
+import be.helha.clapetteChaussette.controller.IViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,11 +10,6 @@ public class QuizzFX extends ViewFX {
 
     // l'interface pour appeler le vrai contrôleur
     private IQuestionnaireListener listener;
-
-    // méthode pour brancher le vrai contrôleur
-    public void setController(IQuestionnaireListener listener) {
-        this.listener = listener;
-    }
 
     @FXML
     private Button qcmButton;
@@ -70,7 +66,7 @@ public class QuizzFX extends ViewFX {
         // completely loaded.
     }
 
-    public interface IQuestionnaireListener {
+    public interface IQuestionnaireListener extends IViewController {
         void onAddQcmRequested();
 
         void onAddPollRequested();

@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.PollEditorController;
+import be.helha.clapetteChaussette.controller.editor.PollEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 
 /**

@@ -1,5 +1,6 @@
 package be.helha.clapetteChaussette.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +11,11 @@ public class Quizz {
     private UUID uuid;
     String name;
     private List<Question> questions;
+
+    public Quizz() {
+        this.questions = new ArrayList<Question>();
+        this.uuid = UUID.randomUUID();
+    }
 
     public Quizz(String name, List<Question> questions) {
         this.name = name;
@@ -31,9 +37,13 @@ public class Quizz {
         this.questions.add(question);
     }
 
-    public UUID getUuid() { return uuid;}
+    public UUID getUuid() {
+        return uuid;
+    }
 
-    public String getName() {return name;}
+    public String getName() {
+        return name;
+    }
 
     @Override
     public String toString() {

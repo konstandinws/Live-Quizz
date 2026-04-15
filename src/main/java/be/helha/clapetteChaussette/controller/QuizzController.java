@@ -2,7 +2,7 @@ package be.helha.clapetteChaussette.controller;
 
 import java.util.ArrayList;
 
-import be.helha.clapetteChaussette.model.Questionnaire;
+import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.model.question.Poll;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.view.QuestionnaireFX.IQuestionnaireListener;
@@ -10,14 +10,14 @@ import be.helha.clapetteChaussette.view.OpenEditorFX;
 import be.helha.clapetteChaussette.view.QcmEditorFX;
 
 // Controleur de l'édition du questionnaire, c'est lui qui manipulera le modèle
-public class QuestionnaireController implements IQuestionnaireListener, IController {
-    private Questionnaire sessionEnCours; // le modele
+public class QuizzController implements IQuestionnaireListener, IController {
+    private Quizz sessionEnCours; // le modele
     private NavigationService navigationService;
 
     // au démarrage on crée un questionnaire vide
-    public QuestionnaireController(NavigationService navigationService) {
+    public QuizzController(NavigationService navigationService) {
         this.navigationService = navigationService;
-        this.sessionEnCours = new Questionnaire(new ArrayList<>());
+        this.sessionEnCours = new Quizz();
     }
 
     @Override

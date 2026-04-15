@@ -1,21 +1,25 @@
 package be.helha.clapetteChaussette.view;
 
-import be.helha.clapetteChaussette.model.question.Poll;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-public class PollEditorFX implements IDisplayable {
-    private Poll poll;
-    private IQuestionListener<String> listener;
+import java.util.ArrayList;
+import java.util.List;
 
-    @FXML
-    private Button addAnswerBTN;
+import be.helha.clapetteChaussette.controller.PollEditorController;
+import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+
+/**
+ * JavaFX controller for the Poll editing interface.
+ * Inherits from ViewFX based on the new project architecture.
+ */
+public class PollEditorFX extends ViewFX {
 
     @FXML
     private VBox answersContainer;
@@ -24,50 +28,116 @@ public class PollEditorFX implements IDisplayable {
     private TextField pollQuestion;
 
     @FXML
+    private Button addAnswerBTN;
+
+    @FXML
     private Button savePoll;
 
-    @FXML
-    void addNewAnswer(ActionEvent event) {
+    final int MAX_ANSWERS = 6;
+    final int MIN_ANSWERS = 2;
 
+    private PollEditorController controller;
+    private List<TextField> textFields = new ArrayList<>();
+
+    /**
+     * Initializes the view with 2 default answer fields.
+     */
+    @FXML
+    public void initialize() {
+        for (int i = 0; i < MIN_ANSWERS; i++) {
+            answersContainer.getChildren().add(createAnswerRow());
+        }
     }
 
+    /**
+     * Linked to the "+" button in the FXML.
+     */
     @FXML
-    void onPollSave(ActionEvent event) {
-
+    void addNewAnswer() {
+        answersContainer.getChildren().add(createAnswerRow());
+        setAddAnswerBTNVisibility();
     }
 
+    boolean checkMaxAnswers() {
+        return answersContainer.getChildren().size() >= MAX_ANSWERS;
+    }
 
+    void setAddAnswerBTNVisibility() {
+        addAnswerBTN.setDisable(checkMaxAnswers());
+    }
 
+    /**
+     * Linked to the "Save" button in the FXML.
+     */
+    @FXML
+    void onPollSave() {
+        try {
+            String title = pollQuestion.getText();
+            List<String> answers = getAnswers();
+
+            controller.createPoll(title, answers);
+
+        } catch (InvalidQuestionException e) {
+            showErrorPopup(e.getMessage());
+        }
+    }
+
+    /**
+     * Creates a row with a text field and a "Delete" button.
+     */
+    private HBox createAnswerRow() {
+        HBox answerRow = new HBox();
+        answerRow.setAlignment(Pos.CENTER_LEFT);
+        answerRow.setPadding(new Insets(5, 10, 5, 10));
+
+        TextField answerTF = new TextField();
+        answerTF.setPromptText("Option de réponse");
+        HBox.setHgrow(answerTF, Priority.ALWAYS);
+
+        Button deleteBTN = new Button("Supprimer");
+        textFields.add(answerTF);
+
+        deleteBTN.setOnAction(e -> {
+            if (answersContainer.getChildren().size() > MIN_ANSWERS) {
+                answersContainer.getChildren().remove(answerRow);
+                textFields.remove(answerTF);
+                setAddAnswerBTNVisibility();
+            } else {
+                showErrorPopup("Vous devez avoir au minimum 2 options pour un sondage.");
+            }
+        });
+
+        answerRow.getChildren().addAll(answerTF, deleteBTN);
+        return answerRow;
+    }
+
+    List<String> getAnswers() {
+        List<String> answers = new ArrayList<>();
+        for (TextField field : textFields) {
+            if (!field.getText().trim().isEmpty()) {
+                answers.add(field.getText());
+            }
+        }
+        return answers;
+    }
+
+    private void showErrorPopup(String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle("Erreur de saisie");
+        alert.setHeaderText("Impossible de sauvegarder le sondage");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public void setController(PollEditorController controller) {
+        this.controller = controller;
+    }
+
+    /**
+     * Mandatory method inherited from ViewFX.
+     */
     @Override
-    public Scene InitializeView() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/clapetteChaussette/fxml/PollEditor.fxml"));
-        loader.setControllerFactory(param -> this);
-        Parent root = loader.load();
-        return new Scene(root);
-    }
-
-
-
-    public void setController(IQuestionListener<String> listener) {
-        this.listener = listener;
-    }
-
-    public void setPoll(Poll poll) {
-        this.poll = poll;
-
-        this.pollQuestion.setText(poll.getQuestion());
-        this.choix1.setText(poll.getChoice(0));
-        this.choix2.setText(poll.getChoice(1));
-        this.choix3.setText(poll.getChoice(2));
-        this.choix4.setText(poll.getChoice(3));
-    }
-
-
-    @FXML
-    private void initialize() {
+    protected String getFXMLPath() {
+        return "PollEditor.fxml";
     }
 }
-
-
-
-

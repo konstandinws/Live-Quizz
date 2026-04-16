@@ -38,10 +38,10 @@ public class QcmViewFX extends ViewFX {
 
     public void setQcm(QcmQuestion qcm) {
         this.qcm = qcm;
-        CheckBox1.setText(qcm.getAnswers().get(0).getAnwser());
-        CheckBox2.setText(qcm.getAnswers().get(1).getAnwser());
-        CheckBox3.setText(qcm.getAnswers().get(2).getAnwser());
-        CheckBox4.setText(qcm.getAnswers().get(3).getAnwser());
+        CheckBox1.setText(qcm.getAnswers().get(0).getAnswer());
+        CheckBox2.setText(qcm.getAnswers().get(1).getAnswer());
+        CheckBox3.setText(qcm.getAnswers().get(2).getAnswer());
+        CheckBox4.setText(qcm.getAnswers().get(3).getAnswer());
 
         laQuestion.setText(qcm.getQuestion());
     }

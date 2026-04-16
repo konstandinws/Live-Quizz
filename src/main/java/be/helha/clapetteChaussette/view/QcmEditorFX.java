@@ -16,7 +16,7 @@ import java.util.List;
 import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.controller.editor.QcmEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
-import be.helha.clapetteChaussette.model.question.Anwser;
+import be.helha.clapetteChaussette.model.question.Answer;
 
 /**
  * Contrôleur JavaFX de l'interface d'édition de questions QCM.
@@ -98,7 +98,7 @@ public class QcmEditorFX extends ViewFX {
     private void createQuestion() {
         try {
             String title = getTitle();
-            List<Anwser> answers = getAnswers();
+            List<Answer> answers = getAnswers();
             controller.createQcm(title, answers);
         } catch (InvalidQuestionException e) {
             showErrorPopup(e.getMessage());
@@ -154,15 +154,15 @@ public class QcmEditorFX extends ViewFX {
      *
      * @return la liste des textes de toutes les réponses, dans l'ordre d'affichage
      */
-    List<Anwser> getAnswers() {
-        List<Anwser> answers = new ArrayList<>();
+    List<Answer> getAnswers() {
+        List<Answer> answers = new ArrayList<>();
         int i = 0;
         for (TextField field : textFields) {
             boolean isCorrect = false;
             if (correctAnswerCB.get(i).isSelected()) {
                 isCorrect = true;
             }
-            answers.add(new Anwser(field.getText(), isCorrect));
+            answers.add(new Answer(field.getText(), isCorrect));
             i++;
         }
         return answers;

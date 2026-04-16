@@ -1,6 +1,6 @@
 package clapetteChaussette.model.question;
 
-import be.helha.clapetteChaussette.model.question.Anwser;
+import be.helha.clapetteChaussette.model.question.Answer;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +13,7 @@ public class OpenQuestionTest {
     public void testCreationQuestionOuverte() {
         // Préparation des données
         String titre = "Quelle est la capitale de la France ?";
-        List<Anwser> reponses = Arrays.asList(new Anwser("Paris", true), new Anwser("paris", true));
+        List<Answer> reponses = Arrays.asList(new Answer("Paris", true), new Answer("paris", true));
         boolean avecPoints = true;
 
         // on crée l'objet

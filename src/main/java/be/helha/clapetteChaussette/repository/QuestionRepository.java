@@ -3,7 +3,7 @@ package be.helha.clapetteChaussette.repository;
 import be.helha.clapetteChaussette.exception.DatabaseException;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.enums.QuestionType;
-import be.helha.clapetteChaussette.model.question.Anwser;
+import be.helha.clapetteChaussette.model.question.Answer;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -47,9 +47,9 @@ public class QuestionRepository {
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
 
-            for (Anwser answer : question.anwsers()) {
+            for (Answer answer : question.answers()) {
                 statement.setObject(1, question.uuid());
-                statement.setString(2, answer.getAnwser());
+                statement.setString(2, answer.getAnswer());
                 statement.setBoolean(3, answer.isCorrect());
                 statement.addBatch();
             }
@@ -73,7 +73,7 @@ public class QuestionRepository {
                     String content = resultSet.getString("content");
                     String type = resultSet.getString("type");
 
-                    List<Anwser> answers = new ArrayList<>();
+                    List<Answer> answers = new ArrayList<>();
 
                     // on remplit les 2 listes avec les choix et les bonne réponses
                     findAnswers(questionUuid, connection, answers);
@@ -92,7 +92,7 @@ public class QuestionRepository {
     }
 
     // on va aller chercher les choix et les bonnes reponses pour chaque question
-    public void findAnswers(UUID questionUuid, Connection connection, List<Anwser> answers)
+    public void findAnswers(UUID questionUuid, Connection connection, List<Answer> answers)
             throws SQLException {
         String query = "SELECT reponse, bonne_reponse FROM reponse_question WHERE question_uuid = ?";
 
@@ -103,7 +103,7 @@ public class QuestionRepository {
                 while (resultSet.next()) {
                     String answer = resultSet.getString("reponse");
                     boolean correctAnswer = resultSet.getBoolean("bonne_reponse");
-                    answers.add(new Anwser(answer, correctAnswer));
+                    answers.add(new Answer(answer, correctAnswer));
                 }
             }
         }

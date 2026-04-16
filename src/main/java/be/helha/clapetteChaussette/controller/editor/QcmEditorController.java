@@ -4,7 +4,7 @@ import java.util.List;
 
 import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
-import be.helha.clapetteChaussette.model.question.Anwser;
+import be.helha.clapetteChaussette.model.question.Answer;
 import be.helha.clapetteChaussette.model.question.QcmQuestion;
 
 /**
@@ -41,15 +41,15 @@ public class QcmEditorController implements IViewController {
         this.mainController = mainController;
     }
 
-    public void createQcm(String title, List<Anwser> answers)
+    public void createQcm(String title, List<Answer> answers)
             throws InvalidQuestionException {
 
         validateTitle(title);
         validateAnswers(answers);
 
         List<String> correctAnswers = answers.stream()
-                .filter(Anwser::isCorrect)
-                .map(Anwser::getAnwser)
+                .filter(Answer::isCorrect)
+                .map(Answer::getAnswer)
                 .toList();
 
         validateCorrectAnswer(correctAnswers);
@@ -78,9 +78,9 @@ public class QcmEditorController implements IViewController {
      * @param answers La liste des réponses à valider.
      * @throws InvalidQuestionException Si au moins une réponse est invalide.
      */
-    private void validateAnswers(List<Anwser> answers) throws InvalidQuestionException {
-        for (Anwser answer : answers) {
-            if (answer.getAnwser().isBlank())
+    private void validateAnswers(List<Answer> answers) throws InvalidQuestionException {
+        for (Answer answer : answers) {
+            if (answer.getAnswer().isBlank())
                 throw new InvalidQuestionException("une reponse ne peut pas etre vide");
         }
     }

@@ -8,7 +8,7 @@ public class OpenQuestion extends Question {
 
     private boolean pointsEnabled;
 
-    public OpenQuestion(String question, List<Anwser> correctAnswers, boolean pointsEnabled) {
+    public OpenQuestion(String question, List<Answer> correctAnswers, boolean pointsEnabled) {
         super(question, QuestionType.OPEN);
         this.answers = correctAnswers;
         this.pointsEnabled = pointsEnabled;

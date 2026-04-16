@@ -15,14 +15,14 @@ public class Poll extends Question {
         this.voteCounts = new ArrayList<Integer>();
     }
 
-    public Poll(String Question, List<Anwser> options) {
+    public Poll(String Question, List<Answer> options) {
         this(Question);
-        for (Anwser option : options) {
+        for (Answer option : options) {
             addOption(option);
         }
     }
 
-    public void addOption(Anwser option) {
+    public void addOption(Answer option) {
         this.answers.add(option);
         this.voteCounts.add(0);
     }
@@ -36,7 +36,7 @@ public class Poll extends Question {
     }
 
     public String getChoice(int index) {
-        return this.answers.get(index).getAnwser();
+        return this.answers.get(index).getAnswer();
     }
 
     @Override

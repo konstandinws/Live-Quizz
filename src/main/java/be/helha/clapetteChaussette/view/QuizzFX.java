@@ -1,14 +1,21 @@
 package be.helha.clapetteChaussette.view;
 
 import be.helha.clapetteChaussette.controller.IViewController;
+import be.helha.clapetteChaussette.model.question.Question;
+import be.helha.clapetteChaussette.view.ControlerComponent.ControlerComponent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import java.io.IOException;
+import java.util.List;
 
 public class QuizzFX extends ViewFX {
     private IQuestionnaireListener controller;
     // l'interface pour appeler le vrai contrôleur
+
+    private ControlerComponent controlerComponent;
 
     @FXML
     private Button qcmButton;
@@ -67,6 +74,7 @@ public class QuizzFX extends ViewFX {
     private void initialize() {
         // Hint: initialize() will be called when the associated FXML has been
         // completely loaded.
+        this.chargerQuestions();
     }
 
     public interface IQuestionnaireListener extends IViewController {
@@ -78,5 +86,16 @@ public class QuizzFX extends ViewFX {
 
         void onSaveRequested(); // quand l'éditeur a fini d'ajouter des questions.
 
+    }
+
+
+    public void chargerQuestions(List<Question> questions) throws IOException {
+        for (Question q : questions) {
+
+            ControlerComponent composant = ControlerComponent.creerComposent();
+            composant.setData(q);
+            VboxListe.getChildren().add(composant.getRoot());
+
+        }
     }
 }

@@ -23,7 +23,7 @@ public class QuizzFX extends ViewFX {
     private Button btnSauvegarder;
 
     @FXML
-    private VBox listeQuestionsBox;
+    private VBox VboxListe;
 
     // méthodes pour les evenements des clics sur les boutons
     @FXML

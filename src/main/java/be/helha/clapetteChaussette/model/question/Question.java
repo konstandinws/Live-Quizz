@@ -11,7 +11,7 @@ public abstract class Question {
      private UUID quuid;
      private UUID questionnaireUuid;
      private String question;
-     List<Anwser> answers;
+     List<Answer> answers;
      String response;
      boolean hasTimer;
      QuestionType type;
@@ -27,7 +27,7 @@ public abstract class Question {
           return question;
      }
 
-     public List<Anwser> getAnswers() {
+     public List<Answer> getAnswers() {
           return Collections.unmodifiableList(answers);
      }
 

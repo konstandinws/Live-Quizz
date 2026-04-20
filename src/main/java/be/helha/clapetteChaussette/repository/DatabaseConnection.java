@@ -11,7 +11,8 @@ import java.sql.SQLException;
 public class DatabaseConnection {
     private static final Dotenv dotenv = Dotenv.load();
 
-    private static final String url = "jdbc:postgresql://%s:%s/%s".formatted(dotenv.get("DATABASEHOST"), dotenv.get("DATABASEPORT"), dotenv.get("DATABASENAME"));
+    private static final String url = "jdbc:postgresql://%s:%s/%s".formatted(dotenv.get("DATABASEHOST"),
+            dotenv.get("DATABASEPORT"), dotenv.get("DATABASENAME"));
     private static final String user = dotenv.get("DATABASEUSER");
     private static final String password = dotenv.get("DATABASEPASSWORD");
 

@@ -12,24 +12,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-// TODO modifier les parametres des questions pour voir si il faut mettre des DTO specifiques au quizz
-
+/**
+ * JDBC implementation of the {@link QuizzRepository}.
+ * <p>
+ * This repository handles the storage and retrieval of Quiz entities
+ * in a relational database using JDBC.
+ * </p>
+ */
 public class JdbcQuizzRepository implements QuizzRepository{
 
-    // il faudra rajouter un nom pour le quizz dans sa table dans la DB, comme ca
-    // quand on recupere grace au réseau on
-    // afficher le nom du quizz.
     @Override
-    public void save(UUID uuid, UUID teacherUuid, String name) {
+    public void save(QuizzDTO quizz) {
 
         String query = "INSERT INTO questionnaire(quuid, teacher_uuid, name) values (?, ?, ?)";
 
         try (Connection connection = DatabaseConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
 
-            statement.setObject(1, uuid);
-            statement.setObject(2, teacherUuid);
-            statement.setString(3, name);
+            statement.setObject(1, quizz.uuid());
+            statement.setObject(2, quizz.teacherUuid());
+            statement.setString(3, quizz.name());
 
             statement.executeUpdate();
 
@@ -38,38 +40,6 @@ public class JdbcQuizzRepository implements QuizzRepository{
         }
     }
 
-    // cette methode sert peut etre a rien
-    // elle retourne le nom d'un questionnaire en prenant son uuid (mais pour avoir
-    // son uuid, on deja recu le nom)
-    public Optional<String> findNameByUuid(UUID uuid) {
-        String query = "Select name FROM questionnaire WHERE quuid = ?";
-
-        try (Connection connection = DatabaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
-
-            statement.setObject(1, uuid);
-
-            statement.executeQuery();
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    String name = resultSet.getString("name");
-
-                    return Optional.of(name);
-                }
-            }
-
-        } catch (SQLException e) {
-            throw new DatabaseException("Error while finding the name of quizz in the Database", e);
-        }
-
-        return Optional.empty();
-    }
-
-    // obligé de retourner un optionnal ? au pire la liste est juste vide
-    // je laisse comme ca dans pour avoir "protocole" pour traiter les données
-
-    // retourne tous les questionnaires qui appartiennent a un prof
     @Override
     public List<QuizzDTO> findAll(UUID teacherUuid) {
         String query = "Select quuid, name FROM questionnaire WHERE teacher_uuid = ?";
@@ -79,8 +49,6 @@ public class JdbcQuizzRepository implements QuizzRepository{
                 PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setObject(1, teacherUuid);
-
-            statement.executeQuery();
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {

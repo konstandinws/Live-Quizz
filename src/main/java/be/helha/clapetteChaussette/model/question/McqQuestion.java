@@ -5,13 +5,13 @@ import be.helha.clapetteChaussette.model.enums.QuestionType;
 import java.util.Collections;
 import java.util.List;
 
-public class QcmQuestion extends Question {
+public class McqQuestion extends Question {
 
     private boolean multipleChoice;
 
     // Vrai QCM avec plusieurs bonnes réponses
-    public QcmQuestion(String question, List<Answer> answers) {
-        super(question, QuestionType.QCM);
+    public McqQuestion(String question, List<Answer> answers) {
+        super(question, QuestionType.MCQ);
         this.answers = answers;
         this.multipleChoice = isMultipleAnswers();
     }

@@ -24,8 +24,8 @@ public class QuizzEditorController implements IQuestionnaireListener {
     }
 
     @Override
-    public void onAddQcmRequested() {
-        this.mainController.navigateToQcmQuestionEditor();
+    public void onAddMcqRequested() {
+        this.mainController.navigateToMcqQuestionEditor();
     }
 
     @Override

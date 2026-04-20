@@ -13,7 +13,7 @@ import be.helha.clapetteChaussette.repository.TeacherRepository;
 import be.helha.clapetteChaussette.service.DbService;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.view.OpenEditorFX;
-import be.helha.clapetteChaussette.view.QcmEditorFX;
+import be.helha.clapetteChaussette.view.McqEditorFX;
 import be.helha.clapetteChaussette.view.QuizzFX;
 import be.helha.clapetteChaussette.view.ViewFX;
 
@@ -61,12 +61,12 @@ public class EditorController {
         // TODO: implement poll editor
     }
 
-    public void navigateToQcmQuestionEditor() {
-        QcmEditorFX qcmEditorFX = new QcmEditorFX();
-        QcmEditorController qcmEditorController = new QcmEditorController();
-        qcmEditorFX.setOwnViewController(qcmEditorController);
-        qcmEditorController.setController(this);
-        navigateTo(qcmEditorFX, "Éditeur de Question QCM");
+    public void navigateToMcqQuestionEditor() {
+        McqEditorFX mcqEditorFX = new McqEditorFX();
+        McqEditorController mcqEditorController = new McqEditorController();
+        mcqEditorFX.setOwnViewController(mcqEditorController);
+        mcqEditorController.setController(this);
+        navigateTo(mcqEditorFX, "Éditeur de Question QCM");
     }
 
     public void navigateTo(ViewFX view, String title) {

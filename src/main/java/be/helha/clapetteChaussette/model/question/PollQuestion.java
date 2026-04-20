@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Poll extends Question {
+public class PollQuestion extends Question {
 
     private final List<Integer> voteCounts;
 
-    public Poll(String question) {
+    public PollQuestion(String question) {
         super(question, QuestionType.POLL);
         this.voteCounts = new ArrayList<Integer>();
     }
 
-    public Poll(String Question, List<Answer> options) {
+    public PollQuestion(String Question, List<Answer> options) {
         this(Question);
         for (Answer option : options) {
             addOption(option);

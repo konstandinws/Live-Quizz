@@ -15,14 +15,20 @@ public class OpenEditorController implements IViewController {
         this.mainController = mainController;
     }
 
-    public void createOpenQuestion(String title, List<Answer> correctAnswers, boolean hasPoints)
+    public void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
             throws InvalidQuestionException {
 
         if (title == null || title.isBlank()) {
             throw new InvalidQuestionException("La question ne peut pas être vide.");
         }
 
-        OpenQuestion oq = new OpenQuestion(title, correctAnswers, hasPoints);
+        List<Answer> answers = answerTexts.stream()
+                .map(String::trim)
+                .filter(text -> !text.isBlank())
+                .map(text -> new Answer(text, true)) // by default all the answers given are correct
+                .toList();
+
+        OpenQuestion oq = new OpenQuestion(title, answers, hasPoints);
         mainController.addQuestionToQuizz(oq);
         mainController.navigateToQuizzEditor();
     }

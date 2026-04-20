@@ -1,25 +1,26 @@
 package be.helha.clapetteChaussette.controller.editor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.question.Answer;
-import be.helha.clapetteChaussette.model.question.QcmQuestion;
+import be.helha.clapetteChaussette.model.question.McqQuestion;
 
 /**
  * Contrôleur responsable de la création et de la validation des questions QCM.
  * <p>
  * Fait le lien entre la vue
- * {@link be.helha.clapetteChaussette.view.QcmEditorFX} et
+ * {@link be.helha.clapetteChaussette.view.McqEditorFX} et
  * le service de persistance (à intégrer). Toute la logique de validation
  * métier est centralisée ici.
  */
-public class QcmEditorController implements IViewController {
+public class McqEditorController implements IViewController {
 
     /**
      * Valide les données fournies et crée une nouvelle instance de
-     * {@link QcmQuestion}.
+     * {@link McqQuestion}.
      * <p>
      * Note : Actuellement, cette méthode retourne l'objet créé. À l'avenir, elle
      * devrait
@@ -30,7 +31,7 @@ public class QcmEditorController implements IViewController {
      * @param answers        La liste complète des choix de réponses possibles.
      * @param correctAnswers La liste des réponses sélectionnées comme étant
      *                       correctes.
-     * @return Une instance valide de {@link QcmQuestion}.
+     * @return Une instance valide de {@link McqQuestion}.
      * @throws InvalidQuestionException Si la validation échoue (titre vide, réponse
      *                                  vide, ou aucune bonne réponse).
      */
@@ -41,21 +42,25 @@ public class QcmEditorController implements IViewController {
         this.mainController = mainController;
     }
 
-    public void createQcm(String title, List<Answer> answers)
+    public void createMcq(String title, List<String> answers, List<Boolean> correctAnswers)
             throws InvalidQuestionException {
 
         validateTitle(title);
-        validateAnswers(answers);
+        List<Answer> answerObjects = new ArrayList<>();
+        for (int i = 0; i < answers.size(); i++) {
+            answerObjects.add(new Answer(answers.get(i), correctAnswers.get(i)));
+        }
 
-        List<String> correctAnswers = answers.stream()
+        validateAnswers(answerObjects);
+
+        List<String> correctAnswerTexts = answerObjects.stream()
                 .filter(Answer::isCorrect)
                 .map(Answer::getAnswer)
                 .toList();
-
-        validateCorrectAnswer(correctAnswers);
+        validateCorrectAnswer(correctAnswerTexts);
 
         // remplacer le return par un appel au service
-        mainController.addQuestionToQuizz(new QcmQuestion(title, answers));
+        mainController.addQuestionToQuizz(new McqQuestion(title, answerObjects));
         mainController.navigateToQuizzEditor();
     }
 

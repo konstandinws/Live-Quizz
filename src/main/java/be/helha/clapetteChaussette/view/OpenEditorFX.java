@@ -16,7 +16,6 @@ import java.util.List;
 import be.helha.clapetteChaussette.controller.IViewController;
 import be.helha.clapetteChaussette.controller.editor.OpenEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
-import be.helha.clapetteChaussette.model.question.Answer;
 
 public class OpenEditorFX extends ViewFX {
 
@@ -72,15 +71,9 @@ public class OpenEditorFX extends ViewFX {
         try {
             String title = questionTitle.getText();
             boolean hasPoints = pointsCheckBox.isSelected();
+            List<String> answerText = answerFields.stream().map(TextField::getText).toList();
 
-            List<Answer> validAnswers = new ArrayList<Answer>();
-            for (TextField tf : answerFields) {
-                if (!tf.getText().isBlank()) {
-                    validAnswers.add(new Answer(tf.getText(), true));
-                }
-            }
-
-            controller.createOpenQuestion(title, validAnswers, hasPoints);
+            controller.createOpenQuestion(title, answerText, hasPoints);
 
         } catch (InvalidQuestionException e) {
             showError(e.getMessage());

@@ -3,12 +3,13 @@ package be.helha.clapetteChaussette.view;
 import javafx.scene.control.Label;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+
+import java.util.List;
+
 import be.helha.clapetteChaussette.controller.IViewController;
-import be.helha.clapetteChaussette.model.question.Poll;
 import javafx.event.ActionEvent;
 
 public class PollViewFX extends ViewFX {
-    private Poll poll;
     private IQuestionListener<String> listener;
 
     @FXML
@@ -26,23 +27,25 @@ public class PollViewFX extends ViewFX {
     @FXML
     private Button choix4;
 
+    public PollViewFX(String question, List<String> choices) {
+        this.title.setText(question);
+        this.choix1.setText(choices.get(0));
+        this.choix2.setText(choices.get(1));
+        this.choix3.setText(choices.get(2));
+        this.choix4.setText(choices.get(3));
+    }
+
     @FXML
     private void handleButtonClick(ActionEvent event) {
-        listener.validate(((Button) event.getSource()).getText(), poll);
+        listener.validate(((Button) event.getSource()).getText());
     }
 
     public void setController(IQuestionListener<String> listener) {
         this.listener = listener;
     }
 
-    public void setPoll(Poll poll) {
-        this.poll = poll;
-
-        this.title.setText(poll.getQuestion());
-        this.choix1.setText(poll.getChoice(0));
-        this.choix2.setText(poll.getChoice(1));
-        this.choix3.setText(poll.getChoice(2));
-        this.choix4.setText(poll.getChoice(3));
+    @FXML
+    private void initialize() {
     }
 
     @Override
@@ -59,7 +62,4 @@ public class PollViewFX extends ViewFX {
         }
     }
 
-    @FXML
-    private void initialize() {
-    }
 }

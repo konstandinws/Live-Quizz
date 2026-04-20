@@ -14,20 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.helha.clapetteChaussette.controller.IViewController;
-import be.helha.clapetteChaussette.controller.editor.QcmEditorController;
+import be.helha.clapetteChaussette.controller.editor.McqEditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
-import be.helha.clapetteChaussette.model.question.Answer;
 
 /**
  * Contrôleur JavaFX de l'interface d'édition de questions QCM.
  * <p>
  * Gère l'affichage dynamique des lignes de réponses et collecte les données
  * saisies par l'utilisateur avant de les transmettre à
- * {@link QcmEditorController}.
+ * {@link McqEditorController}.
  * La validation métier est déléguée au controller ; cette classe ne gère
  * que la validation visuelle (affichage des erreurs).
  */
-public class QcmEditorFX extends ViewFX {
+public class McqEditorFX extends ViewFX {
     @FXML
     private Button saveQuestionBTN;
 
@@ -43,7 +42,7 @@ public class QcmEditorFX extends ViewFX {
     /** Le nombre minimum de réponses requises pour un QCM. */
     final int MIN_ANSWERS = 2;
 
-    QcmEditorController controller;
+    McqEditorController controller;
 
     private List<CheckBox> correctAnswerCB = new ArrayList<>();
     private List<TextField> textFields = new ArrayList<>();
@@ -98,8 +97,11 @@ public class QcmEditorFX extends ViewFX {
     private void createQuestion() {
         try {
             String title = getTitle();
-            List<Answer> answers = getAnswers();
-            controller.createQcm(title, answers);
+            List<String> answers = textFields.stream().map(TextField::getText).toList();
+            List<Boolean> correctAnswers = correctAnswerCB.stream()
+                    .map(CheckBox::isSelected)
+                    .toList();
+            controller.createMcq(title, answers, correctAnswers);
         } catch (InvalidQuestionException e) {
             showErrorPopup(e.getMessage());
         }
@@ -150,25 +152,6 @@ public class QcmEditorFX extends ViewFX {
     }
 
     /**
-     * Retourne le texte saisi dans chaque champ de réponse.
-     *
-     * @return la liste des textes de toutes les réponses, dans l'ordre d'affichage
-     */
-    List<Answer> getAnswers() {
-        List<Answer> answers = new ArrayList<>();
-        int i = 0;
-        for (TextField field : textFields) {
-            boolean isCorrect = false;
-            if (correctAnswerCB.get(i).isSelected()) {
-                isCorrect = true;
-            }
-            answers.add(new Answer(field.getText(), isCorrect));
-            i++;
-        }
-        return answers;
-    }
-
-    /**
      * Retourne le texte des réponses dont la {@link CheckBox} est cochée.
      *
      * @return la liste des textes des réponses marquées comme correctes
@@ -208,15 +191,16 @@ public class QcmEditorFX extends ViewFX {
 
     @Override
     protected String getFXMLPath() {
-        return "QcmEditor.fxml";
+        return "McqEditor.fxml";
     }
 
     @Override
     public void setOwnViewController(IViewController controller) {
-        if (controller instanceof QcmEditorController) {
-            this.controller = (QcmEditorController) controller;
+        if (controller instanceof McqEditorController) {
+            this.controller = (McqEditorController) controller;
         } else {
-            throw new IllegalArgumentException("Controller must be an instance of QcmEditorController");
+            throw new IllegalArgumentException("Controller must be an instance of McqEditorController");
         }
     }
+
 }

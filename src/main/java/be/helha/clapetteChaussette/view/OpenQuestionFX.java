@@ -1,7 +1,7 @@
 package be.helha.clapetteChaussette.view;
 
 import be.helha.clapetteChaussette.controller.IViewController;
-import be.helha.clapetteChaussette.model.question.OpenQuestion;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,32 +18,19 @@ public class OpenQuestionFX extends ViewFX {
     private TextArea textArea;
 
     private IQuestionListener<String> listener;
-    private OpenQuestion open;
 
     @FXML
     private void initialize() {
-        // The question is no longer created here; we wait for it to be provided by the
-        // MainController
     }
 
-    /**
-     * This method allows the MainController to pass data to the view
-     */
     public void setController(IQuestionListener<String> listener) {
         this.listener = listener;
     }
 
-    public void setOpenQuestion(OpenQuestion question) {
-        this.open = question;
-        if (question != null && questionFree != null) {
-            this.questionFree.setText(question.getQuestion());
-        }
-    }
-
     @FXML
     private void handleSendAction() {
-        if (open != null && textArea != null) {
-            listener.validate(textArea.getText(), open);
+        if (textArea != null) {
+            listener.validate(textArea.getText());
         }
     }
 

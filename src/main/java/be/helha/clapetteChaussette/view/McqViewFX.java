@@ -1,20 +1,19 @@
 package be.helha.clapetteChaussette.view;
 
+import java.util.List;
+
 import be.helha.clapetteChaussette.controller.IViewController;
-import be.helha.clapetteChaussette.model.question.QcmQuestion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
-public class QcmViewFX extends ViewFX {
-
-    private QcmQuestion qcm;
+public class McqViewFX extends ViewFX {
     private IQuestionListener<String> listener;
 
     @FXML
-    private Label laQuestion;
+    private Label questionLabel;
 
     @FXML
     private CheckBox CheckBox1;
@@ -32,23 +31,30 @@ public class QcmViewFX extends ViewFX {
     private void initialize() {
     }
 
+    /**
+     * Initializes the MCQ editor view by setting the question text and the four
+     * answer options.
+     *
+     * @param answers  a list of answer labels to display in the checkboxes
+     *                 (expected order: first to fourth option)
+     * @param question the question text to show at the top of the editor
+     */
+    public McqViewFX(List<String> answers, String question) {
+        questionLabel.setText(question);
+        CheckBox1.setText(answers.get(0));
+        CheckBox2.setText(answers.get(1));
+        CheckBox3.setText(answers.get(2));
+        CheckBox4.setText(answers.get(3));
+
+    }
+
     public void setController(IQuestionListener<String> listener) {
         this.listener = listener;
     }
 
-    public void setQcm(QcmQuestion qcm) {
-        this.qcm = qcm;
-        CheckBox1.setText(qcm.getAnswers().get(0).getAnswer());
-        CheckBox2.setText(qcm.getAnswers().get(1).getAnswer());
-        CheckBox3.setText(qcm.getAnswers().get(2).getAnswer());
-        CheckBox4.setText(qcm.getAnswers().get(3).getAnswer());
-
-        laQuestion.setText(qcm.getQuestion());
-    }
-
     @Override
     protected String getFXMLPath() {
-        return "qcm.fxml";
+        return "mcq.fxml";
     }
 
     @FXML
@@ -63,7 +69,7 @@ public class QcmViewFX extends ViewFX {
     }
 
     private void verify(String answer) {
-        listener.validate(answer, qcm);
+        listener.validate(answer);
     }
 
     @Override
@@ -75,7 +81,7 @@ public class QcmViewFX extends ViewFX {
         }
     }
 
-    public interface IQcmListener extends IQuestionListener<String> {
-        public boolean verify(CheckBox source, QcmQuestion qcm);
+    public interface IMcqListener extends IQuestionListener<String> {
+        public boolean verify(CheckBox source);
     }
 }

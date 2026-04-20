@@ -11,7 +11,7 @@ public class QuizzFX extends ViewFX {
     // l'interface pour appeler le vrai contrôleur
 
     @FXML
-    private Button qcmButton;
+    private Button mcqButton;
 
     @FXML
     private Button pollButton;
@@ -33,8 +33,8 @@ public class QuizzFX extends ViewFX {
     }
 
     @FXML
-    void onQcmClick(ActionEvent event) {
-        controller.onAddQcmRequested();
+    void onMcqClick(ActionEvent event) {
+        controller.onAddMcqRequested();
 
     }
 
@@ -70,7 +70,7 @@ public class QuizzFX extends ViewFX {
     }
 
     public interface IQuestionnaireListener extends IViewController {
-        void onAddQcmRequested();
+        void onAddMcqRequested();
 
         void onAddPollRequested();
 

@@ -15,7 +15,7 @@ class McqEditorControllerTest {
     private McqEditorController controller = new McqEditorController();
 
     @Test
-    void testCreateQcm_ThrowsException_WhenTitleIsBlank() {
+    void testCreateMcq_ThrowsException_WhenTitleIsBlank() {
         List<String> answerTexts = Arrays.asList("A", "B");
         List<Boolean> correctFlags = Arrays.asList(true, false);
 
@@ -23,7 +23,7 @@ class McqEditorControllerTest {
     }
 
     @Test
-    void testCreateQcm_ThrowsException_WhenOneAnswerIsBlank() {
+    void testCreateMcq_ThrowsException_WhenOneAnswerIsBlank() {
         String title = "Titre";
         List<String> answerTexts = Arrays.asList("A", "  ");
         List<Boolean> correctFlags = Arrays.asList(true, false);
@@ -32,7 +32,7 @@ class McqEditorControllerTest {
     }
 
     @Test
-    void testCreateQcm_ThrowsException_WhenNoCorrectAnswer() {
+    void testCreateMcq_ThrowsException_WhenNoCorrectAnswer() {
         String title = "Titre";
         List<String> answerTexts = Arrays.asList("A", "B");
         List<Boolean> correctFlags = Arrays.asList(false, false);

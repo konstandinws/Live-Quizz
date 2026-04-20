@@ -1,7 +1,7 @@
-package be.helha.clapetteChaussette.view;
+package be.helha.clapetteChaussette.view.Question;
 
-import be.helha.clapetteChaussette.controller.IViewController;
-
+import be.helha.clapetteChaussette.view.IQuestionListener;
+import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -37,15 +37,6 @@ public class OpenQuestionFX extends ViewFX {
     @Override
     protected String getFXMLPath() {
         return "open.fxml";
-    }
-
-    @Override
-    public void setOwnViewController(IViewController controller) {
-        if (controller instanceof IQuestionListener) {
-            this.listener = (IQuestionListener<String>) controller;
-        } else {
-            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
-        }
     }
 
     public interface IOpenListener extends IQuestionListener<String> {

@@ -3,7 +3,7 @@ package be.helha.clapetteChaussette.controller;
 import be.helha.clapetteChaussette.model.question.McqQuestion;
 import be.helha.clapetteChaussette.view.IQuestionListener;
 
-public class McqController implements IQuestionListener<String>, IViewController {
+public class McqController implements IQuestionListener<String>, IController {
     private McqQuestion question;
 
     public McqController(McqQuestion question) {

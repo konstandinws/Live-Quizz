@@ -1,6 +1,6 @@
 package be.helha.clapetteChaussette.controller;
 
-public interface IViewController {
+public interface IController {
     /**
      * This interface is usefull for polymorphism to use with the naviatgion
      * service.

@@ -1,4 +1,4 @@
-package be.helha.clapetteChaussette.view;
+package be.helha.clapetteChaussette.view.editor;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -13,9 +13,9 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.IViewController;
-import be.helha.clapetteChaussette.controller.editor.OpenEditorController;
+import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.view.ViewFX;
 
 public class OpenEditorFX extends ViewFX {
 
@@ -29,7 +29,7 @@ public class OpenEditorFX extends ViewFX {
     private Button addAnswerBTN; // Button to add a new answer variant
 
     // Link to the controller
-    private OpenEditorController controller;
+    private IOpenEditorListener controller;
     private List<TextField> answerFields = new ArrayList<>();
 
     // Called when the page initializes to add a first answer field
@@ -91,12 +91,9 @@ public class OpenEditorFX extends ViewFX {
         return "OpenEditor.fxml";
     }
 
-    @Override
-    public void setOwnViewController(IViewController controller) {
-        if (controller instanceof OpenEditorController) {
-            this.controller = (OpenEditorController) controller;
-        } else {
-            throw new IllegalArgumentException("Controller must be an instance of OpenEditorController");
-        }
+    public interface IOpenEditorListener {
+        void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
+                throws InvalidQuestionException;
+
     }
 }

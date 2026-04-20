@@ -1,8 +1,9 @@
-package be.helha.clapetteChaussette.view;
+package be.helha.clapetteChaussette.view.Question;
 
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.IViewController;
+import be.helha.clapetteChaussette.view.IQuestionListener;
+import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -70,18 +71,5 @@ public class McqViewFX extends ViewFX {
 
     private void verify(String answer) {
         listener.validate(answer);
-    }
-
-    @Override
-    public void setOwnViewController(IViewController controller) {
-        if (controller instanceof IQuestionListener) {
-            this.listener = (IQuestionListener<String>) controller;
-        } else {
-            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
-        }
-    }
-
-    public interface IMcqListener extends IQuestionListener<String> {
-        public boolean verify(CheckBox source);
     }
 }

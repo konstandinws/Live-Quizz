@@ -3,7 +3,7 @@ package be.helha.clapetteChaussette.controller;
 import be.helha.clapetteChaussette.model.question.PollQuestion;
 import be.helha.clapetteChaussette.view.IQuestionListener;
 
-public class PollController implements IQuestionListener<String>, IViewController {
+public class PollController implements IQuestionListener<String>, IController {
     private PollQuestion poll;
 
     public PollController(PollQuestion poll) {

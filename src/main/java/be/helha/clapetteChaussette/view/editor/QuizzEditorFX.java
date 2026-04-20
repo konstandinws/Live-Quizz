@@ -1,14 +1,14 @@
-package be.helha.clapetteChaussette.view;
+package be.helha.clapetteChaussette.view.editor;
 
-import be.helha.clapetteChaussette.controller.IViewController;
+import be.helha.clapetteChaussette.controller.IController;
+import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-public class QuizzFX extends ViewFX {
-    private IQuestionnaireListener controller;
-    // l'interface pour appeler le vrai contrôleur
+public class QuizzEditorFX extends ViewFX {
+    private IQuizzListener controller;
 
     @FXML
     private Button mcqButton;
@@ -54,29 +54,17 @@ public class QuizzFX extends ViewFX {
         return "QuizzEditor.fxml";
     }
 
-    @Override
-    public void setOwnViewController(IViewController controller) {
-        if (controller instanceof IQuestionnaireListener) {
-            this.controller = (IQuestionnaireListener) controller;
-        } else {
-            throw new IllegalArgumentException("Controller must implement IQuestionnaireListener");
-        }
-    }
-
     @FXML
     private void initialize() {
-        // Hint: initialize() will be called when the associated FXML has been
-        // completely loaded.
     }
 
-    public interface IQuestionnaireListener extends IViewController {
+    public interface IQuizzListener extends IController {
         void onAddMcqRequested();
 
         void onAddPollRequested();
 
         void onAddQuestionFreeRequested();
 
-        void onSaveRequested(); // quand l'éditeur a fini d'ajouter des questions.
-
+        void onSaveRequested();
     }
 }

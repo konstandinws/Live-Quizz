@@ -1,4 +1,4 @@
-package be.helha.clapetteChaussette.view;
+package be.helha.clapetteChaussette.view.editor;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -13,16 +13,17 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.IViewController;
-import be.helha.clapetteChaussette.controller.editor.McqEditorController;
+import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.model.question.Answer;
+import be.helha.clapetteChaussette.view.ViewFX;
 
 /**
  * Contrôleur JavaFX de l'interface d'édition de questions QCM.
  * <p>
  * Gère l'affichage dynamique des lignes de réponses et collecte les données
  * saisies par l'utilisateur avant de les transmettre à
- * {@link McqEditorController}.
+ * {@link EditorController}.
  * La validation métier est déléguée au controller ; cette classe ne gère
  * que la validation visuelle (affichage des erreurs).
  */
@@ -37,12 +38,10 @@ public class McqEditorFX extends ViewFX {
     @FXML
     private Button addAnswerBTN;
 
-    /** Le nombre maximum de réponses autorisées pour un QCM. */
     final int MAX_ANSWERS = 6;
-    /** Le nombre minimum de réponses requises pour un QCM. */
     final int MIN_ANSWERS = 2;
 
-    McqEditorController controller;
+    IMcqEditorListener controller;
 
     private List<CheckBox> correctAnswerCB = new ArrayList<>();
     private List<TextField> textFields = new ArrayList<>();
@@ -194,13 +193,17 @@ public class McqEditorFX extends ViewFX {
         return "McqEditor.fxml";
     }
 
-    @Override
-    public void setOwnViewController(IViewController controller) {
-        if (controller instanceof McqEditorController) {
-            this.controller = (McqEditorController) controller;
-        } else {
-            throw new IllegalArgumentException("Controller must be an instance of McqEditorController");
-        }
-    }
+    public interface IMcqEditorListener {
+        void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
+                throws InvalidQuestionException;
 
+        void createMcq(String title, List<String> answers, List<Boolean> correctAnswers)
+                throws InvalidQuestionException;
+
+        void validateTitle(String title) throws InvalidQuestionException;
+
+        void validateAnswers(List<Answer> answers) throws InvalidQuestionException;
+
+        void validateCorrectAnswer(List<String> correctAnswers) throws InvalidQuestionException;
+    }
 }

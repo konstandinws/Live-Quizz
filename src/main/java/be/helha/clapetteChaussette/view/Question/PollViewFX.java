@@ -1,4 +1,4 @@
-package be.helha.clapetteChaussette.view;
+package be.helha.clapetteChaussette.view.Question;
 
 import javafx.scene.control.Label;
 import javafx.fxml.FXML;
@@ -6,7 +6,8 @@ import javafx.scene.control.Button;
 
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.IViewController;
+import be.helha.clapetteChaussette.view.IQuestionListener;
+import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
 
 public class PollViewFX extends ViewFX {
@@ -52,14 +53,4 @@ public class PollViewFX extends ViewFX {
     protected String getFXMLPath() {
         return "poll.fxml";
     }
-
-    @Override
-    public void setOwnViewController(IViewController controller) {
-        if (controller instanceof IQuestionListener) {
-            this.listener = (IQuestionListener<String>) controller;
-        } else {
-            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
-        }
-    }
-
 }

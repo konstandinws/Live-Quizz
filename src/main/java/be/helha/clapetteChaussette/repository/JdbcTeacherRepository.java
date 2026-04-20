@@ -22,13 +22,6 @@ import java.util.UUID;
  */
 public class JdbcTeacherRepository implements TeacherRepository{
 
-    /**
-     * Saves a new teacher record into the database.
-     *
-     * @param teacher The {@link TeacherDTO} object containing the teacher's unique identifier,
-     * name, and hashed password.
-     * @throws DatabaseException if a database access error occurs or the SQL insertion fails.
-     */
     @Override
     public void save(TeacherDTO teacher) {
 
@@ -49,22 +42,11 @@ public class JdbcTeacherRepository implements TeacherRepository{
         }
     }
 
-    /**
-     * Retrieves a teacher from the database based on the provided credentials.
-     * <p>
-     * Returns a {@link TeacherResponseDTO} which safely excludes sensitive data
-     * such as the password hash.
-     * </p>
-     *
-     * @param cred The {@link Credentials} object containing the teacher's name and hashed password to match.
-     * @return An {@link Optional} containing the {@link TeacherResponseDTO} if the credentials match an existing record,
-     * or an empty {@link Optional} if no match is found.
-     * @throws DatabaseException if a database access error occurs during the query execution.
-     */
+
     @Override
     public Optional<TeacherResponseDTO> find(Credentials cred) {
 
-        String query = "SELECT uuid, name, password_hash FROM teacher WHERE name = ? AND password_hash = ?";
+        String query = "SELECT uuid, name FROM teacher WHERE name = ? AND password_hash = ?";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query)) {
@@ -76,15 +58,13 @@ public class JdbcTeacherRepository implements TeacherRepository{
                 if(resultSet.next()) {
                     UUID uuid = resultSet.getObject("uuid", UUID.class);
                     String name = resultSet.getString("name");
-                    // je veux pas renvoyer le hash du mdp fix degeu pour l'instant
-                    // je pourrait faire 2 DTO dinstinct un pour l'envoi et un pour la reception
+
                     return Optional.of(new TeacherResponseDTO(uuid, name));
                 }
             }
 
         } catch (SQLException e) {
             throw new DatabaseException("Error while finding the teacher in the Database", e);
-
         }
 
         return Optional.empty();

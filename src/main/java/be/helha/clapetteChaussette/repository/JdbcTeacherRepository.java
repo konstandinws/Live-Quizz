@@ -3,6 +3,7 @@ package be.helha.clapetteChaussette.repository;
 import be.helha.clapetteChaussette.exception.DatabaseException;
 import be.helha.clapetteChaussette.model.dto.Credentials;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
+import be.helha.clapetteChaussette.model.dto.TeacherResponseDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,11 +13,22 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-// TODO javadoc
-
-// je l'appelle teacher repo mais on pourrait aussi l'appeler TeacherDAO (data access objet), en gros celui qui parle a la db (je crois)
+/**
+ * JDBC implementation of the {@link TeacherRepository}.
+ * <p>
+ * This repository is responsible for managing the persistence of Teacher entities
+ * in a relational database using raw JDBC connections.
+ * </p>
+ */
 public class JdbcTeacherRepository implements TeacherRepository{
 
+    /**
+     * Saves a new teacher record into the database.
+     *
+     * @param teacher The {@link TeacherDTO} object containing the teacher's unique identifier,
+     * name, and hashed password.
+     * @throws DatabaseException if a database access error occurs or the SQL insertion fails.
+     */
     @Override
     public void save(TeacherDTO teacher) {
 
@@ -37,8 +49,20 @@ public class JdbcTeacherRepository implements TeacherRepository{
         }
     }
 
+    /**
+     * Retrieves a teacher from the database based on the provided credentials.
+     * <p>
+     * Returns a {@link TeacherResponseDTO} which safely excludes sensitive data
+     * such as the password hash.
+     * </p>
+     *
+     * @param cred The {@link Credentials} object containing the teacher's name and hashed password to match.
+     * @return An {@link Optional} containing the {@link TeacherResponseDTO} if the credentials match an existing record,
+     * or an empty {@link Optional} if no match is found.
+     * @throws DatabaseException if a database access error occurs during the query execution.
+     */
     @Override
-    public Optional<TeacherDTO> find(Credentials cred) {
+    public Optional<TeacherResponseDTO> find(Credentials cred) {
 
         String query = "SELECT uuid, name, password_hash FROM teacher WHERE name = ? AND password_hash = ?";
 
@@ -54,7 +78,7 @@ public class JdbcTeacherRepository implements TeacherRepository{
                     String name = resultSet.getString("name");
                     // je veux pas renvoyer le hash du mdp fix degeu pour l'instant
                     // je pourrait faire 2 DTO dinstinct un pour l'envoi et un pour la reception
-                    return Optional.of(new TeacherDTO(uuid, name, ""));
+                    return Optional.of(new TeacherResponseDTO(uuid, name));
                 }
             }
 

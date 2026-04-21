@@ -4,7 +4,7 @@ import be.helha.clapetteChaussette.model.question.OpenQuestion;
 import be.helha.clapetteChaussette.model.question.Question;
 import be.helha.clapetteChaussette.view.IQuestionListener;
 
-public class OpenController implements IQuestionListener<String>, IController {
+public class OpenController extends BaseController implements IQuestionListener<String> {
     private OpenQuestion question;
 
     public OpenController(Question question) {

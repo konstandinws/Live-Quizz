@@ -1,6 +1,5 @@
 package be.helha.clapetteChaussette.view.editor;
 
-import be.helha.clapetteChaussette.controller.IController;
 import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -58,7 +57,7 @@ public class QuizzEditorFX extends ViewFX {
     private void initialize() {
     }
 
-    public interface IQuizzListener extends IController {
+    public interface IQuizzListener {
         void onAddMcqRequested();
 
         void onAddPollRequested();

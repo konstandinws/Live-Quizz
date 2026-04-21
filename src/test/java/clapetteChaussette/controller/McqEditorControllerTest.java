@@ -19,7 +19,8 @@ class McqEditorControllerTest {
         List<String> answerTexts = Arrays.asList("A", "B");
         List<Boolean> correctFlags = Arrays.asList(true, false);
 
-        assertThrows(InvalidQuestionException.class, () -> controller.createMcq("   ", answerTexts, correctFlags));
+        assertThrows(InvalidQuestionException.class,
+                () -> controller.createMcqQuestion("   ", answerTexts, correctFlags));
     }
 
     @Test
@@ -28,7 +29,8 @@ class McqEditorControllerTest {
         List<String> answerTexts = Arrays.asList("A", "  ");
         List<Boolean> correctFlags = Arrays.asList(true, false);
 
-        assertThrows(InvalidQuestionException.class, () -> controller.createMcq(title, answerTexts, correctFlags));
+        assertThrows(InvalidQuestionException.class,
+                () -> controller.createMcqQuestion(title, answerTexts, correctFlags));
     }
 
     @Test
@@ -37,6 +39,7 @@ class McqEditorControllerTest {
         List<String> answerTexts = Arrays.asList("A", "B");
         List<Boolean> correctFlags = Arrays.asList(false, false);
 
-        assertThrows(InvalidQuestionException.class, () -> controller.createMcq(title, answerTexts, correctFlags));
+        assertThrows(InvalidQuestionException.class,
+                () -> controller.createMcqQuestion(title, answerTexts, correctFlags));
     }
 }

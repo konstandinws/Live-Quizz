@@ -15,7 +15,6 @@ import java.util.List;
 
 import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
-import be.helha.clapetteChaussette.model.question.Answer;
 import be.helha.clapetteChaussette.view.ViewFX;
 
 /**
@@ -94,13 +93,13 @@ public class McqEditorFX extends ViewFX {
      */
     @FXML
     private void createQuestion() {
+        String title = getTitle();
+        List<String> answers = textFields.stream().map(TextField::getText).toList();
+        List<Boolean> correctAnswers = correctAnswerCB.stream()
+                .map(CheckBox::isSelected)
+                .toList();
         try {
-            String title = getTitle();
-            List<String> answers = textFields.stream().map(TextField::getText).toList();
-            List<Boolean> correctAnswers = correctAnswerCB.stream()
-                    .map(CheckBox::isSelected)
-                    .toList();
-            controller.createMcq(title, answers, correctAnswers);
+            controller.createMcqQuestion(title, answers, correctAnswers);
         } catch (InvalidQuestionException e) {
             showErrorPopup(e.getMessage());
         }
@@ -194,16 +193,7 @@ public class McqEditorFX extends ViewFX {
     }
 
     public interface IMcqEditorListener {
-        void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
+        void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
                 throws InvalidQuestionException;
-
-        void createMcq(String title, List<String> answers, List<Boolean> correctAnswers)
-                throws InvalidQuestionException;
-
-        void validateTitle(String title) throws InvalidQuestionException;
-
-        void validateAnswers(List<Answer> answers) throws InvalidQuestionException;
-
-        void validateCorrectAnswer(List<String> correctAnswers) throws InvalidQuestionException;
     }
 }

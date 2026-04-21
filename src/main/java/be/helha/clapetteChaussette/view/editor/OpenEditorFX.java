@@ -94,6 +94,5 @@ public class OpenEditorFX extends ViewFX {
     public interface IOpenEditorListener {
         void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
                 throws InvalidQuestionException;
-
     }
 }

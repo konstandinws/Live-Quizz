@@ -2,9 +2,7 @@ package be.helha.clapetteChaussette.repository;
 
 
 import be.helha.clapetteChaussette.exception.DatabaseException;
-import be.helha.clapetteChaussette.model.dto.Credentials;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.model.dto.TeacherResponseDTO;
 
 import java.util.Optional;
 
@@ -27,18 +25,15 @@ public interface TeacherRepository {
    void save(TeacherDTO teacher);
 
    /**
-    * Retrieves a teacher based on the provided credentials.
+    * Retrieves a teacher by their name, including their stored password hash.
     * <p>
-    * Returns a {@link TeacherResponseDTO} which safely excludes sensitive data
-    * such as the password hash.
+    * This method is used both during registration to check for username availability,
+    * and during authentication to retrieve the stored credentials for verification.
     * </p>
     *
-    * @param cred The {@link Credentials} object containing the teacher's name and hashed password to match.
-    * @return An {@link Optional} containing the {@link TeacherResponseDTO} if the credentials match an existing record,
-    * or an empty {@link Optional} if no match is found.
-    * @throws DatabaseException if a data retrieval error occurs.
+    * @param name The username of the teacher to search for.
+    * @return An {@link Optional} containing the {@link TeacherDTO} if a match is found,
+    * or an empty {@link Optional} if the name does not exist in the database.
     */
-   Optional<TeacherResponseDTO> find(Credentials cred);
-
-   Optional<Boolean> findByName(String name);
+   Optional<TeacherDTO> findByName(String name);
 }

@@ -1,9 +1,7 @@
 package be.helha.clapetteChaussette.repository;
 
 import be.helha.clapetteChaussette.exception.DatabaseException;
-import be.helha.clapetteChaussette.model.dto.Credentials;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.model.dto.TeacherResponseDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,37 +40,9 @@ public class JdbcTeacherRepository implements TeacherRepository{
         }
     }
 
-
     @Override
-    public Optional<TeacherResponseDTO> find(Credentials cred) {
-
-        String query = "SELECT uuid, name FROM teacher WHERE name = ? AND password_hash = ?";
-
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query)) {
-
-            statement.setString(1, cred.name());
-            statement.setString(2, cred.hashed_password());
-
-            try(ResultSet resultSet = statement.executeQuery()){
-                if(resultSet.next()) {
-                    UUID uuid = resultSet.getObject("uuid", UUID.class);
-                    String name = resultSet.getString("name");
-
-                    return Optional.of(new TeacherResponseDTO(uuid, name));
-                }
-            }
-
-        } catch (SQLException e) {
-            throw new DatabaseException("Error while finding the teacher in the Database", e);
-        }
-
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Boolean> findByName(String name) {
-        String query = "SELECT name FROM teacher WHERE name = ?";
+    public Optional<TeacherDTO> findByName(String name) {
+        String query = "SELECT uuid, name, password_hash FROM teacher WHERE name = ?";
 
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query)) {
@@ -81,8 +51,12 @@ public class JdbcTeacherRepository implements TeacherRepository{
 
             try(ResultSet resultSet = statement.executeQuery()){
                 if(resultSet.next()) {
+
+                    UUID uuid = resultSet.getObject("uuid", UUID.class);
                     String teacherName = resultSet.getString("name");
-                    if (!teacherName.isEmpty()) return Optional.of(true);
+                    String hashedPassword = resultSet.getString("password_hash");
+
+                    return Optional.of(new TeacherDTO(uuid, name, hashedPassword));
                 }
             }
 

@@ -21,7 +21,7 @@ import java.util.UUID;
  */
 public class TeacherService {
 
-    TeacherRepository repository;
+    private final TeacherRepository repository;
 
     /**
      * Constructs a new TeacherService.

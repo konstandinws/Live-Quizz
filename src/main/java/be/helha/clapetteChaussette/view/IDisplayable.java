@@ -4,10 +4,10 @@ import javafx.scene.Scene;
 
 public interface IDisplayable {
     /**
-     * Cette interface est à implémenter par les vues pour que le service de
-     * navigation puisse les afficher
+     * This interface must be implemented by views so that the navigation service
+     * can display them.
      * 
-     * Chaque IDisplayable doit avoir une méthode Initialize
+     * Each IDisplayable must have an Initialize method.
      */
 
     Scene InitializeView() throws Exception;

@@ -11,6 +11,6 @@ import java.util.UUID;
  *
  * @param uuid The unique identifier of the teacher.
  * @param name The teacher's username or display name.
- * @param hashed_password The hashed version of the teacher's password.
+ * @param hashedPassword The hashed version of the teacher's password.
  */
-public record TeacherDTO(UUID uuid, String name, String hashed_password) {}
+public record TeacherDTO(UUID uuid, String name, String hashedPassword) {}

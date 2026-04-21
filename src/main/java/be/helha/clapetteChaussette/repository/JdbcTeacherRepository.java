@@ -32,7 +32,7 @@ public class JdbcTeacherRepository implements TeacherRepository{
 
             statement.setObject(1, teacher.uuid());
             statement.setString(2, teacher.name());
-            statement.setString(3, teacher.hashed_password());
+            statement.setString(3, teacher.hashedPassword());
 
             statement.executeUpdate();
 
@@ -60,6 +60,29 @@ public class JdbcTeacherRepository implements TeacherRepository{
                     String name = resultSet.getString("name");
 
                     return Optional.of(new TeacherResponseDTO(uuid, name));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error while finding the teacher in the Database", e);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Boolean> findByName(String name) {
+        String query = "SELECT name FROM teacher WHERE name = ?";
+
+        try(Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, name);
+
+            try(ResultSet resultSet = statement.executeQuery()){
+                if(resultSet.next()) {
+                    String teacherName = resultSet.getString("name");
+                    if (!teacherName.isEmpty()) return Optional.of(true);
                 }
             }
 

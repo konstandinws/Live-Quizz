@@ -39,4 +39,6 @@ public interface TeacherRepository {
     * @throws DatabaseException if a data retrieval error occurs.
     */
    Optional<TeacherResponseDTO> find(Credentials cred);
+
+   Optional<Boolean> findByName(String name);
 }

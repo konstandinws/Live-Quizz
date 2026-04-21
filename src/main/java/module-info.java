@@ -3,6 +3,7 @@ module clapelleChausette {
     requires javafx.fxml;
     requires io.github.cdimascio.dotenv.java;
     requires java.sql;
+    requires jbcrypt;
 
     opens be.helha.clapetteChaussette.view to javafx.fxml;
     opens be.helha.clapetteChaussette.view.editor to javafx.fxml;

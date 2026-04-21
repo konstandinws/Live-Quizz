@@ -20,14 +20,23 @@ public class EditorService {
      * It will create the question objects and save them to the database
      */
 
+    // #region Fields
+
     private DbService dbService;
     private ValidateQuestionEditorService validateQuestionEditorService;
+
+    // endregion
+
+    // #region Constructor
 
     public EditorService(DbService dbService, ValidateQuestionEditorService validateQuestionEditorService) {
         this.dbService = dbService;
         this.validateQuestionEditorService = validateQuestionEditorService;
     }
 
+    // endregion
+
+    // #region Public Methods
     public OpenQuestion createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
             throws InvalidQuestionException {
         validateQuestionEditorService.validateOpenQuestion(title, answerTexts);
@@ -57,6 +66,10 @@ public class EditorService {
         dbService.saveQuestions(createQuestionDTOs(quizz.getQuestions(), quizz.getUuid()));
     }
 
+    // endregion
+
+    // #region Private Methods
+
     /**
      * Just to the lissibility of the code.
      * This method will create all the question DTOs from the quizz questions and
@@ -78,4 +91,6 @@ public class EditorService {
         }
         return questionsDTO;
     }
+
+    // endregion
 }

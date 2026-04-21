@@ -11,6 +11,8 @@ import be.helha.clapetteChaussette.repository.TeacherRepository;
 import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
+import be.helha.clapetteChaussette.view.PollEditorFX;
+import be.helha.clapetteChaussette.view.PollEditorFX.IPollEditorListener;
 import be.helha.clapetteChaussette.view.editor.McqEditorFX;
 import be.helha.clapetteChaussette.view.editor.OpenEditorFX;
 import be.helha.clapetteChaussette.view.editor.McqEditorFX.IMcqEditorListener;
@@ -32,7 +34,7 @@ import be.helha.clapetteChaussette.view.editor.QuizzEditorFX.IQuizzListener;
  */
 public class EditorController
         extends BaseController
-        implements IQuizzListener, IOpenEditorListener, IMcqEditorListener {
+        implements IQuizzListener, IOpenEditorListener, IMcqEditorListener, IPollEditorListener {
 
     // #region Fields
 
@@ -81,19 +83,16 @@ public class EditorController
 
     @Override
     public void onAddMcqRequested() {
-        System.out.println("Add MCQ requested, navigating to McqEditorFX");
         navigateToView(new McqEditorFX(), "Éditeur de Question QCM", this);
     }
 
     @Override
     public void onAddPollRequested() {
-        System.out.println("Add Poll requested, navigating to PollEditorFX");
-        // TODO: implement PollEditorFX and navigate to it here
+        navigateToView(new PollEditorFX(), "Éditeur de Sondage", this);
     }
 
     @Override
     public void onAddQuestionFreeRequested() {
-        System.out.println("Add Free Question requested, navigating to OpenEditorFX");
         navigateToView(new OpenEditorFX(), "Éditeur de Question Libre", this);
     }
 
@@ -123,4 +122,13 @@ public class EditorController
     }
 
     // endregion
+
+    // #region IPollEditorListener methods
+
+    @Override
+    public void createPoll(String title, List<String> answers) throws InvalidQuestionException {
+        quizz.addQuestion(editorService.createPollQuestion(title, answers));
+    }
+
+    // //#endregion
 }

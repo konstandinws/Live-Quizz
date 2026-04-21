@@ -82,4 +82,9 @@ public class ValidateQuestionEditorService {
         validateMcqAnswers(answers);
         validateIfAtLeastOneValidAnswser(correctAnswers);
     }
+
+    public void validatePollQuestion(String title, List<String> answers) throws InvalidQuestionException {
+        validateTitle(title);
+        validateAnswers(answers);
+    }
 }

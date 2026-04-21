@@ -11,6 +11,7 @@ import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 import be.helha.clapetteChaussette.model.question.Answer;
 import be.helha.clapetteChaussette.model.question.McqQuestion;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
+import be.helha.clapetteChaussette.model.question.PollQuestion;
 import be.helha.clapetteChaussette.model.question.Question;
 
 public class EditorService {
@@ -58,6 +59,16 @@ public class EditorService {
             answerObjects.add(new Answer(answers.get(i), correctAnswers.get(i)));
         }
         return new McqQuestion(title, answerObjects);
+    }
+
+    public PollQuestion createPollQuestion(String title, List<String> answers) throws InvalidQuestionException {
+        validateQuestionEditorService.validatePollQuestion(title, answers);
+        List<Answer> answerObjects = answers.stream()
+                .map(String::trim)
+                .filter(text -> !text.isBlank())
+                .map(text -> new Answer(text, false)) // in a poll, there are no correct answers
+                .toList();
+        return new PollQuestion(title, answerObjects);
     }
 
     public void saveQuizz(Quizz quizz, UUID teacherUuid) {

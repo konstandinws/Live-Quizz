@@ -1,7 +1,5 @@
 package be.helha.clapetteChaussette.view;
 
-import be.helha.clapetteChaussette.controller.IViewController;
-import be.helha.clapetteChaussette.controller.editor.QcmEditorController;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,14 +12,14 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.editor.PollEditorController;
+import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 
 /**
  * JavaFX controller for the Poll editing interface.
  * Inherits from ViewFX based on the new project architecture.
  */
-public class PollEditorFX extends ViewFX {
+public class PollEditorFX extends ViewFX<EditorController> {
 
     @FXML
     private VBox answersContainer;
@@ -38,7 +36,6 @@ public class PollEditorFX extends ViewFX {
     final int MAX_ANSWERS = 6;
     final int MIN_ANSWERS = 2;
 
-    private PollEditorController controller;
     private List<TextField> textFields = new ArrayList<>();
 
     /**
@@ -77,7 +74,7 @@ public class PollEditorFX extends ViewFX {
             String title = pollQuestion.getText();
             List<String> answers = getAnswers();
 
-            controller.createPoll(title, answers);
+            listener.createPoll(title, answers);
 
         } catch (InvalidQuestionException e) {
             showErrorPopup(e.getMessage());
@@ -131,10 +128,6 @@ public class PollEditorFX extends ViewFX {
         alert.showAndWait();
     }
 
-    public void setController(PollEditorController controller) {
-        this.controller = controller;
-    }
-
     /**
      * Mandatory method inherited from ViewFX.
      */
@@ -143,12 +136,8 @@ public class PollEditorFX extends ViewFX {
         return "PollEditor.fxml";
     }
 
-    @Override
-    public void setOwnViewController(IViewController controller) {
-        if (controller instanceof PollEditorController) {
-            this.controller = (PollEditorController) controller;
-        } else {
-            throw new IllegalArgumentException("Controller must be an instance of PollEditorController");
-        }
+    public interface IPollEditorListener {
+        void createPoll(String title, List<String> answers) throws InvalidQuestionException;
+
     }
 }

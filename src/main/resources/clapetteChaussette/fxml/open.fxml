@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.helha.clapetteChaussette.view.OpenQuestionFX">
+<VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.helha.clapetteChaussette.view.question.OpenQuestionFX">
     <children>
-        <Label prefHeight="68.0" prefWidth="200.0" text="Questionnaire libre">
+        <Label prefHeight="68.0" prefWidth="212.0" text="Questionnaire libre">
             <font>
                 <Font size="23.0" />
             </font>

@@ -3,14 +3,14 @@ package clapetteChaussette.model.question;
 import org.junit.jupiter.api.Test;
 
 import be.helha.clapetteChaussette.model.question.Answer;
-import be.helha.clapetteChaussette.model.question.QcmQuestion;
+import be.helha.clapetteChaussette.model.question.McqQuestion;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class QcmQuestionTest {
+class McqQuestionTest {
 
     @Test
     void unique_answer_constructor() {
@@ -19,7 +19,7 @@ class QcmQuestionTest {
         List<Answer> choices = Arrays.asList(new Answer("12", false), new Answer("10", false), new Answer("18", true));
         List<Answer> correctAnswers = List.of(new Answer("18", true));
 
-        QcmQuestion question = new QcmQuestion(title, choices);
+        McqQuestion question = new McqQuestion(title, choices);
 
         assertEquals(title, question.getQuestion());
         assertEquals(choices, question.getAnswers());
@@ -36,7 +36,7 @@ class QcmQuestionTest {
                 new Answer("4", true));
         List<Answer> correctAnswers = Arrays.asList(new Answer("2", true), new Answer("4", true));
 
-        QcmQuestion question = new QcmQuestion(title, choices);
+        McqQuestion question = new McqQuestion(title, choices);
 
         assertEquals(title, question.getQuestion());
         assertEquals(choices, question.getAnswers());

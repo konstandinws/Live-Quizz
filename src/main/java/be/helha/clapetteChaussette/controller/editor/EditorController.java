@@ -1,101 +1,126 @@
 package be.helha.clapetteChaussette.controller.editor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import be.helha.clapetteChaussette.controller.BaseController;
+import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.Quizz;
-import be.helha.clapetteChaussette.model.dto.QuestionDTO;
-import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.model.question.Question;
 import be.helha.clapetteChaussette.repository.TeacherRepository;
-import be.helha.clapetteChaussette.service.DbService;
+import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
-import be.helha.clapetteChaussette.view.OpenEditorFX;
-import be.helha.clapetteChaussette.view.QcmEditorFX;
-import be.helha.clapetteChaussette.view.QuizzFX;
-import be.helha.clapetteChaussette.view.ViewFX;
+import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
+import be.helha.clapetteChaussette.view.editor.McqEditorFX;
+import be.helha.clapetteChaussette.view.editor.OpenEditorFX;
+import be.helha.clapetteChaussette.view.editor.McqEditorFX.IMcqEditorListener;
+import be.helha.clapetteChaussette.view.editor.OpenEditorFX.IOpenEditorListener;
+import be.helha.clapetteChaussette.view.editor.QuizzEditorFX.IQuizzListener;
 
-public class EditorController {
-    /**
-     * This is the main controller for the editor features.
-     * It will be used to navigate between the different editors and to share data
-     * between them if needed.
-     */
-    NavigationService navigationService;
+/**
+ * Main controller for the editor features.
+ * <p>
+ * This controller manages the navigation between different question editors
+ * (QCM, Open Question, etc.)
+ * and handles the creation and saving of questions to the quizz being edited.
+ * It interacts with the {@link EditorService} for business logic and the
+ * {@link ValidateQuestionEditorService} for validating question data before
+ * saving.
+ * The controller also manages a reference to the current quizz and the teacher
+ * creating it, allowing for proper association when saving to the database.
+ * <p>
+ */
+public class EditorController
+        extends BaseController
+        implements IQuizzListener, IOpenEditorListener, IMcqEditorListener {
+
+    // #region Fields
+
+    EditorService editorService;
+    ValidateQuestionEditorService validateQuestionEditorService;
     Quizz quizz;
     TeacherDTO teacher;
 
-    public EditorController(Quizz quizz) {
+    // endregion
+
+    // #region Constructor
+
+    /**
+     * Constructor for the EditorController.
+     * 
+     * @param quizz                         The quizz being edited.
+     * @param editorService                 Service for handling editor-related
+     *                                      business logic.
+     * @param navigationService             Service for handling navigation between
+     *                                      views.
+     * @param validateQuestionEditorService Service for validating question data
+     *                                      before saving.
+     */
+    public EditorController(Quizz quizz,
+            EditorService editorService,
+            NavigationService navigationService,
+            ValidateQuestionEditorService validateQuestionEditorService) {
+
         this.quizz = quizz;
+        this.editorService = editorService;
+        this.navigationService = navigationService;
+        this.validateQuestionEditorService = validateQuestionEditorService;
+
         teacher = new TeacherDTO(
                 UUID.randomUUID(),
                 "test_prof_1",
                 "mot_de_passe_haché");
-        TeacherRepository teacherRepository = new TeacherRepository();
+        TeacherRepository teacherRepository = new TeacherRepository(); // i know this is bad but this gonna move when we
+                                                                       // implement the login system
         teacherRepository.save(teacher);
     }
 
-    public void setNavigationService(NavigationService navigationService) {
-        this.navigationService = navigationService;
+    // #endregion
+
+    // #region IQuizzListener methods
+
+    @Override
+    public void onAddMcqRequested() {
+        System.out.println("Add MCQ requested, navigating to McqEditorFX");
+        navigateToView(new McqEditorFX(), "Éditeur de Question QCM", this);
     }
 
-    public void navigateToQuizzEditor() {
-        QuizzFX quizzFX = new QuizzFX();
-        QuizzEditorController controller = new QuizzEditorController();
-        quizzFX.setOwnViewController(controller);
-        controller.setController(this);
-        navigateTo(quizzFX, "Éditeur de Questionnaire");
+    @Override
+    public void onAddPollRequested() {
+        System.out.println("Add Poll requested, navigating to PollEditorFX");
+        // TODO: implement PollEditorFX and navigate to it here
     }
 
-    public void navigateToOpenQuestionEditor() {
-        OpenEditorFX openEditorFX = new OpenEditorFX();
-        OpenEditorController controller = new OpenEditorController();
-        openEditorFX.setOwnViewController(controller);
-        controller.setController(this);
-        navigateTo(openEditorFX, "Éditeur de Question Libre");
+    @Override
+    public void onAddQuestionFreeRequested() {
+        System.out.println("Add Free Question requested, navigating to OpenEditorFX");
+        navigateToView(new OpenEditorFX(), "Éditeur de Question Libre", this);
     }
 
-    public void navigateToPollQuestionEditor() {
-        // TODO: implement poll editor
+    @Override
+    public void onSaveRequested() {
+        editorService.saveQuizz(quizz, teacher.uuid());
     }
 
-    public void navigateToQcmQuestionEditor() {
-        QcmEditorFX qcmEditorFX = new QcmEditorFX();
-        QcmEditorController qcmEditorController = new QcmEditorController();
-        qcmEditorFX.setOwnViewController(qcmEditorController);
-        qcmEditorController.setController(this);
-        navigateTo(qcmEditorFX, "Éditeur de Question QCM");
+    // endregion
+
+    // #region IOpenEditorListener methods
+
+    @Override
+    public void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
+            throws InvalidQuestionException {
+        quizz.addQuestion(editorService.createOpenQuestion(title, answerTexts, hasPoints));
     }
 
-    public void navigateTo(ViewFX view, String title) {
-        navigationService.navigateTo(view, title);
+    // endregion
+
+    // #region IMcqEditorListener methods
+
+    @Override
+    public void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
+            throws InvalidQuestionException {
+        quizz.addQuestion(editorService.createMcqQuestion(title, answers, correctAnswers));
     }
 
-    public void addQuestionToQuizz(Question question) {
-        quizz.addQuestion(question);
-    }
-
-    public void saveQuizz() {
-        DbService dbService = new DbService();
-        QuizzDTO quizzDTO = new QuizzDTO(quizz.getUuid(), quizz.getName(), teacher.uuid());
-        dbService.saveQuizz(quizzDTO);
-        dbService.saveQuestions(createQuestionDTOs(quizz.getQuestions()));
-    }
-
-    private List<QuestionDTO> createQuestionDTOs(List<Question> questions) {
-        UUID quizzUuid = quizz.getUuid();
-        List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();
-        for (Question question : quizz.getQuestions()) {
-            QuestionDTO questionDTO = new QuestionDTO(
-                    UUID.randomUUID(),
-                    quizzUuid,
-                    question.getQuestion(),
-                    question.getAnswers(),
-                    question.getType());
-            questionsDTO.add(questionDTO);
-        }
-        return questionsDTO;
-    }
+    // endregion
 }

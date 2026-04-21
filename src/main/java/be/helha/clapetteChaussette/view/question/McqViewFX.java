@@ -3,7 +3,6 @@ package be.helha.clapetteChaussette.view.question;
 import java.util.List;
 
 import be.helha.clapetteChaussette.controller.question.McqController;
-import be.helha.clapetteChaussette.view.IQuestionListener;
 import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

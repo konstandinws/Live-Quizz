@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import java.util.List;
 
 import be.helha.clapetteChaussette.controller.question.PollController;
-import be.helha.clapetteChaussette.view.IQuestionListener;
 import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
 

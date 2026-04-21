@@ -11,8 +11,8 @@ public abstract class BaseController {
      */
     protected NavigationService navigationService;
 
-    public void navigateToView(ViewFX view, String title) {
-        view.setOwnController(this);
+    public void navigateToView(ViewFX view, String title, BaseController controller) {
         navigationService.navigateTo(view, title);
+        view.setOwnController(controller);
     }
 }

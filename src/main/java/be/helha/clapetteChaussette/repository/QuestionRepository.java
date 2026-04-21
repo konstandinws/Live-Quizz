@@ -68,7 +68,6 @@ public class QuestionRepository {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    UUID quuid = resultSet.getObject("quuid", UUID.class);
                     UUID quizzUuid = resultSet.getObject("questionnaire_uuid", UUID.class);
                     String content = resultSet.getString("content");
                     String type = resultSet.getString("type");

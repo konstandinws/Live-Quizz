@@ -11,23 +11,29 @@ import be.helha.clapetteChaussette.repository.TeacherRepository;
 import java.util.List;
 
 public class DbService implements IRepository {
+    private TeacherRepository tRepo;
+    private QuizzRepository qRepo;
+    private QuestionRepository questionRepo;
+
+    public DbService(TeacherRepository tRepo, QuizzRepository qRepo, QuestionRepository questionRepo) {
+        this.tRepo = tRepo;
+        this.qRepo = qRepo;
+        this.questionRepo = questionRepo;
+    }
 
     @Override
     public void saveTeacher(TeacherDTO teacher) {
-        TeacherRepository tRepo = new TeacherRepository();
         tRepo.save(teacher);
     }
 
     @Override
     public void saveQuizz(QuizzDTO quizz) {
-        QuizzRepository quizzRepo = new QuizzRepository();
-        quizzRepo.save(quizz.uuid(), quizz.teacher_uuid(), quizz.name());
+        qRepo.save(quizz.uuid(), quizz.teacher_uuid(), quizz.name());
     }
 
     @Override
     public void saveQuestion(QuestionDTO question) {
-        QuestionRepository qRepo = new QuestionRepository();
-        qRepo.save(question);
+        questionRepo.save(question);
     }
 
     @Override

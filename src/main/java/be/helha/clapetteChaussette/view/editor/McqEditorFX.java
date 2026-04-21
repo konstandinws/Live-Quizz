@@ -26,7 +26,7 @@ import be.helha.clapetteChaussette.view.ViewFX;
  * La validation métier est déléguée au controller ; cette classe ne gère
  * que la validation visuelle (affichage des erreurs).
  */
-public class McqEditorFX extends ViewFX {
+public class McqEditorFX extends ViewFX<EditorController> {
     @FXML
     private Button saveQuestionBTN;
 
@@ -39,8 +39,6 @@ public class McqEditorFX extends ViewFX {
 
     final int MAX_ANSWERS = 6;
     final int MIN_ANSWERS = 2;
-
-    IMcqEditorListener controller;
 
     private List<CheckBox> correctAnswerCB = new ArrayList<>();
     private List<TextField> textFields = new ArrayList<>();
@@ -99,7 +97,7 @@ public class McqEditorFX extends ViewFX {
                 .map(CheckBox::isSelected)
                 .toList();
         try {
-            controller.createMcqQuestion(title, answers, correctAnswers);
+            listener.createMcqQuestion(title, answers, correctAnswers);
         } catch (InvalidQuestionException e) {
             showErrorPopup(e.getMessage());
         }

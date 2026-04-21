@@ -17,7 +17,7 @@ import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.view.ViewFX;
 
-public class OpenEditorFX extends ViewFX {
+public class OpenEditorFX extends ViewFX<EditorController> {
 
     @FXML
     private TextField questionTitle; // Field where the teacher will enter the question
@@ -28,8 +28,6 @@ public class OpenEditorFX extends ViewFX {
     @FXML
     private Button addAnswerBTN; // Button to add a new answer variant
 
-    // Link to the controller
-    private IOpenEditorListener controller;
     private List<TextField> answerFields = new ArrayList<>();
 
     // Called when the page initializes to add a first answer field
@@ -73,7 +71,7 @@ public class OpenEditorFX extends ViewFX {
             boolean hasPoints = pointsCheckBox.isSelected();
             List<String> answerText = answerFields.stream().map(TextField::getText).toList();
 
-            controller.createOpenQuestion(title, answerText, hasPoints);
+            listener.createOpenQuestion(title, answerText, hasPoints);
 
         } catch (InvalidQuestionException e) {
             showError(e.getMessage());

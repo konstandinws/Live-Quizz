@@ -1,13 +1,13 @@
 package be.helha.clapetteChaussette.view.editor;
 
+import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-public class QuizzEditorFX extends ViewFX {
-    private IQuizzListener controller;
+public class QuizzEditorFX extends ViewFX<EditorController> {
 
     @FXML
     private Button mcqButton;
@@ -27,25 +27,25 @@ public class QuizzEditorFX extends ViewFX {
     // méthodes pour les evenements des clics sur les boutons
     @FXML
     void onPollClick(ActionEvent event) {
-        controller.onAddPollRequested();
+        listener.onAddPollRequested();
 
     }
 
     @FXML
     void onMcqClick(ActionEvent event) {
-        controller.onAddMcqRequested();
+        listener.onAddMcqRequested();
 
     }
 
     @FXML
     void onQuestionFreeClick(ActionEvent event) {
-        controller.onAddQuestionFreeRequested();
+        listener.onAddQuestionFreeRequested();
 
     }
 
     @FXML
     void onSaveClick(ActionEvent event) {
-        controller.onSaveRequested();
+        listener.onSaveRequested();
     }
 
     @Override

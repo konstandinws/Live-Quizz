@@ -2,11 +2,16 @@ package be.helha.clapetteChaussette.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.model.Quizz;
+import be.helha.clapetteChaussette.model.dto.QuestionDTO;
+import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 import be.helha.clapetteChaussette.model.question.Answer;
 import be.helha.clapetteChaussette.model.question.McqQuestion;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
+import be.helha.clapetteChaussette.model.question.Question;
 
 public class EditorService {
     /**
@@ -15,7 +20,18 @@ public class EditorService {
      * It will create the question objects and save them to the database
      */
 
-    public OpenQuestion createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints) {
+    private DbService dbService;
+    private ValidateQuestionEditorService validateQuestionEditorService;
+
+    public EditorService(DbService dbService, ValidateQuestionEditorService validateQuestionEditorService) {
+        this.dbService = dbService;
+        this.validateQuestionEditorService = validateQuestionEditorService;
+    }
+
+    public OpenQuestion createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
+            throws InvalidQuestionException {
+        validateQuestionEditorService.validateOpenQuestion(title, answerTexts);
+
         List<Answer> answers = answerTexts.stream()
                 .map(String::trim)
                 .filter(text -> !text.isBlank())
@@ -25,19 +41,41 @@ public class EditorService {
         return new OpenQuestion(title, answers, hasPoints);
     }
 
-    public McqQuestion createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers) {
-
+    public McqQuestion createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
+            throws InvalidQuestionException {
+        validateQuestionEditorService.validateMcqQuestion(title, answers, correctAnswers);
         List<Answer> answerObjects = new ArrayList<>();
         for (int i = 0; i < answers.size(); i++) {
             answerObjects.add(new Answer(answers.get(i), correctAnswers.get(i)));
         }
-
-        List<String> correctAnswerTexts = answerObjects.stream()
-                .filter(Answer::isCorrect)
-                .map(Answer::getAnswer)
-                .toList();
-
         return new McqQuestion(title, answerObjects);
     }
 
+    public void saveQuizz(Quizz quizz, UUID teacherUuid) {
+        QuizzDTO quizzDTO = new QuizzDTO(quizz.getUuid(), quizz.getName(), teacherUuid);
+        dbService.saveQuizz(quizzDTO);
+        dbService.saveQuestions(createQuestionDTOs(quizz.getQuestions(), quizz.getUuid()));
+    }
+
+    /**
+     * Just to the lissibility of the code.
+     * This method will create all the question DTOs from the quizz questions and
+     * return them as a list.
+     * 
+     * @param quizz
+     * @return
+     */
+    private List<QuestionDTO> createQuestionDTOs(List<Question> questions, UUID quizzUuid) {
+        List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();
+        for (Question question : questions) {
+            QuestionDTO questionDTO = new QuestionDTO(
+                    UUID.randomUUID(),
+                    quizzUuid,
+                    question.getQuestion(),
+                    question.getAnswers(),
+                    question.getType());
+            questionsDTO.add(questionDTO);
+        }
+        return questionsDTO;
+    }
 }

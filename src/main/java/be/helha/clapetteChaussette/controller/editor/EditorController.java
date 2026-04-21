@@ -1,18 +1,13 @@
 package be.helha.clapetteChaussette.controller.editor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import be.helha.clapetteChaussette.controller.BaseController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.Quizz;
-import be.helha.clapetteChaussette.model.dto.QuestionDTO;
-import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.model.question.Question;
 import be.helha.clapetteChaussette.repository.TeacherRepository;
-import be.helha.clapetteChaussette.service.DbService;
 import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
@@ -38,11 +33,17 @@ import be.helha.clapetteChaussette.view.editor.QuizzEditorFX.IQuizzListener;
 public class EditorController
         extends BaseController
         implements IQuizzListener, IOpenEditorListener, IMcqEditorListener {
+
+    // #region Fields
+
     EditorService editorService;
     ValidateQuestionEditorService validateQuestionEditorService;
-    NavigationService navigationService;
     Quizz quizz;
     TeacherDTO teacher;
+
+    // endregion
+
+    // #region Constructor
 
     /**
      * Constructor for the EditorController.
@@ -74,67 +75,52 @@ public class EditorController
         teacherRepository.save(teacher);
     }
 
-    // IQuizzListener methods
+    // #endregion
+
+    // #region IQuizzListener methods
 
     @Override
     public void onAddMcqRequested() {
-        navigateToView(new McqEditorFX(), "Éditeur de Question QCM");
+        System.out.println("Add MCQ requested, navigating to McqEditorFX");
+        navigateToView(new McqEditorFX(), "Éditeur de Question QCM", this);
     }
 
     @Override
     public void onAddPollRequested() {
-        // TODO
+        System.out.println("Add Poll requested, navigating to PollEditorFX");
+        // TODO: implement PollEditorFX and navigate to it here
     }
 
     @Override
     public void onAddQuestionFreeRequested() {
-        navigateToView(new OpenEditorFX(), "Éditeur de Question Libre");
+        System.out.println("Add Free Question requested, navigating to OpenEditorFX");
+        navigateToView(new OpenEditorFX(), "Éditeur de Question Libre", this);
     }
 
     @Override
     public void onSaveRequested() {
-        this.saveQuizz();
+        editorService.saveQuizz(quizz, teacher.uuid());
     }
 
-    // IOpenEditorListener methods
+    // endregion
+
+    // #region IOpenEditorListener methods
 
     @Override
     public void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
             throws InvalidQuestionException {
-        validateQuestionEditorService.validateOpenQuestion(title, answerTexts);
         quizz.addQuestion(editorService.createOpenQuestion(title, answerTexts, hasPoints));
     }
 
-    // IMcqEditorListener methods
+    // endregion
+
+    // #region IMcqEditorListener methods
 
     @Override
     public void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
             throws InvalidQuestionException {
-        validateQuestionEditorService.validateMcqQuestion(title, answers);
         quizz.addQuestion(editorService.createMcqQuestion(title, answers, correctAnswers));
     }
 
-    // some shit to move
-
-    private void saveQuizz() { // a faire dans un service
-        DbService dbService = new DbService();
-        QuizzDTO quizzDTO = new QuizzDTO(quizz.getUuid(), quizz.getName(), teacher.uuid());
-        dbService.saveQuizz(quizzDTO);
-        dbService.saveQuestions(createQuestionDTOs(quizz.getQuestions()));
-    }
-
-    private List<QuestionDTO> createQuestionDTOs(List<Question> questions) { // a faire dans un service
-        UUID quizzUuid = quizz.getUuid();
-        List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();
-        for (Question question : quizz.getQuestions()) {
-            QuestionDTO questionDTO = new QuestionDTO(
-                    UUID.randomUUID(),
-                    quizzUuid,
-                    question.getQuestion(),
-                    question.getAnswers(),
-                    question.getType());
-            questionsDTO.add(questionDTO);
-        }
-        return questionsDTO;
-    }
+    // endregion
 }

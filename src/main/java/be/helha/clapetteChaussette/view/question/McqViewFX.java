@@ -1,7 +1,8 @@
-package be.helha.clapetteChaussette.view.Question;
+package be.helha.clapetteChaussette.view.question;
 
 import java.util.List;
 
+import be.helha.clapetteChaussette.controller.question.McqController;
 import be.helha.clapetteChaussette.view.IQuestionListener;
 import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
@@ -10,8 +11,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
-public class McqViewFX extends ViewFX {
-    private IQuestionListener<String> listener;
+public class McqViewFX extends ViewFX<McqController> {
 
     @FXML
     private Label questionLabel;
@@ -47,10 +47,6 @@ public class McqViewFX extends ViewFX {
         CheckBox3.setText(answers.get(2));
         CheckBox4.setText(answers.get(3));
 
-    }
-
-    public void setController(IQuestionListener<String> listener) {
-        this.listener = listener;
     }
 
     @Override

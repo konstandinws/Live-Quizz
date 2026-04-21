@@ -1,5 +1,6 @@
-package be.helha.clapetteChaussette.view.Question;
+package be.helha.clapetteChaussette.view.question;
 
+import be.helha.clapetteChaussette.controller.question.OpenController;
 import be.helha.clapetteChaussette.view.IQuestionListener;
 import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.fxml.FXML;
@@ -7,7 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
-public class OpenQuestionFX extends ViewFX {
+public class OpenQuestionFX extends ViewFX<OpenController> {
     @FXML
     private Button envoyerBtn;
 
@@ -17,14 +18,8 @@ public class OpenQuestionFX extends ViewFX {
     @FXML
     private TextArea textArea;
 
-    private IQuestionListener<String> listener;
-
     @FXML
     private void initialize() {
-    }
-
-    public void setController(IQuestionListener<String> listener) {
-        this.listener = listener;
     }
 
     @FXML

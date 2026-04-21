@@ -5,9 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-public abstract class ViewFX implements IDisplayable {
+public abstract class ViewFX<C extends BaseController> implements IDisplayable {
 
-    protected BaseController controller;
+    protected C listener;
 
     protected abstract String getFXMLPath();
 
@@ -19,7 +19,8 @@ public abstract class ViewFX implements IDisplayable {
         return new Scene(root);
     }
 
-    public void setOwnController(BaseController controller) {
-        this.controller = controller;
+    public void setOwnController(C controller) {
+        this.listener = controller;
     }
+
 }

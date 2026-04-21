@@ -1,5 +1,6 @@
-package be.helha.clapetteChaussette.controller;
+package be.helha.clapetteChaussette.controller.question;
 
+import be.helha.clapetteChaussette.controller.BaseController;
 import be.helha.clapetteChaussette.model.question.PollQuestion;
 import be.helha.clapetteChaussette.view.IQuestionListener;
 

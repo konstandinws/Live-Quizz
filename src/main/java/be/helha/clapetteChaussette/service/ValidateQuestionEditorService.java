@@ -75,10 +75,11 @@ public class ValidateQuestionEditorService {
         validateAnswers(answerTexts);
     }
 
-    public void validateMcqQuestion(String title, List<String> answers)
+    public void validateMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
             throws InvalidQuestionException {
         validateTitle(title);
         validateAnswers(answers);
         validateMcqAnswers(answers);
+        validateIfAtLeastOneValidAnswser(correctAnswers);
     }
 }

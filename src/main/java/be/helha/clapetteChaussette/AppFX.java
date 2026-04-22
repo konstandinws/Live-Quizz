@@ -2,9 +2,9 @@
 package be.helha.clapetteChaussette;
 
 import be.helha.clapetteChaussette.controller.LoginController;
-import be.helha.clapetteChaussette.repository.QuestionRepository;
-import be.helha.clapetteChaussette.repository.QuizzRepository;
-import be.helha.clapetteChaussette.repository.TeacherRepository;
+import be.helha.clapetteChaussette.repository.JdbcIQuestionRepository;
+import be.helha.clapetteChaussette.repository.JdbcIQuizzRepository;
+import be.helha.clapetteChaussette.repository.JdbcITeacherRepository;
 import be.helha.clapetteChaussette.service.DbService;
 import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
@@ -20,15 +20,16 @@ public class AppFX extends Application {
         NavigationService navigationService = new NavigationService(mainstage);
         ValidateQuestionEditorService validateService = new ValidateQuestionEditorService();
 
-        TeacherRepository teacherRepository = new TeacherRepository();
-        QuestionRepository questionRepository = new QuestionRepository();
-        QuizzRepository quizzRepository = new QuizzRepository();
+        JdbcITeacherRepository teacherRepository = new JdbcITeacherRepository();
+        JdbcIQuestionRepository questionRepository = new JdbcIQuestionRepository();
+        JdbcIQuizzRepository quizzRepository = new JdbcIQuizzRepository();
 
         DbService dbService = new DbService(teacherRepository, quizzRepository, questionRepository);
         EditorService editorService = new EditorService(dbService, validateService);
 
         // On lance le LoginController au démarrage
-        LoginController loginController = new LoginController(navigationService, dbService, editorService, validateService);
+        LoginController loginController = new LoginController(navigationService, dbService, editorService,
+                validateService);
         loginController.navigateToView(new LoginViewFX(), "Clapette Chaussette - Connexion", loginController);
     }
 

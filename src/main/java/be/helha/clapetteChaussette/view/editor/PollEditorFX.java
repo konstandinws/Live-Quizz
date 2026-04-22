@@ -1,5 +1,6 @@
-package be.helha.clapetteChaussette.view;
+package be.helha.clapetteChaussette.view.editor;
 
+import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

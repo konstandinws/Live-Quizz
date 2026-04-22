@@ -2,4 +2,15 @@ package be.helha.clapetteChaussette.model.dto;
 
 import java.util.UUID;
 
-public record TeacherDTO(UUID uuid, String name, String hashed_password) {}
+/**
+ * Data Transfer Object representing a Teacher, including sensitive information.
+ * <p>
+ * Typically used for registration or internal operations where the password hash
+ * must be persisted to the database.
+ * </p>
+ *
+ * @param uuid The unique identifier of the teacher.
+ * @param name The teacher's username or display name.
+ * @param hashedPassword The hashed version of the teacher's password.
+ */
+public record TeacherDTO(UUID uuid, String name, String hashedPassword) {}

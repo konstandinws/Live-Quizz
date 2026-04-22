@@ -11,12 +11,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-// TODO ameliorer la javadoc
+//TODO add a way to find all questions of a quizz from the quizz uuid
 
-// Je pense que c'est possible de faire un grosse requete avec un join au lieu de faire plusieurs petites requetes comme ici
+/**
+ * JDBC implementation of the {@link IQuestionRepository}.
+ * <p>
+ * This repository is responsible for managing the persistence of Question entities
+ * and their corresponding Answers in a relational database using raw JDBC connections.
+ * </p>
+ */
+public class JdbcIQuestionRepository implements IQuestionRepository {
 
-public class QuestionRepository {
-
+    @Override
     public void save(QuestionDTO question) {
 
         String query = "INSERT INTO question (quuid, questionnaire_uuid, content, type) values (?, ?, ?, ?)";
@@ -38,10 +44,6 @@ public class QuestionRepository {
         }
     }
 
-    // cette methode va etre appele dans save pour ecrire en cascade les choix
-    // possibles d'une question
-    // QuestionDTO est super important ici c'est ca qui m'a permis de generaliser la
-    // creation sans devoir modifier tous les models
     private void saveAnswers(QuestionDTO question, Connection connection) throws SQLException {
         String query = "INSERT INTO reponse_question (question_uuid, reponse, bonne_reponse) values (?, ?, ?)";
 
@@ -57,6 +59,7 @@ public class QuestionRepository {
         }
     }
 
+    @Override
     public Optional<QuestionDTO> findByUuid(UUID questionUuid) {
 
         String query = "SELECT quuid, questionnaire_uuid, content, type FROM question WHERE quuid = ?";
@@ -68,6 +71,7 @@ public class QuestionRepository {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
+                    UUID quuid = resultSet.getObject("quuid", UUID.class);
                     UUID quizzUuid = resultSet.getObject("questionnaire_uuid", UUID.class);
                     String content = resultSet.getString("content");
                     String type = resultSet.getString("type");
@@ -91,8 +95,7 @@ public class QuestionRepository {
     }
 
     // on va aller chercher les choix et les bonnes reponses pour chaque question
-    public void findAnswers(UUID questionUuid, Connection connection, List<Answer> answers)
-            throws SQLException {
+    private void findAnswers(UUID questionUuid, Connection connection, List<Answer> answers) throws SQLException {
         String query = "SELECT reponse, bonne_reponse FROM reponse_question WHERE question_uuid = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {

@@ -7,8 +7,9 @@ import be.helha.clapetteChaussette.controller.BaseController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.repository.TeacherRepository;
+import be.helha.clapetteChaussette.repository.ITeacherRepository;
 import be.helha.clapetteChaussette.service.EditorService;
+import be.helha.clapetteChaussette.repository.JdbcITeacherRepository;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
 import be.helha.clapetteChaussette.view.editor.PollEditorFX;
@@ -72,9 +73,11 @@ public class EditorController
                 UUID.randomUUID(),
                 "test_prof_1",
                 "mot_de_passe_haché");
-        TeacherRepository teacherRepository = new TeacherRepository(); // i know this is bad but this gonna move when we
-                                                                       // implement the login system
-        teacherRepository.save(teacher);
+
+        // i know this is bad but this gonna move when we
+        // implement the login system
+        ITeacherRepository ITeacherRepository = new JdbcITeacherRepository();
+        ITeacherRepository.save(teacher);
     }
 
     // #endregion

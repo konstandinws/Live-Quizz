@@ -29,6 +29,7 @@ public class Quizz {
         return Collections.unmodifiableList(questions);
     }
 
+    // Polymorphic method to add any question type that extends the Question class
     public void addQuestion(Question question) {
         this.questions.add(question);
     }

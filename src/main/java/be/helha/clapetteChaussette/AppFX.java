@@ -12,7 +12,7 @@ import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
 import be.helha.clapetteChaussette.view.LoginViewFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
-//fgfgfgf
+//fgfgfgfggg
 public class AppFX extends Application {
 
     @Override

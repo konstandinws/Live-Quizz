@@ -16,8 +16,8 @@
          <children>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
-                  <TextField fx:id="questionTitle" alignment="TOP_CENTER" layoutX="157.0" layoutY="61.0" prefWidth="300.0" promptText="veuillez ecrire votre question" />
-                  <Label layoutX="228.0" layoutY="15.0" text="Nouveau QCM">
+                  <TextField fx:id="questionTitle" alignment="TOP_CENTER" layoutX="157.0" layoutY="61.0" prefWidth="300.0" promptText="Please enter your question" />
+                  <Label layoutX="228.0" layoutY="15.0" text="New MCQ">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -33,7 +33,7 @@
             <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
                   <Button fx:id="addAnswerBTN" layoutX="42.0" layoutY="38.0" mnemonicParsing="false" onAction="#addNewAnswer" text="+" />
-                  <Button fx:id="saveQuestionBTN" alignment="CENTER_RIGHT" layoutX="481.0" layoutY="38.0" mnemonicParsing="false" onAction="#createQuestion" text="sauvegarder" />
+                  <Button fx:id="saveQuestionBTN" alignment="CENTER_RIGHT" layoutX="481.0" layoutY="38.0" mnemonicParsing="false" onAction="#createQuestion" text="Save" />
                </children>
             </AnchorPane>
          </children>

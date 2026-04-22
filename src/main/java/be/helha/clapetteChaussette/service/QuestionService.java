@@ -1,6 +1,8 @@
 package be.helha.clapetteChaussette.service;
 
+import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
+import be.helha.clapetteChaussette.model.question.Question;
 import be.helha.clapetteChaussette.repository.JdbcIQuizzRepository;
 
 import java.util.Collections;
@@ -15,6 +17,16 @@ public class QuestionService {
     }
 
     public List<QuizzDTO> getQuizzesByTeacher(UUID teacherUuid) {
-        return quizzRepository.findAll(teacherUuid).orElse(Collections.emptyList());
+        return java.util.Optional.ofNullable(quizzRepository.findAll(teacherUuid))
+                .orElse(Collections.emptyList());
+    }
+
+    public QuestionDTO transformQuestionToDTO(Question question) {
+        return new QuestionDTO(
+                question.getQuuid(),
+                question.getQuestionnaireUuid(),
+                question.getQuestion(),
+                question.getAnswers(),
+                question.getType());
     }
 }

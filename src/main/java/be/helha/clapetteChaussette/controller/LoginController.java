@@ -2,7 +2,6 @@
 package be.helha.clapetteChaussette.controller;
 
 import be.helha.clapetteChaussette.model.Quizz;
-import be.helha.clapetteChaussette.model.dto.Credentials;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 import be.helha.clapetteChaussette.service.DbService;
 import be.helha.clapetteChaussette.service.EditorService;
@@ -28,8 +27,7 @@ public class LoginController extends BaseController {
     }
 
     public void onLoginRequested(String name, String password) {
-        Credentials creds = new Credentials(name, password);
-        Optional<TeacherDTO> teacher = dbService.findTeacher(creds);
+        Optional<TeacherDTO> teacher = dbService.findTeacher(name);
 
         if (teacher.isPresent()) {
             goToEditor(teacher.get());

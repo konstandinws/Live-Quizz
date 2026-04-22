@@ -53,7 +53,6 @@ public class JdbcITeacherRepository implements ITeacherRepository {
                 if (resultSet.next()) {
 
                     UUID uuid = resultSet.getObject("uuid", UUID.class);
-                    String teacherName = resultSet.getString("name");
                     String hashedPassword = resultSet.getString("password_hash");
 
                     return Optional.of(new TeacherDTO(uuid, name, hashedPassword));

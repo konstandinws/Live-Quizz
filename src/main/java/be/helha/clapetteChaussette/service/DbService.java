@@ -1,7 +1,6 @@
 // be.helha.clapetteChaussette.service.DbService
 package be.helha.clapetteChaussette.service;
 
-import be.helha.clapetteChaussette.model.dto.Credentials;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
@@ -32,8 +31,8 @@ public class DbService implements IRepository {
     }
 
     @Override
-    public Optional<TeacherDTO> findTeacher(Credentials cred) {
-        return tRepo.find(cred);
+    public Optional<TeacherDTO> findTeacher(String name) {
+        return tRepo.findByName(name);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class DbService implements IRepository {
     }
 
     @Override
-    public Optional<List<QuizzDTO>> findAllQuizzes(UUID teacherUuid) {
+    public List<QuizzDTO> findAllQuizzes(UUID teacherUuid) {
         return qRepo.findAll(teacherUuid);
     }
 

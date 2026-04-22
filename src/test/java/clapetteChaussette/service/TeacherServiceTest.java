@@ -1,9 +1,12 @@
 package clapetteChaussette.service;
 
+import be.helha.clapetteChaussette.exception.LoginFailedException;
 import be.helha.clapetteChaussette.exception.TeacherAlreadyExistsException;
+import be.helha.clapetteChaussette.model.Teacher;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 import be.helha.clapetteChaussette.repository.TeacherRepository;
 import be.helha.clapetteChaussette.service.TeacherService;
+import be.helha.clapetteChaussette.utils.PasswordHasher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,8 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -41,8 +43,9 @@ public class TeacherServiceTest {
 
     @Test
     void registerNewTeacher_ShouldThrowException_WhenPasswordIsTooShort() {
+        String teacher = "Bob";
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            teacherService.registerNewTeacher(anyString(), "1234");
+            teacherService.registerNewTeacher(teacher, "1234");
         });
 
         assertEquals("password not strong enough", exception.getMessage());
@@ -52,7 +55,7 @@ public class TeacherServiceTest {
 
     @Test
     void registerNewTeacher_ShouldThrowException_WhenTeacherAlreadyExists() {
-        String teacherName = "test_teacher";
+        String teacherName = "Mark";
         // we simulate that the teacher is already in the DB
         when(repository.findByName(teacherName))
                 .thenReturn(Optional.of(new TeacherDTO(UUID.randomUUID(), teacherName, "hash_password")));
@@ -61,8 +64,72 @@ public class TeacherServiceTest {
             teacherService.registerNewTeacher(teacherName, "password");
         });
 
-        assertEquals("This teacher already exist", exception.getMessage());
+        assertEquals("Teacher already exists : " + teacherName, exception.getMessage());
 
         verify(repository, never()).save(any());
+    }
+
+    @Test
+    void registerNewTeacher_ShouldSucceed_WhenDataIsValid() {
+        String teacherName = "John";
+
+        when(repository.findByName(teacherName)).thenReturn(Optional.empty());
+
+        // I originally used anyString() but the password needs to be at least some characters long
+        Teacher createdTeacher = teacherService.registerNewTeacher(teacherName, "12345678");
+
+        assertNotNull(createdTeacher.getUuid());
+        assertEquals(teacherName, createdTeacher.getName());
+
+        verify(repository, times(1)).save(any(TeacherDTO.class));
+    }
+
+    @Test
+    void teacherLogin_ShouldThrowException_WhenNameDoesNotExist() {
+        String loginName = "Alex";
+        when(repository.findByName(loginName)).thenReturn(Optional.empty());
+
+        LoginFailedException exception = assertThrows(LoginFailedException.class, () -> {
+            teacherService.teacherLogin(loginName, "password");
+        });
+
+        assertEquals("Invalid credentials", exception.getMessage());
+    }
+
+    @Test
+    void teacherLogin_ShouldThrowException_WhenPasswordIsIncorrect() {
+        String wrongPassword = "wrongPassword";
+        String realPassword = "correctPassword";
+        String hashedPasswordInDb = PasswordHasher.hashPassword(realPassword);
+        String teacherName = "Phillipe";
+        TeacherDTO dbTeacher = new TeacherDTO(UUID.randomUUID(), teacherName, hashedPasswordInDb);
+
+        when(repository.findByName(teacherName)).thenReturn(Optional.of(dbTeacher));
+
+        // try to connect with the wrong password
+        LoginFailedException exception =  assertThrows(LoginFailedException.class, () -> {
+            teacherService.teacherLogin(teacherName, wrongPassword);
+        });
+
+        assertEquals("Invalid credentials", exception.getMessage());
+    }
+
+    @Test
+    void teacherLogin_ShouldSucceed_WhenCredentialsAreCorrect() {
+        String password = "MyPassword";
+        String hashedPasswordInDb = PasswordHasher.hashPassword(password);
+        String teacherName = "David";
+        UUID uuid = UUID.randomUUID();
+
+        TeacherDTO dbTeacher = new TeacherDTO(uuid, teacherName, hashedPasswordInDb);
+
+        when(repository.findByName(teacherName)).thenReturn(Optional.of(dbTeacher));
+
+        Teacher loggedTeacher = teacherService.teacherLogin(teacherName, password);
+
+        assertNotNull(loggedTeacher);
+        assertEquals(uuid, loggedTeacher.getUuid());
+        assertEquals(teacherName, loggedTeacher.getName());
+
     }
 }

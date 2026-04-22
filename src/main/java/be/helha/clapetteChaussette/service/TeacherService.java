@@ -22,6 +22,7 @@ import java.util.UUID;
 public class TeacherService {
 
     private final TeacherRepository repository;
+    private final int MINIMUM_PASSWORD_LENGTH = 6;
 
     /**
      * Constructs a new TeacherService.
@@ -40,7 +41,7 @@ public class TeacherService {
      * </p>
      *
      * @param name The desired username for the new teacher.
-     * @param password The plain-text password (must be at least 6 characters).
+     * @param password The plain-text password (must be at least MINIMUM_PASSWORD_LENGTH characters).
      * @return The newly created {@link Teacher} domain model.
      * @throws IllegalArgumentException if the name is blank or the password is too short.
      * @throws TeacherAlreadyExistsException if a teacher with the given name already exists.
@@ -50,11 +51,11 @@ public class TeacherService {
         if (name.isBlank()){
             throw new IllegalArgumentException("invalid teacher name");
         }
-        if(password.length() < 6) {
+        if(password.length() < MINIMUM_PASSWORD_LENGTH ) {
             throw new IllegalArgumentException("password not strong enough");
         }
         if (repository.findByName(name).isPresent()) {
-            throw new TeacherAlreadyExistsException("This teacher already exist");
+            throw new TeacherAlreadyExistsException(name);
         }
 
         String hashedPassword = PasswordHasher.hashPassword(password);
@@ -78,8 +79,10 @@ public class TeacherService {
 
         Optional<TeacherDTO> dbResponse = repository.findByName(name);
 
+        // we verify that the teacher exists
         if(dbResponse.isPresent()) {
             TeacherDTO teacherDTO = dbResponse.get();
+            // we verify if the password is correct
             if (PasswordHasher.verifyPassword(password, teacherDTO.hashedPassword()))
             {
                 return createTeacherFromDB(teacherDTO);

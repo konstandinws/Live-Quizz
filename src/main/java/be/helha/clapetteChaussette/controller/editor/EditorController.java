@@ -1,11 +1,12 @@
 package be.helha.clapetteChaussette.controller.editor;
 
+import java.util.List;
+
 import be.helha.clapetteChaussette.controller.BaseController;
 import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
-import java.util.List;
 
 public class EditorController extends BaseController {
     private Quizz quizz;
@@ -13,16 +14,16 @@ public class EditorController extends BaseController {
     private ValidateQuestionEditorService validateService;
 
     public EditorController(Quizz quizz,
-                            EditorService editorService,
-                            NavigationService navigationService,
-                            ValidateQuestionEditorService validateService) {
+            EditorService editorService,
+            NavigationService navigationService,
+            ValidateQuestionEditorService validateService) {
         super(navigationService);
         this.quizz = quizz;
         this.editorService = editorService;
         this.validateService = validateService;
     }
 
-    //  MÉTHODES POUR LES BOUTONS DU QUIZZ EDITOR
+    // MÉTHODES POUR LES BOUTONS DU QUIZZ EDITOR
 
     public void onAddMcqRequested() {
         System.out.println("Ouverture éditeur QCM");
@@ -40,17 +41,12 @@ public class EditorController extends BaseController {
         System.out.println("Sauvegarde du Quiz complet");
     }
 
-
-
     public void createOpenQuestion(String title, List<String> answers, boolean hasPoints) {
         System.out.println("Question reçue : " + title);
         System.out.println("Réponses possibles : " + answers);
         System.out.println("Points activés : " + hasPoints);
 
-
     }
-
-
 
     /**
      * Appelée par McqEditorFX pour créer un QCM
@@ -60,19 +56,18 @@ public class EditorController extends BaseController {
         System.out.println("Titre : " + title);
         System.out.println("Nombre de choix : " + answers.size());
 
-
     }
 
     /**
      * Cette méthode est appelée par le PollEditorFX quand on clique sur sauvegarder
-     * @param title Le titre du sondage
+     * 
+     * @param title   Le titre du sondage
      * @param answers La liste des options de réponse
      */
     public void createPoll(String title, List<String> answers) {
         System.out.println("Sondage reçu dans le contrôleur !");
         System.out.println("Titre : " + title);
         System.out.println("Options : " + answers);
-
 
     }
 }

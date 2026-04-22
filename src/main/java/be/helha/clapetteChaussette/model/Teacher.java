@@ -2,21 +2,25 @@ package be.helha.clapetteChaussette.model;
 
 import java.util.UUID;
 
+/**
+ * Domain model representing a Teacher within the application.
+ */
 public class Teacher {
     private UUID uuid;
     private String name;
-    private String hashed_password;
 
-    public Teacher(String name, String hashed_password) {
-        uuid = UUID.randomUUID();
+    /**
+     * Constructs a new Teacher instance.
+     *
+     * @param uuid The unique identifier for the teacher.
+     * @param name The name of the teacher.
+     */
+    public Teacher(UUID uuid, String name) {
+        this.uuid = uuid;
         this.name = name;
-        this.hashed_password = hashed_password;
     }
 
     public UUID getUuid() { return uuid;}
 
     public String getName() { return name;}
-
-    public String getHashed_password() { return hashed_password;}
-
 }

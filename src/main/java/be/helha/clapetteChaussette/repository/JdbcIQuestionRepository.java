@@ -16,8 +16,10 @@ import java.util.UUID;
 /**
  * JDBC implementation of the {@link IQuestionRepository}.
  * <p>
- * This repository is responsible for managing the persistence of Question entities
- * and their corresponding Answers in a relational database using raw JDBC connections.
+ * This repository is responsible for managing the persistence of Question
+ * entities
+ * and their corresponding Answers in a relational database using raw JDBC
+ * connections.
  * </p>
  */
 public class JdbcIQuestionRepository implements IQuestionRepository {
@@ -71,7 +73,6 @@ public class JdbcIQuestionRepository implements IQuestionRepository {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    UUID quuid = resultSet.getObject("quuid", UUID.class);
                     UUID quizzUuid = resultSet.getObject("questionnaire_uuid", UUID.class);
                     String content = resultSet.getString("content");
                     String type = resultSet.getString("type");

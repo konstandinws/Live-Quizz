@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
 
-<fx:root type="VBox" spacing="8" xmlns="http://javafx.com/javafx"
-         xmlns:fx="http://javafx.com/fxml"
-         fx:controller="be.helha.clapetteChaussette.view.ControlerComponent.ControlerComponent"
-         styleClass="carte"
-         stylesheets="@../css/composent.css">
+<fx:root fx:id="root" spacing="8" styleClass="carte" stylesheets="@../css/composent.css" type="VBox" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.helha.clapetteChaussette.view.ControlerComponent.ControlerComponent">
 
-    <Label fx:id="labelTitre" styleClass="carte-titre"/>
-    <Label fx:id="labelQuestion" styleClass="carte-question"/>
-    <Label fx:id="labelDate" styleClass="carte-date"/>
+    <Label fx:id="labelTitre" styleClass="carte-titre" />
+    <Label fx:id="labelQuestion" styleClass="carte-question" />
+    <Label fx:id="labelDate" styleClass="carte-date" />
 
 </fx:root>

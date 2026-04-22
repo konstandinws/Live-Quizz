@@ -7,16 +7,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.util.List;
 
 public class ControlerComponent extends VBox {
 
     @FXML
     private Label labelTitre;
     @FXML
-    private Label labelQuestion ;
+    private Label labelQuestion;
     @FXML
-    private Label labelDate ;
+    private Label labelDate;
 
     @FXML
     private VBox root; // le nœud racine de ton composent.fxml
@@ -35,9 +34,11 @@ public class ControlerComponent extends VBox {
         return root;
     }
 
-    // Tes méthodes métier du composant
     public void setData(QuizzDTO question) {
-        // ...
 
+    }
+
+    @FXML
+    private void initialize() {
     }
 }

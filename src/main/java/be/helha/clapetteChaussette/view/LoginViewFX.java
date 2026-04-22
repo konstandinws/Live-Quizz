@@ -24,10 +24,18 @@ public class LoginViewFX extends ViewFX<LoginController> {
         listener.onRegisterRequested(nameField.getText(), passwordField.getText());
     }
 
-
     @Override
     protected String getFXMLPath() {
-        // Ne mets PAS de "/" ou de dossier ici, ViewFX s'en occupe
         return "login.fxml";
+    }
+
+    @FXML
+    private void initialize() {
+    }
+
+    public interface ILoginListener {
+        void onLoginRequested(String name, String password);
+
+        void onRegisterRequested(String name, String password);
     }
 }

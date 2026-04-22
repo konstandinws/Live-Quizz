@@ -8,12 +8,15 @@ import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
 import be.helha.clapetteChaussette.controller.editor.EditorController;
+import be.helha.clapetteChaussette.view.LoginViewFX.ILoginListener;
 import be.helha.clapetteChaussette.view.editor.QuizzEditorFX;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class LoginController extends BaseController {
+public class LoginController
+        extends BaseController
+        implements ILoginListener {
     private DbService dbService;
     private EditorService editorService;
     private ValidateQuestionEditorService validateService;
@@ -26,27 +29,27 @@ public class LoginController extends BaseController {
     }
 
     public void onLoginRequested(String name, String password) {
-        Optional<TeacherDTO> teacher = dbService.findTeacher(name);
 
+        Optional<TeacherDTO> teacher = dbService.findTeacher(name);
         if (teacher.isPresent()) {
             goToEditor(teacher.get());
         } else {
-            System.out.println("Échec connexion : Prof non trouvé.");
+            System.out.println("Échec connexion : Prof non trouvé.");// gonna need to throw an error that gonna be
+                                                                     // catched by the view to display an error message
         }
     }
 
     public void onRegisterRequested(String name, String password) {
-        TeacherDTO newTeacher = new TeacherDTO(UUID.randomUUID(), name, password);
+        TeacherDTO newTeacher = new TeacherDTO(UUID.randomUUID(), name, password); // need to deleguate into a service
         dbService.saveTeacher(newTeacher);
         goToEditor(newTeacher);
     }
 
     private void goToEditor(TeacherDTO teacher) {
-        // Pour l'instant on va direct à l'éditeur, mais on pourrait aller vers une
-        // liste de quiz
+        // for now we directly create a new quiz, but we should display a list of quiz
+        // to choose from or an option to create a new one
         Quizz quizz = new Quizz("Nouveau Quiz");
         EditorController editorCtrl = new EditorController(quizz, editorService, navigationService, validateService);
-        // On stocke le prof dans l'application via le controller
-        editorCtrl.navigateToView(new QuizzEditorFX(), "Éditeur de Quiz", editorCtrl);
+        navigateToView(new QuizzEditorFX(), "Éditeur de Quiz", editorCtrl);
     }
 }

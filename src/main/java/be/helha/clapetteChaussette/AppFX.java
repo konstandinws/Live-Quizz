@@ -2,9 +2,7 @@ package be.helha.clapetteChaussette;
 
 import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.model.Quizz;
-import be.helha.clapetteChaussette.repository.QuestionRepository;
-import be.helha.clapetteChaussette.repository.QuizzRepository;
-import be.helha.clapetteChaussette.repository.TeacherRepository;
+import be.helha.clapetteChaussette.repository.*;
 import be.helha.clapetteChaussette.service.DbService;
 import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
@@ -21,9 +19,9 @@ public class AppFX extends Application {
     public void start(Stage mainstage) throws Exception {
         NavigationService navigationService = new NavigationService(mainstage);
         ValidateQuestionEditorService validateQuestionEditorService = new ValidateQuestionEditorService();
-        TeacherRepository teacherRepository = new TeacherRepository();
-        QuestionRepository questionRepository = new QuestionRepository();
-        QuizzRepository quizzRepository = new QuizzRepository();
+        TeacherRepository teacherRepository = new JdbcTeacherRepository();
+        QuestionRepository questionRepository = new JdbcQuestionRepository();
+        QuizzRepository quizzRepository = new JdbcQuizzRepository();
         DbService dbService = new DbService(teacherRepository, quizzRepository, questionRepository);
         EditorService editorService = new EditorService(dbService, validateQuestionEditorService);
         Quizz quizz = new Quizz("placeholder");

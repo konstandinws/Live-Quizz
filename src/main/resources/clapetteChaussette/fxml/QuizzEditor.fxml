@@ -26,20 +26,10 @@
          <bottom>
       <HBox alignment="CENTER" spacing="20" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="qcmButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#onQcmClick" prefHeight="120.0" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="card-purple">
+            <Button fx:id="qcmButton" mnemonicParsing="false" onAction="#onQcmClick" prefHeight="107.0" prefWidth="107.0" styleClass="card-purple">
                <graphic>
-                  <VBox alignment="CENTER"  spacing="12">
-                     <Label alignment="CENTER" minHeight="-Infinity" minWidth="80.0" styleClass="card-title" text="QCM" textAlignment="CENTER" />
-                  </VBox>
-               </graphic>
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="pollButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#onPollClick" prefHeight="120.0" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="card-blue">
-               <graphic>
-                  <VBox alignment="CENTER" spacing="12">
-                     <Label alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="80.0" styleClass="card-title" text="Poll" textAlignment="CENTER" />
+                  <VBox alignment="CENTER" prefWidth="180" spacing="12">
+                     <Label prefHeight="30.0" prefWidth="46.0" styleClass="card-title" text="QCM" />
                   </VBox>
                </graphic>
                <HBox.margin>

@@ -14,15 +14,15 @@
                 <Font size="23.0" />
             </font>
         </Label>
-        <Label fx:id="questionFree" text="Chargement..." />
-        <TextArea fx:id="textArea" maxWidth="400.0" prefHeight="71.0" prefWidth="492.0" promptText="entrer votre reponse" scrollLeft="1.0">
+        <Label fx:id="questionFree" text="Loading..." />
+        <TextArea fx:id="textArea" maxWidth="400.0" prefHeight="71.0" prefWidth="492.0" promptText="Submit your answer" scrollLeft="1.0">
             <font>
                 <Font name="Agency FB" size="24.0" />
             </font>
         </TextArea>
         <AnchorPane prefHeight="153.0" prefWidth="600.0">
             <children>
-                <Button fx:id="envoyerBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="191.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleSendAction" prefHeight="46.0" prefWidth="173.0" text="Envoyer" textAlignment="JUSTIFY" />
+                <Button fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" layoutX="191.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleSendAction" prefHeight="46.0" prefWidth="173.0" text="Submit" textAlignment="JUSTIFY" />
             </children>
         </AnchorPane>
     </children>

@@ -8,7 +8,6 @@ import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
 import be.helha.clapetteChaussette.controller.editor.EditorController;
-import be.helha.clapetteChaussette.view.LoginViewFX;
 import be.helha.clapetteChaussette.view.editor.QuizzEditorFX;
 
 import java.util.Optional;

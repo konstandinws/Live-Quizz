@@ -18,7 +18,7 @@ public class OpenController extends BaseController implements IQuestionListener<
 
     @Override
     public void validate(String answers) {
-        // Ta logique de validation pour la question ouverte
+
         question.setResponse(answers);
     }
 }

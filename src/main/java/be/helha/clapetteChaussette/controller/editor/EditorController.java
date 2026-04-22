@@ -22,7 +22,7 @@ public class EditorController extends BaseController {
         this.validateService = validateService;
     }
 
-    // --- MÉTHODES POUR LES BOUTONS DU QUIZZ EDITOR ---
+    //  MÉTHODES POUR LES BOUTONS DU QUIZZ EDITOR
 
     public void onAddMcqRequested() {
         System.out.println("Ouverture éditeur QCM");
@@ -40,17 +40,17 @@ public class EditorController extends BaseController {
         System.out.println("Sauvegarde du Quiz complet");
     }
 
-    // --- MÉTHODE QUI ÉTAIT EN ROUGE ---
-    // Vérifie bien qu'il y a : String, List<String> ET boolean hasPoints
+
+
     public void createOpenQuestion(String title, List<String> answers, boolean hasPoints) {
         System.out.println("Question reçue : " + title);
         System.out.println("Réponses possibles : " + answers);
         System.out.println("Points activés : " + hasPoints);
 
-        // C'est ici que tu créeras ton objet OpenQuestion plus tard
+
     }
 
-    // Dans EditorController.java
+
 
     /**
      * Appelée par McqEditorFX pour créer un QCM
@@ -60,9 +60,9 @@ public class EditorController extends BaseController {
         System.out.println("Titre : " + title);
         System.out.println("Nombre de choix : " + answers.size());
 
-        // Plus tard, tu créeras ici l'objet McqQuestion
+
     }
-    // Dans EditorController.java
+
     /**
      * Cette méthode est appelée par le PollEditorFX quand on clique sur sauvegarder
      * @param title Le titre du sondage
@@ -73,7 +73,6 @@ public class EditorController extends BaseController {
         System.out.println("Titre : " + title);
         System.out.println("Options : " + answers);
 
-        // Plus tard, tu ajouteras ici la logique pour créer
-        // l'objet PollQuestion et l'ajouter au Quizz
+
     }
 }

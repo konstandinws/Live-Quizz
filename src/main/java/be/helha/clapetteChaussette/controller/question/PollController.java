@@ -8,7 +8,7 @@ import be.helha.clapetteChaussette.view.IQuestionListener;
 public class PollController extends BaseController implements IQuestionListener<String> {
     private PollQuestion poll;
 
-    // Ajoute le paramètre NavigationService ici
+    //  On Ajoute le paramètre NavigationService ici
     public PollController(PollQuestion poll, NavigationService navigationService) {
         super(navigationService); // Transmet le service au parent
         this.poll = poll;

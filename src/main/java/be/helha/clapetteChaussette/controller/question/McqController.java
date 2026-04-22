@@ -16,7 +16,7 @@ public class McqController extends BaseController implements IQuestionListener<S
 
     @Override
     public void validate(String answers) {
-        // Ta logique actuelle
+
         question.setResponse(answers);
     }
 }

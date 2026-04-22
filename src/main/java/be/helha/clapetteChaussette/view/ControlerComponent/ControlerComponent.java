@@ -1,5 +1,6 @@
 package be.helha.clapetteChaussette.view.ControlerComponent;
 
+import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -22,11 +23,11 @@ public class ControlerComponent extends VBox {
 
     // Méthode statique qui charge et retourne une instance du composant
     public static ControlerComponent creerComposent() throws IOException {
-        FXMLLoader loader = new FXMLLoader(
-                ControlerComponent.class.getResource("/Component/composent.fxml")
-        );
+        FXMLLoader loader = new FXMLLoader(ControlerComponent.class.getResource("/Component/composent.fxml"));
         loader.load();
-        return loader.getController();
+        ControlerComponent controller = loader.getController();
+        controller.root = loader.getRoot();
+        return controller;
     }
 
     // Retourne le nœud pour l'ajouter dans un conteneur
@@ -35,7 +36,8 @@ public class ControlerComponent extends VBox {
     }
 
     // Tes méthodes métier du composant
-    public void setData(Question question) {
+    public void setData(QuizzDTO question) {
         // ...
+
     }
 }

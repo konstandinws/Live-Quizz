@@ -45,7 +45,8 @@ public class LoginController extends BaseController {
     }
 
     private void goToEditor(TeacherDTO teacher) {
-        // Pour l'instant on va direct à l'éditeur, mais on pourrait aller vers une liste de quiz
+        // Pour l'instant on va direct à l'éditeur, mais on pourrait aller vers une
+        // liste de quiz
         Quizz quizz = new Quizz("Nouveau Quiz");
         EditorController editorCtrl = new EditorController(quizz, editorService, navigationService, validateService);
         // On stocke le prof dans l'application via le controller

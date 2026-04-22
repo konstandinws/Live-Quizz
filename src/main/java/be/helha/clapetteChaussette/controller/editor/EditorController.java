@@ -3,16 +3,46 @@ package be.helha.clapetteChaussette.controller.editor;
 import java.util.List;
 
 import be.helha.clapetteChaussette.controller.BaseController;
+import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.Quizz;
+import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
+import be.helha.clapetteChaussette.view.editor.McqEditorFX;
+import be.helha.clapetteChaussette.view.editor.OpenEditorFX;
+import be.helha.clapetteChaussette.view.editor.PollEditorFX;
+import be.helha.clapetteChaussette.view.editor.McqEditorFX.IMcqEditorListener;
+import be.helha.clapetteChaussette.view.editor.OpenEditorFX.IOpenEditorListener;
+import be.helha.clapetteChaussette.view.editor.PollEditorFX.IPollEditorListener;
+import be.helha.clapetteChaussette.view.editor.QuizzEditorFX.IQuizzListener;
 
-public class EditorController extends BaseController {
-    private Quizz quizz;
-    private EditorService editorService;
-    private ValidateQuestionEditorService validateService;
+public class EditorController
+        extends BaseController
+        implements IQuizzListener, IOpenEditorListener, IMcqEditorListener, IPollEditorListener {
 
+    // #region Fields
+
+    EditorService editorService;
+    ValidateQuestionEditorService validateQuestionEditorService;
+    Quizz quizz;
+    TeacherDTO teacher;
+
+    // endregion
+
+    // #region Constructor
+
+    /**
+     * Constructor for the EditorController.
+     * 
+     * @param quizz                         The quizz being edited.
+     * @param editorService                 Service for handling editor-related
+     *                                      business logic.
+     * @param navigationService             Service for handling navigation between
+     *                                      views.
+     * @param validateQuestionEditorService Service for validating question data
+     *                                      before saving.
+     */
     public EditorController(Quizz quizz,
             EditorService editorService,
             NavigationService navigationService,
@@ -20,54 +50,61 @@ public class EditorController extends BaseController {
         super(navigationService);
         this.quizz = quizz;
         this.editorService = editorService;
-        this.validateService = validateService;
+        this.validateQuestionEditorService = validateService;
     }
 
-    // MÉTHODES POUR LES BOUTONS DU QUIZZ EDITOR
+    // #endregion
 
+    // #region IQuizzListener methods
+
+    @Override
     public void onAddMcqRequested() {
-        System.out.println("Ouverture éditeur QCM");
+        navigateToView(new McqEditorFX(), "Éditeur de Question QCM", this);
     }
 
+    @Override
     public void onAddPollRequested() {
-        System.out.println("Ouverture éditeur Sondage");
+        navigateToView(new PollEditorFX(), "Éditeur de Sondage", this);
     }
 
+    @Override
     public void onAddQuestionFreeRequested() {
-        System.out.println("Ouverture éditeur Question Ouverte");
+        navigateToView(new OpenEditorFX(), "Éditeur de Question Libre", this);
     }
 
+    @Override
     public void onSaveRequested() {
-        System.out.println("Sauvegarde du Quiz complet");
+        editorService.saveQuizz(quizz, teacher.uuid());
     }
 
-    public void createOpenQuestion(String title, List<String> answers, boolean hasPoints) {
-        System.out.println("Question reçue : " + title);
-        System.out.println("Réponses possibles : " + answers);
-        System.out.println("Points activés : " + hasPoints);
+    // endregion
 
+    // #region IOpenEditorListener methods
+
+    @Override
+    public void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
+            throws InvalidQuestionException {
+        quizz.addQuestion(editorService.createOpenQuestion(title, answerTexts, hasPoints));
     }
 
-    /**
-     * Appelée par McqEditorFX pour créer un QCM
-     */
-    public void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers) {
-        System.out.println("QCM reçu !");
-        System.out.println("Titre : " + title);
-        System.out.println("Nombre de choix : " + answers.size());
+    // endregion
 
+    // #region IMcqEditorListener methods
+
+    @Override
+    public void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
+            throws InvalidQuestionException {
+        quizz.addQuestion(editorService.createMcqQuestion(title, answers, correctAnswers));
     }
 
-    /**
-     * Cette méthode est appelée par le PollEditorFX quand on clique sur sauvegarder
-     * 
-     * @param title   Le titre du sondage
-     * @param answers La liste des options de réponse
-     */
-    public void createPoll(String title, List<String> answers) {
-        System.out.println("Sondage reçu dans le contrôleur !");
-        System.out.println("Titre : " + title);
-        System.out.println("Options : " + answers);
+    // endregion
 
+    // #region IPollEditorListener methods
+
+    @Override
+    public void createPoll(String title, List<String> answers) throws InvalidQuestionException {
+        quizz.addQuestion(editorService.createPollQuestion(title, answers));
     }
+
+    // //#endregion
 }

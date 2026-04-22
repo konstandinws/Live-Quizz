@@ -12,11 +12,14 @@ import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 
 public interface IRepository {
     void saveTeacher(TeacherDTO teacher);
+
     Optional<TeacherDTO> findTeacher(Credentials cred); // Nouveau
 
     void saveQuizz(QuizzDTO quizz);
+
     Optional<List<QuizzDTO>> findAllQuizzes(UUID teacherUuid); // Nouveau
 
     void saveQuestion(QuestionDTO question);
+
     void saveQuestions(List<QuestionDTO> questions);
 }

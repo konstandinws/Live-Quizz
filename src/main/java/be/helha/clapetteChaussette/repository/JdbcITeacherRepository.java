@@ -10,11 +10,11 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
-
 /**
  * JDBC implementation of the {@link ITeacherRepository}.
  * <p>
- * This repository is responsible for managing the persistence of Teacher entities
+ * This repository is responsible for managing the persistence of Teacher
+ * entities
  * in a relational database using raw JDBC connections.
  * </p>
  */
@@ -25,8 +25,8 @@ public class JdbcITeacherRepository implements ITeacherRepository {
 
         String query = "INSERT INTO teacher (uuid, name, password_hash) values (?, ?, ?)";
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setObject(1, teacher.uuid());
             statement.setString(2, teacher.name());
@@ -44,13 +44,13 @@ public class JdbcITeacherRepository implements ITeacherRepository {
     public Optional<TeacherDTO> findByName(String name) {
         String query = "SELECT uuid, name, password_hash FROM teacher WHERE name = ?";
 
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, name);
 
-            try(ResultSet resultSet = statement.executeQuery()){
-                if(resultSet.next()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
 
                     UUID uuid = resultSet.getObject("uuid", UUID.class);
                     String teacherName = resultSet.getString("name");

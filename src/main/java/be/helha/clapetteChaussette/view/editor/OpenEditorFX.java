@@ -1,45 +1,96 @@
 package be.helha.clapetteChaussette.view.editor;
 
-// VÉRIFIE BIEN CET IMPORT
-import be.helha.clapetteChaussette.controller.editor.EditorController;
-import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import be.helha.clapetteChaussette.controller.editor.EditorController;
+import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.view.ViewFX;
 
 public class OpenEditorFX extends ViewFX<EditorController> {
 
     @FXML
-    private TextField questionTitle;
+    private TextField questionTitle; // Field where the teacher will enter the question
+    @FXML
+    private VBox answersContainer; // Container where the created answers are stacked
+    @FXML
+    private CheckBox pointsCheckBox; // Checkbox to enable or disable points
+    @FXML
+    private Button addAnswerBTN; // Button to add a new answer variant
+
+    private List<TextField> answerFields = new ArrayList<>();
+
+    // Called when the page initializes to add a first answer field
+    @FXML
+    public void initialize() {
+        addNewAnswer();
+    }
 
     @FXML
-    private CheckBox pointsCheckBox;
+    private void addNewAnswer() {
+        HBox row = createAnswerRow();
+        answersContainer.getChildren().add(row);
+    }
 
-    @FXML
-    private List<TextField> answerFields;
+    private HBox createAnswerRow() {
+        HBox row = new HBox(10);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setPadding(new Insets(5));
+
+        TextField tf = new TextField();
+        tf.setPromptText("Accepted answer variant...");
+        HBox.setHgrow(tf, Priority.ALWAYS);
+        answerFields.add(tf);
+
+        Button deleteBtn = new Button("X");
+        deleteBtn.setOnAction(e -> {
+            if (answerFields.size() > 1) {
+                answersContainer.getChildren().remove(row);
+                answerFields.remove(tf);
+            }
+        });
+
+        row.getChildren().addAll(tf, deleteBtn);
+        return row;
+    }
 
     @FXML
     private void saveQuestion() {
         try {
             String title = questionTitle.getText();
             boolean hasPoints = pointsCheckBox.isSelected();
+            List<String> answerText = answerFields.stream().map(TextField::getText).toList();
 
-            // On transforme la liste de TextField en liste de String
-            List<String> answerText = answerFields.stream()
-                    .map(TextField::getText)
-                    .toList();
-
-            // L'appel fonctionnera si la méthode existe dans EditorController
             listener.createOpenQuestion(title, answerText, hasPoints);
 
-        } catch (Exception e) {
-            System.err.println("Erreur : " + e.getMessage());
+        } catch (InvalidQuestionException e) {
+            showError(e.getMessage());
         }
+    }
+
+    private void showError(String msg) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setContentText(msg);
+        alert.show();
     }
 
     @Override
     protected String getFXMLPath() {
         return "OpenEditor.fxml";
+    }
+
+    public interface IOpenEditorListener {
+        void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
+                throws InvalidQuestionException;
     }
 }

@@ -2,7 +2,7 @@ package be.helha.clapetteChaussette.view.editor;
 
 import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
-import be.helha.clapetteChaussette.repository.QuizzRepository;
+import be.helha.clapetteChaussette.repository.JdbcIQuizzRepository;
 import be.helha.clapetteChaussette.view.ControlerComponent.ControlerComponent;
 import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
@@ -16,10 +16,10 @@ import java.util.UUID;
 import java.util.List;
 
 public class QuizzEditorFX extends ViewFX<EditorController> {
+    private UUID teacherUuid;
 
     @FXML
     private Button mcqButton;
-    private UUID teacherUuid;
 
     @FXML
     private Button pollButton;
@@ -32,7 +32,7 @@ public class QuizzEditorFX extends ViewFX<EditorController> {
 
     // Modification ici : le nom doit correspondre au fx:id="VboxListe" du FXML
     @FXML
-    private VBox questionlistevbox;
+    private VBox questionListVbox;
 
     // Modification ici : on renomme pour correspondre au onAction="#onQcmClick" du
     // FXML
@@ -63,13 +63,13 @@ public class QuizzEditorFX extends ViewFX<EditorController> {
 
     @FXML
     private void initialize() {
-        QuestionService quizzliste = new QuestionService(new QuizzRepository());
+        QuestionService quizzliste = new QuestionService(new JdbcIQuizzRepository());
         List<QuizzDTO> quizzes = quizzliste.getQuizzesByTeacher(teacherUuid);
         for (QuizzDTO quizz : quizzes) {
             try {
                 ControlerComponent carte = ControlerComponent.creerComposent();
                 carte.setData(quizz); // ← passe les données à la carte
-                questionlistevbox.getChildren().add(carte.getRoot());
+                questionListVbox.getChildren().add(carte.getRoot());
             } catch (IOException e) {
                 e.printStackTrace();
             }

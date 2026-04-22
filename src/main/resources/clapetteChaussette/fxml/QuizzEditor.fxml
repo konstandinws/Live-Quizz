@@ -25,13 +25,13 @@
       </top>
          <center>
       <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">
-      <VBox fx:id="VboxListe" prefHeight="200.0" prefWidth="100.0" />
+      <VBox fx:id="questionListVbox" prefHeight="200.0" prefWidth="100.0" />
       </ScrollPane>
          </center>
          <bottom>
       <HBox alignment="CENTER" spacing="20" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="qcmButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#onQcmClick" prefHeight="120.0" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="card-purple">
+            <Button fx:id="mcqButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#onQcmClick" prefHeight="120.0" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="card-purple">
                <graphic>
                   <VBox alignment="CENTER"  spacing="12">
                      <Label alignment="CENTER" minHeight="-Infinity" minWidth="80.0" styleClass="card-title" text="QCM" textAlignment="CENTER" />

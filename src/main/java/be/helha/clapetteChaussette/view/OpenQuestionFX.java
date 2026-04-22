@@ -1,13 +1,14 @@
 package be.helha.clapetteChaussette.view;
 
-import be.helha.clapetteChaussette.controller.IViewController;
+import be.helha.clapetteChaussette.controller.question.OpenController;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
-public class OpenQuestionFX extends ViewFX {
+// 1. On précise le contrôleur associé (OpenController)
+public class OpenQuestionFX extends ViewFX<OpenController> {
     @FXML
     private Button envoyerBtn;
 
@@ -17,22 +18,16 @@ public class OpenQuestionFX extends ViewFX {
     @FXML
     private TextArea textArea;
 
-    private IQuestionListener<String> listener;
     private OpenQuestion open;
 
     @FXML
     private void initialize() {
-        // The question is no longer created here; we wait for it to be provided by the
-        // MainController
+        // Initialisation vide, le texte sera mis à jour via setOpenQuestion
     }
 
     /**
-     * This method allows the MainController to pass data to the view
+     * Permet d'afficher le texte de la question reçue
      */
-    public void setController(IQuestionListener<String> listener) {
-        this.listener = listener;
-    }
-
     public void setOpenQuestion(OpenQuestion question) {
         this.open = question;
         if (question != null && questionFree != null) {
@@ -42,8 +37,9 @@ public class OpenQuestionFX extends ViewFX {
 
     @FXML
     private void handleSendAction() {
-        if (open != null && textArea != null) {
-            listener.validate(textArea.getText(), open);
+        if (listener != null && textArea != null) {
+            // 2. On n'envoie que le texte, conformément à l'interface IQuestionListener
+            listener.validate(textArea.getText());
         }
     }
 
@@ -52,16 +48,5 @@ public class OpenQuestionFX extends ViewFX {
         return "open.fxml";
     }
 
-    @Override
-    public void setOwnViewController(IViewController controller) {
-        if (controller instanceof IQuestionListener) {
-            this.listener = (IQuestionListener<String>) controller;
-        } else {
-            throw new IllegalArgumentException("Controller must implement IQuestionListener<String>");
-        }
-    }
-
-    public interface IOpenListener extends IQuestionListener<String> {
-        public void validate(String aws);
-    }
+    // 3. Plus besoin de setOwnViewController, ViewFX possède déjà setOwnController
 }

@@ -19,15 +19,13 @@ public abstract class BaseController {
      * using the
      * provided view and window title, then binds the given controller to that view
      * via
-     * {@link ViewFX#setOwnController(Object)}.
+     * .
      *
-     * @param <C>        the concrete type of controller, constrained to
-     *                   {@link BaseController}
-     * @param view       the target view to display
-     * @param title      the title to apply during navigation (e.g., window or scene
-     *                   title)
-     * @param controller the controller instance to associate with the target view
      */
+
+    public BaseController(NavigationService navigationService) {
+        this.navigationService = navigationService;
+    }
     public <C extends BaseController> void navigateToView(ViewFX<C> view, String title, C controller) {
         navigationService.navigateTo(view, title);
         view.setOwnController(controller);

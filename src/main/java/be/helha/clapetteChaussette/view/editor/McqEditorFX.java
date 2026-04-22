@@ -70,7 +70,7 @@ public class McqEditorFX extends ViewFX<EditorController> {
      * Vérifie si le nombre maximum de réponses autorisées est atteint.
      *
      * @return {@code true} si {@code answersContainer} contient
-     *         {@value MAX_ANSWERS} réponses ou plus
+
      */
     boolean checkMaxAnswers() {
         return answersContainer.getChildren().size() >= MAX_ANSWERS;
@@ -114,7 +114,7 @@ public class McqEditorFX extends ViewFX<EditorController> {
      * aux listes internes {@code correctAnswerCB} et {@code textFields}.
      * <p>
      * La suppression est bloquée et une popup est affichée si le nombre de réponses
-     * est inférieur ou égal à {@value MIN_ANSWERS}.
+
      *
      * @return un {@link HBox} prêt à être ajouté à {@code answersContainer}
      */

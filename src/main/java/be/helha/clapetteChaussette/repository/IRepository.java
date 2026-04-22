@@ -1,17 +1,22 @@
+// be.helha.clapetteChaussette.repository.IRepository
 package be.helha.clapetteChaussette.repository;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+import be.helha.clapetteChaussette.model.dto.Credentials;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 
 public interface IRepository {
-    public void saveTeacher(TeacherDTO teacher);
+    void saveTeacher(TeacherDTO teacher);
+    Optional<TeacherDTO> findTeacher(Credentials cred); // Nouveau
 
-    public void saveQuizz(QuizzDTO quizz);
+    void saveQuizz(QuizzDTO quizz);
+    Optional<List<QuizzDTO>> findAllQuizzes(UUID teacherUuid); // Nouveau
 
-    public void saveQuestion(QuestionDTO question);
-
-    public void saveQuestions(List<QuestionDTO> questions);
+    void saveQuestion(QuestionDTO question);
+    void saveQuestions(List<QuestionDTO> questions);
 }

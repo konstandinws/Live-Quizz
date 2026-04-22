@@ -21,26 +21,24 @@ public class QuizzEditorFX extends ViewFX<EditorController> {
     @FXML
     private Button btnSauvegarder;
 
+    // Modification ici : le nom doit correspondre au fx:id="VboxListe" du FXML
     @FXML
-    private VBox listeQuestionsBox;
+    private VBox VboxListe;
 
-    // méthodes pour les evenements des clics sur les boutons
+    // Modification ici : on renomme pour correspondre au onAction="#onQcmClick" du FXML
     @FXML
-    void onPollClick(ActionEvent event) {
-        listener.onAddPollRequested();
-
+    void onQcmClick(ActionEvent event) {
+        listener.onAddMcqRequested();
     }
 
     @FXML
-    void onMcqClick(ActionEvent event) {
-        listener.onAddMcqRequested();
-
+    void onPollClick(ActionEvent event) {
+        listener.onAddPollRequested();
     }
 
     @FXML
     void onQuestionFreeClick(ActionEvent event) {
         listener.onAddQuestionFreeRequested();
-
     }
 
     @FXML
@@ -55,15 +53,13 @@ public class QuizzEditorFX extends ViewFX<EditorController> {
 
     @FXML
     private void initialize() {
+        // Cette méthode sera appelée une fois le FXML chargé.
     }
 
     public interface IQuizzListener {
         void onAddMcqRequested();
-
         void onAddPollRequested();
-
         void onAddQuestionFreeRequested();
-
         void onSaveRequested();
     }
 }

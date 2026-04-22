@@ -8,12 +8,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import be.helha.clapetteChaussette.controller.editor.EditorController;
-import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+
 
 /**
  * JavaFX controller for the Poll editing interface.

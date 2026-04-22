@@ -1,134 +1,79 @@
 package be.helha.clapetteChaussette.controller.editor;
 
-import java.util.List;
-import java.util.UUID;
-
 import be.helha.clapetteChaussette.controller.BaseController;
-import be.helha.clapetteChaussette.exception.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.Quizz;
-import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.repository.TeacherRepository;
 import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
-import be.helha.clapetteChaussette.view.PollEditorFX;
-import be.helha.clapetteChaussette.view.PollEditorFX.IPollEditorListener;
-import be.helha.clapetteChaussette.view.editor.McqEditorFX;
-import be.helha.clapetteChaussette.view.editor.OpenEditorFX;
-import be.helha.clapetteChaussette.view.editor.McqEditorFX.IMcqEditorListener;
-import be.helha.clapetteChaussette.view.editor.OpenEditorFX.IOpenEditorListener;
-import be.helha.clapetteChaussette.view.editor.QuizzEditorFX.IQuizzListener;
+import java.util.List;
 
-/**
- * Main controller for the editor features.
- * <p>
- * This controller manages the navigation between different question editors
- * (QCM, Open Question, etc.)
- * and handles the creation and saving of questions to the quizz being edited.
- * It interacts with the {@link EditorService} for business logic and the
- * {@link ValidateQuestionEditorService} for validating question data before
- * saving.
- * The controller also manages a reference to the current quizz and the teacher
- * creating it, allowing for proper association when saving to the database.
- * <p>
- */
-public class EditorController
-        extends BaseController
-        implements IQuizzListener, IOpenEditorListener, IMcqEditorListener, IPollEditorListener {
+public class EditorController extends BaseController {
+    private Quizz quizz;
+    private EditorService editorService;
+    private ValidateQuestionEditorService validateService;
 
-    // #region Fields
-
-    EditorService editorService;
-    ValidateQuestionEditorService validateQuestionEditorService;
-    Quizz quizz;
-    TeacherDTO teacher;
-
-    // endregion
-
-    // #region Constructor
-
-    /**
-     * Constructor for the EditorController.
-     * 
-     * @param quizz                         The quizz being edited.
-     * @param editorService                 Service for handling editor-related
-     *                                      business logic.
-     * @param navigationService             Service for handling navigation between
-     *                                      views.
-     * @param validateQuestionEditorService Service for validating question data
-     *                                      before saving.
-     */
     public EditorController(Quizz quizz,
-            EditorService editorService,
-            NavigationService navigationService,
-            ValidateQuestionEditorService validateQuestionEditorService) {
-
+                            EditorService editorService,
+                            NavigationService navigationService,
+                            ValidateQuestionEditorService validateService) {
+        super(navigationService);
         this.quizz = quizz;
         this.editorService = editorService;
-        this.navigationService = navigationService;
-        this.validateQuestionEditorService = validateQuestionEditorService;
-
-        teacher = new TeacherDTO(
-                UUID.randomUUID(),
-                "test_prof_1",
-                "mot_de_passe_haché");
-        TeacherRepository teacherRepository = new TeacherRepository(); // i know this is bad but this gonna move when we
-                                                                       // implement the login system
-        teacherRepository.save(teacher);
+        this.validateService = validateService;
     }
 
-    // #endregion
+    // --- MÉTHODES POUR LES BOUTONS DU QUIZZ EDITOR ---
 
-    // #region IQuizzListener methods
-
-    @Override
     public void onAddMcqRequested() {
-        navigateToView(new McqEditorFX(), "Éditeur de Question QCM", this);
+        System.out.println("Ouverture éditeur QCM");
     }
 
-    @Override
     public void onAddPollRequested() {
-        navigateToView(new PollEditorFX(), "Éditeur de Sondage", this);
+        System.out.println("Ouverture éditeur Sondage");
     }
 
-    @Override
     public void onAddQuestionFreeRequested() {
-        navigateToView(new OpenEditorFX(), "Éditeur de Question Libre", this);
+        System.out.println("Ouverture éditeur Question Ouverte");
     }
 
-    @Override
     public void onSaveRequested() {
-        editorService.saveQuizz(quizz, teacher.uuid());
+        System.out.println("Sauvegarde du Quiz complet");
     }
 
-    // endregion
+    // --- MÉTHODE QUI ÉTAIT EN ROUGE ---
+    // Vérifie bien qu'il y a : String, List<String> ET boolean hasPoints
+    public void createOpenQuestion(String title, List<String> answers, boolean hasPoints) {
+        System.out.println("Question reçue : " + title);
+        System.out.println("Réponses possibles : " + answers);
+        System.out.println("Points activés : " + hasPoints);
 
-    // #region IOpenEditorListener methods
-
-    @Override
-    public void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
-            throws InvalidQuestionException {
-        quizz.addQuestion(editorService.createOpenQuestion(title, answerTexts, hasPoints));
+        // C'est ici que tu créeras ton objet OpenQuestion plus tard
     }
 
-    // endregion
+    // Dans EditorController.java
 
-    // #region IMcqEditorListener methods
+    /**
+     * Appelée par McqEditorFX pour créer un QCM
+     */
+    public void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers) {
+        System.out.println("QCM reçu !");
+        System.out.println("Titre : " + title);
+        System.out.println("Nombre de choix : " + answers.size());
 
-    @Override
-    public void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
-            throws InvalidQuestionException {
-        quizz.addQuestion(editorService.createMcqQuestion(title, answers, correctAnswers));
+        // Plus tard, tu créeras ici l'objet McqQuestion
     }
+    // Dans EditorController.java
+    /**
+     * Cette méthode est appelée par le PollEditorFX quand on clique sur sauvegarder
+     * @param title Le titre du sondage
+     * @param answers La liste des options de réponse
+     */
+    public void createPoll(String title, List<String> answers) {
+        System.out.println("Sondage reçu dans le contrôleur !");
+        System.out.println("Titre : " + title);
+        System.out.println("Options : " + answers);
 
-    // endregion
-
-    // #region IPollEditorListener methods
-
-    @Override
-    public void createPoll(String title, List<String> answers) throws InvalidQuestionException {
-        quizz.addQuestion(editorService.createPollQuestion(title, answers));
+        // Plus tard, tu ajouteras ici la logique pour créer
+        // l'objet PollQuestion et l'ajouter au Quizz
     }
-
-    // //#endregion
 }

@@ -1,5 +1,7 @@
+// be.helha.clapetteChaussette.service.DbService
 package be.helha.clapetteChaussette.service;
 
+import be.helha.clapetteChaussette.model.dto.Credentials;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
@@ -9,6 +11,8 @@ import be.helha.clapetteChaussette.repository.QuizzRepository;
 import be.helha.clapetteChaussette.repository.TeacherRepository;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class DbService implements IRepository {
     private TeacherRepository tRepo;
@@ -27,8 +31,18 @@ public class DbService implements IRepository {
     }
 
     @Override
+    public Optional<TeacherDTO> findTeacher(Credentials cred) {
+        return tRepo.find(cred);
+    }
+
+    @Override
     public void saveQuizz(QuizzDTO quizz) {
         qRepo.save(quizz.uuid(), quizz.teacher_uuid(), quizz.name());
+    }
+
+    @Override
+    public Optional<List<QuizzDTO>> findAllQuizzes(UUID teacherUuid) {
+        return qRepo.findAll(teacherUuid);
     }
 
     @Override
@@ -42,5 +56,4 @@ public class DbService implements IRepository {
             saveQuestion(question);
         }
     }
-
 }

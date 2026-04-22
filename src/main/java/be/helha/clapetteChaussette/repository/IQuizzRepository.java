@@ -1,7 +1,6 @@
 package be.helha.clapetteChaussette.repository;
 
 import be.helha.clapetteChaussette.exception.DatabaseException;
-import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.UUID;
  * agnostic of the underlying database technology.
  * </p>
  */
-public interface QuizzRepository {
+public interface IQuizzRepository {
 
     /**
      * Saves a new quiz into the system.

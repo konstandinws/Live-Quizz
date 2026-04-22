@@ -9,17 +9,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
- * JDBC implementation of the {@link QuizzRepository}.
+ * JDBC implementation of the {@link IQuizzRepository}.
  * <p>
  * This repository handles the storage and retrieval of Quiz entities
  * in a relational database using JDBC.
  * </p>
  */
-public class JdbcQuizzRepository implements QuizzRepository{
+public class JdbcIQuizzRepository implements IQuizzRepository {
 
     @Override
     public void save(QuizzDTO quizz) {

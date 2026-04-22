@@ -19,10 +19,10 @@ public class AppFX extends Application {
     public void start(Stage mainstage) throws Exception {
         NavigationService navigationService = new NavigationService(mainstage);
         ValidateQuestionEditorService validateQuestionEditorService = new ValidateQuestionEditorService();
-        TeacherRepository teacherRepository = new JdbcTeacherRepository();
-        QuestionRepository questionRepository = new JdbcQuestionRepository();
-        QuizzRepository quizzRepository = new JdbcQuizzRepository();
-        DbService dbService = new DbService(teacherRepository, quizzRepository, questionRepository);
+        ITeacherRepository ITeacherRepository = new JdbcITeacherRepository();
+        IQuestionRepository IQuestionRepository = new JdbcIQuestionRepository();
+        IQuizzRepository IQuizzRepository = new JdbcIQuizzRepository();
+        DbService dbService = new DbService(ITeacherRepository, IQuizzRepository, IQuestionRepository);
         EditorService editorService = new EditorService(dbService, validateQuestionEditorService);
         Quizz quizz = new Quizz("placeholder");
         editorController = new EditorController(quizz, editorService, navigationService, validateQuestionEditorService);

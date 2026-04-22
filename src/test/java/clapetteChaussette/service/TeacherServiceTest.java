@@ -4,7 +4,7 @@ import be.helha.clapetteChaussette.exception.LoginFailedException;
 import be.helha.clapetteChaussette.exception.TeacherAlreadyExistsException;
 import be.helha.clapetteChaussette.model.Teacher;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.repository.TeacherRepository;
+import be.helha.clapetteChaussette.repository.ITeacherRepository;
 import be.helha.clapetteChaussette.service.TeacherService;
 import be.helha.clapetteChaussette.utils.PasswordHasher;
 import org.junit.jupiter.api.Test;
@@ -18,13 +18,12 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TeacherServiceTest {
     @Mock
-    private TeacherRepository repository;
+    private ITeacherRepository repository;
 
     @InjectMocks
     private TeacherService teacherService;

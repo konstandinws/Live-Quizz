@@ -12,13 +12,13 @@ import java.util.UUID;
 
 
 /**
- * JDBC implementation of the {@link TeacherRepository}.
+ * JDBC implementation of the {@link ITeacherRepository}.
  * <p>
  * This repository is responsible for managing the persistence of Teacher entities
  * in a relational database using raw JDBC connections.
  * </p>
  */
-public class JdbcTeacherRepository implements TeacherRepository{
+public class JdbcITeacherRepository implements ITeacherRepository {
 
     @Override
     public void save(TeacherDTO teacher) {

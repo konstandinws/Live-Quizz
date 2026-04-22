@@ -5,10 +5,9 @@ import be.helha.clapetteChaussette.exception.InvalidQuizzException;
 import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
-import be.helha.clapetteChaussette.model.question.Answer;
 import be.helha.clapetteChaussette.model.question.Question;
-import be.helha.clapetteChaussette.repository.QuestionRepository;
-import be.helha.clapetteChaussette.repository.QuizzRepository;
+import be.helha.clapetteChaussette.repository.IQuestionRepository;
+import be.helha.clapetteChaussette.repository.IQuizzRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +23,8 @@ import java.util.UUID;
  */
 public class QuizzService {
 
-    private final QuizzRepository quizzRepository;
-    private final QuestionRepository questionRepository;
+    private final IQuizzRepository quizzRepository;
+    private final IQuestionRepository questionRepository;
 
     /**
      * Constructs a new QuizzService with the required repositories.
@@ -33,7 +32,7 @@ public class QuizzService {
      * @param quizzRepository    The repository for saving and retrieving quizzes.
      * @param questionRepository The repository for saving and retrieving questions.
      */
-    public QuizzService(QuizzRepository quizzRepository, QuestionRepository questionRepository){
+    public QuizzService(IQuizzRepository quizzRepository, IQuestionRepository questionRepository){
         this.quizzRepository = quizzRepository;
         this.questionRepository = questionRepository;
     }

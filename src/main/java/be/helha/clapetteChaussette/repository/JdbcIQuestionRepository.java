@@ -14,13 +14,13 @@ import java.util.UUID;
 //TODO add a way to find all questions of a quizz from the quizz uuid
 
 /**
- * JDBC implementation of the {@link QuestionRepository}.
+ * JDBC implementation of the {@link IQuestionRepository}.
  * <p>
  * This repository is responsible for managing the persistence of Question entities
  * and their corresponding Answers in a relational database using raw JDBC connections.
  * </p>
  */
-public class JdbcQuestionRepository implements QuestionRepository{
+public class JdbcIQuestionRepository implements IQuestionRepository {
 
     @Override
     public void save(QuestionDTO question) {

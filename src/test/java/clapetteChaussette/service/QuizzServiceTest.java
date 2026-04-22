@@ -4,12 +4,11 @@ import be.helha.clapetteChaussette.exception.InvalidQuizzException;
 import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
-import be.helha.clapetteChaussette.model.enums.QuestionType;
 import be.helha.clapetteChaussette.model.question.Answer;
-import be.helha.clapetteChaussette.model.question.QcmQuestion;
+import be.helha.clapetteChaussette.model.question.McqQuestion;
 import be.helha.clapetteChaussette.model.question.Question;
-import be.helha.clapetteChaussette.repository.QuestionRepository;
-import be.helha.clapetteChaussette.repository.QuizzRepository;
+import be.helha.clapetteChaussette.repository.IQuestionRepository;
+import be.helha.clapetteChaussette.repository.IQuizzRepository;
 import be.helha.clapetteChaussette.service.QuizzService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,10 +27,10 @@ import static org.mockito.Mockito.*;
 public class QuizzServiceTest {
 
     @Mock
-    private QuizzRepository quizzRepository;
+    private IQuizzRepository IQuizzRepository;
 
     @Mock
-    private QuestionRepository questionRepository;
+    private IQuestionRepository IQuestionRepository;
 
     @InjectMocks
     private QuizzService quizzService;
@@ -74,7 +73,7 @@ public class QuizzServiceTest {
         });
 
         assertEquals("L'identifiant du professeur est requis.", exception.getMessage());
-        verify(quizzRepository, never()).findAll(any());
+        verify(IQuizzRepository, never()).findAll(any());
     }
 
     @Test
@@ -85,12 +84,12 @@ public class QuizzServiceTest {
                 new QuizzDTO(UUID.randomUUID(), "Science", teacherUuid)
         );
 
-        when(quizzRepository.findAll(teacherUuid)).thenReturn(expectedQuizzes);
+        when(IQuizzRepository.findAll(teacherUuid)).thenReturn(expectedQuizzes);
 
         List<QuizzDTO> result = quizzService.findAllQuizzes(teacherUuid);
 
         assertEquals(2, result.size());
-        verify(quizzRepository, times(1)).findAll(teacherUuid);
+        verify(IQuizzRepository, times(1)).findAll(teacherUuid);
     }
 
     @Test
@@ -103,8 +102,8 @@ public class QuizzServiceTest {
 
         assertEquals("Un quiz doit être lié à un professeur.", exception.getMessage());
 
-        verify(quizzRepository, never()).save(any());
-        verify(questionRepository, never()).save(any());
+        verify(IQuizzRepository, never()).save(any());
+        verify(IQuestionRepository, never()).save(any());
     }
 
     @Test
@@ -121,16 +120,16 @@ public class QuizzServiceTest {
                 new Answer("5", false)
         );
 
-        QcmQuestion q1 = new QcmQuestion("Quelle est la capitale de la France?", answersQ1);
-        QcmQuestion q2 = new QcmQuestion("Combien font 2+2?", answersQ2);
+        Question q1 = new McqQuestion("Quelle est la capitale de la France?", answersQ1);
+        Question q2 = new McqQuestion("Combien font 2+2?", answersQ2);
 
         quizz.addQuestion(q1);
         quizz.addQuestion(q2);
 
         quizzService.registerNewQuizz(quizz, teacherUuid);
 
-        verify(quizzRepository, times(1)).save(any(QuizzDTO.class));
+        verify(IQuizzRepository, times(1)).save(any(QuizzDTO.class));
 
-        verify(questionRepository, times(2)).save(any(QuestionDTO.class));
+        verify(IQuestionRepository, times(2)).save(any(QuestionDTO.class));
     }
 }

@@ -4,18 +4,19 @@ import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 import be.helha.clapetteChaussette.repository.IRepository;
-import be.helha.clapetteChaussette.repository.QuestionRepository;
-import be.helha.clapetteChaussette.repository.QuizzRepository;
-import be.helha.clapetteChaussette.repository.TeacherRepository;
+import be.helha.clapetteChaussette.repository.IQuestionRepository;
+import be.helha.clapetteChaussette.repository.IQuizzRepository;
+import be.helha.clapetteChaussette.repository.ITeacherRepository;
 
 import java.util.List;
 
+// deprecated Service, the controllers should use the dedicated services for each repository
 public class DbService implements IRepository {
-    private TeacherRepository tRepo;
-    private QuizzRepository qRepo;
-    private QuestionRepository questionRepo;
+    private ITeacherRepository tRepo;
+    private IQuizzRepository qRepo;
+    private IQuestionRepository questionRepo;
 
-    public DbService(TeacherRepository tRepo, QuizzRepository qRepo, QuestionRepository questionRepo) {
+    public DbService(ITeacherRepository tRepo, IQuizzRepository qRepo, IQuestionRepository questionRepo) {
         this.tRepo = tRepo;
         this.qRepo = qRepo;
         this.questionRepo = questionRepo;
@@ -28,7 +29,7 @@ public class DbService implements IRepository {
 
     @Override
     public void saveQuizz(QuizzDTO quizz) {
-        qRepo.save(quizz.uuid(), quizz.teacher_uuid(), quizz.name());
+        qRepo.save(quizz);
     }
 
     @Override
@@ -42,5 +43,4 @@ public class DbService implements IRepository {
             saveQuestion(question);
         }
     }
-
 }

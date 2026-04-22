@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Repository interface for managing Question entities and their associated Answers.
  */
-public interface QuestionRepository {
+public interface IQuestionRepository {
     /**
      * Saves a new question and its associated possible answers into the database.
      * Both operations (question and answers) are managed together.

@@ -4,7 +4,7 @@ import be.helha.clapetteChaussette.exception.LoginFailedException;
 import be.helha.clapetteChaussette.exception.TeacherAlreadyExistsException;
 import be.helha.clapetteChaussette.model.Teacher;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.repository.TeacherRepository;
+import be.helha.clapetteChaussette.repository.ITeacherRepository;
 import be.helha.clapetteChaussette.utils.PasswordHasher;
 
 import java.util.Optional;
@@ -21,7 +21,7 @@ import java.util.UUID;
  */
 public class TeacherService {
 
-    private final TeacherRepository repository;
+    private final ITeacherRepository repository;
     private final int MINIMUM_PASSWORD_LENGTH = 6;
 
     /**
@@ -29,7 +29,7 @@ public class TeacherService {
      *
      * @param repository The repository used to access and persist teacher data.
      */
-    public TeacherService(TeacherRepository repository) {
+    public TeacherService(ITeacherRepository repository) {
         this.repository = repository;
     }
 

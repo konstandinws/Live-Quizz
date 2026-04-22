@@ -13,7 +13,7 @@ import java.util.Optional;
  * underlying database technology.
  * </p>
  */
-public interface TeacherRepository {
+public interface ITeacherRepository {
 
    /**
     * Saves a new teacher record into the system.

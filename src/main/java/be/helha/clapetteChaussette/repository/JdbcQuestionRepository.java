@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+//TODO add a way to find all questions of a quizz from the quizz uuid
+
 /**
  * JDBC implementation of the {@link QuestionRepository}.
  * <p>

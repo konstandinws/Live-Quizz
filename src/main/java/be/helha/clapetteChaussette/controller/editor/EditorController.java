@@ -12,6 +12,7 @@ import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
 import be.helha.clapetteChaussette.view.editor.McqEditorFX;
 import be.helha.clapetteChaussette.view.editor.OpenEditorFX;
 import be.helha.clapetteChaussette.view.editor.PollEditorFX;
+import be.helha.clapetteChaussette.view.editor.QuizzEditorFX;
 import be.helha.clapetteChaussette.view.editor.McqEditorFX.IMcqEditorListener;
 import be.helha.clapetteChaussette.view.editor.OpenEditorFX.IOpenEditorListener;
 import be.helha.clapetteChaussette.view.editor.PollEditorFX.IPollEditorListener;
@@ -44,11 +45,13 @@ public class EditorController
      *                                      before saving.
      */
     public EditorController(Quizz quizz,
+            TeacherDTO teacher,
             EditorService editorService,
             NavigationService navigationService,
             ValidateQuestionEditorService validateService) {
         super(navigationService);
         this.quizz = quizz;
+        this.teacher = teacher;
         this.editorService = editorService;
         this.validateQuestionEditorService = validateService;
     }
@@ -85,6 +88,7 @@ public class EditorController
     public void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
             throws InvalidQuestionException {
         quizz.addQuestion(editorService.createOpenQuestion(title, answerTexts, hasPoints));
+        navigateToView(new QuizzEditorFX(), "Éditeur de Quiz", this);
     }
 
     // endregion
@@ -95,6 +99,7 @@ public class EditorController
     public void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
             throws InvalidQuestionException {
         quizz.addQuestion(editorService.createMcqQuestion(title, answers, correctAnswers));
+        navigateToView(new QuizzEditorFX(), "Éditeur de Quiz", this);
     }
 
     // endregion
@@ -104,6 +109,7 @@ public class EditorController
     @Override
     public void createPoll(String title, List<String> answers) throws InvalidQuestionException {
         quizz.addQuestion(editorService.createPollQuestion(title, answers));
+        navigateToView(new QuizzEditorFX(), "Éditeur de Quiz", this);
     }
 
     // //#endregion

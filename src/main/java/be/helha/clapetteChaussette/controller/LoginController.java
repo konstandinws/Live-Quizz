@@ -49,7 +49,8 @@ public class LoginController
         // for now we directly create a new quiz, but we should display a list of quiz
         // to choose from or an option to create a new one
         Quizz quizz = new Quizz("Nouveau Quiz");
-        EditorController editorCtrl = new EditorController(quizz, editorService, navigationService, validateService);
+        EditorController editorCtrl = new EditorController(quizz, teacher, editorService, navigationService,
+                validateService);
         navigateToView(new QuizzEditorFX(), "Éditeur de Quiz", editorCtrl);
     }
 }

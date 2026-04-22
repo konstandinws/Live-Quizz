@@ -29,8 +29,6 @@ public class Quizz {
         return Collections.unmodifiableList(questions);
     }
 
-    // méthode pour ajouter une question de n'importe quel type car les types de
-    // questions héritent de Question
     public void addQuestion(Question question) {
         this.questions.add(question);
     }

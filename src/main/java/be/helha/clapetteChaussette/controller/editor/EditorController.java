@@ -1,101 +1,78 @@
 package be.helha.clapetteChaussette.controller.editor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import be.helha.clapetteChaussette.controller.BaseController;
 import be.helha.clapetteChaussette.model.Quizz;
-import be.helha.clapetteChaussette.model.dto.QuestionDTO;
-import be.helha.clapetteChaussette.model.dto.QuizzDTO;
-import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.model.question.Question;
-import be.helha.clapetteChaussette.repository.TeacherRepository;
-import be.helha.clapetteChaussette.service.DbService;
+import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
-import be.helha.clapetteChaussette.view.OpenEditorFX;
-import be.helha.clapetteChaussette.view.QcmEditorFX;
-import be.helha.clapetteChaussette.view.QuizzFX;
-import be.helha.clapetteChaussette.view.ViewFX;
+import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
+import java.util.List;
 
-public class EditorController {
-    /**
-     * This is the main controller for the editor features.
-     * It will be used to navigate between the different editors and to share data
-     * between them if needed.
-     */
-    NavigationService navigationService;
-    Quizz quizz;
-    TeacherDTO teacher;
+public class EditorController extends BaseController {
+    private Quizz quizz;
+    private EditorService editorService;
+    private ValidateQuestionEditorService validateService;
 
-    public EditorController(Quizz quizz) {
+    public EditorController(Quizz quizz,
+                            EditorService editorService,
+                            NavigationService navigationService,
+                            ValidateQuestionEditorService validateService) {
+        super(navigationService);
         this.quizz = quizz;
-        teacher = new TeacherDTO(
-                UUID.randomUUID(),
-                "test_prof_1",
-                "mot_de_passe_haché");
-        TeacherRepository teacherRepository = new TeacherRepository();
-        teacherRepository.save(teacher);
+        this.editorService = editorService;
+        this.validateService = validateService;
     }
 
-    public void setNavigationService(NavigationService navigationService) {
-        this.navigationService = navigationService;
+    //  MÉTHODES POUR LES BOUTONS DU QUIZZ EDITOR
+
+    public void onAddMcqRequested() {
+        System.out.println("Ouverture éditeur QCM");
     }
 
-    public void navigateToQuizzEditor() {
-        QuizzFX quizzFX = new QuizzFX();
-        QuizzEditorController controller = new QuizzEditorController();
-        quizzFX.setOwnViewController(controller);
-        controller.setController(this);
-        navigateTo(quizzFX, "Éditeur de Questionnaire");
+    public void onAddPollRequested() {
+        System.out.println("Ouverture éditeur Sondage");
     }
 
-    public void navigateToOpenQuestionEditor() {
-        OpenEditorFX openEditorFX = new OpenEditorFX();
-        OpenEditorController controller = new OpenEditorController();
-        openEditorFX.setOwnViewController(controller);
-        controller.setController(this);
-        navigateTo(openEditorFX, "Éditeur de Question Libre");
+    public void onAddQuestionFreeRequested() {
+        System.out.println("Ouverture éditeur Question Ouverte");
     }
 
-    public void navigateToPollQuestionEditor() {
-        // TODO: implement poll editor
+    public void onSaveRequested() {
+        System.out.println("Sauvegarde du Quiz complet");
     }
 
-    public void navigateToQcmQuestionEditor() {
-        QcmEditorFX qcmEditorFX = new QcmEditorFX();
-        QcmEditorController qcmEditorController = new QcmEditorController();
-        qcmEditorFX.setOwnViewController(qcmEditorController);
-        qcmEditorController.setController(this);
-        navigateTo(qcmEditorFX, "Éditeur de Question QCM");
+
+
+    public void createOpenQuestion(String title, List<String> answers, boolean hasPoints) {
+        System.out.println("Question reçue : " + title);
+        System.out.println("Réponses possibles : " + answers);
+        System.out.println("Points activés : " + hasPoints);
+
+
     }
 
-    public void navigateTo(ViewFX view, String title) {
-        navigationService.navigateTo(view, title);
+
+
+    /**
+     * Appelée par McqEditorFX pour créer un QCM
+     */
+    public void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers) {
+        System.out.println("QCM reçu !");
+        System.out.println("Titre : " + title);
+        System.out.println("Nombre de choix : " + answers.size());
+
+
     }
 
-    public void addQuestionToQuizz(Question question) {
-        quizz.addQuestion(question);
-    }
+    /**
+     * Cette méthode est appelée par le PollEditorFX quand on clique sur sauvegarder
+     * @param title Le titre du sondage
+     * @param answers La liste des options de réponse
+     */
+    public void createPoll(String title, List<String> answers) {
+        System.out.println("Sondage reçu dans le contrôleur !");
+        System.out.println("Titre : " + title);
+        System.out.println("Options : " + answers);
 
-    public void saveQuizz() {
-        DbService dbService = new DbService();
-        QuizzDTO quizzDTO = new QuizzDTO(quizz.getUuid(), quizz.getName(), teacher.uuid());
-        dbService.saveQuizz(quizzDTO);
-        dbService.saveQuestions(createQuestionDTOs(quizz.getQuestions()));
-    }
 
-    private List<QuestionDTO> createQuestionDTOs(List<Question> questions) {
-        UUID quizzUuid = quizz.getUuid();
-        List<QuestionDTO> questionsDTO = new ArrayList<QuestionDTO>();
-        for (Question question : quizz.getQuestions()) {
-            QuestionDTO questionDTO = new QuestionDTO(
-                    UUID.randomUUID(),
-                    quizzUuid,
-                    question.getQuestion(),
-                    question.getAnswers(),
-                    question.getType());
-            questionsDTO.add(questionDTO);
-        }
-        return questionsDTO;
     }
 }

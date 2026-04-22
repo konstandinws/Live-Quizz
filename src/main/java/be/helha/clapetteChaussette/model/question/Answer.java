@@ -1,16 +1,16 @@
 package be.helha.clapetteChaussette.model.question;
 
-public class Anwser {
-    String anwser;
+public class Answer {
+    String answer;
     boolean isCorrect;
 
-    public Anwser(String anwser, boolean isCorrect) {
-        this.anwser = anwser;
+    public Answer(String answer, boolean isCorrect) {
+        this.answer = answer;
         this.isCorrect = isCorrect;
     }
 
-    public String getAnwser() {
-        return anwser;
+    public String getAnswer() {
+        return answer;
     }
 
     public boolean isCorrect() {

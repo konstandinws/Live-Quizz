@@ -6,23 +6,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Poll extends Question {
+public class PollQuestion extends Question {
 
     private final List<Integer> voteCounts;
 
-    public Poll(String question) {
+    public PollQuestion(String question) {
         super(question, QuestionType.POLL);
         this.voteCounts = new ArrayList<Integer>();
     }
 
-    public Poll(String Question, List<Anwser> options) {
+    public PollQuestion(String Question, List<Answer> options) {
         this(Question);
-        for (Anwser option : options) {
+        for (Answer option : options) {
             addOption(option);
         }
     }
 
-    public void addOption(Anwser option) {
+    public void addOption(Answer option) {
         this.answers.add(option);
         this.voteCounts.add(0);
     }
@@ -36,7 +36,7 @@ public class Poll extends Question {
     }
 
     public String getChoice(int index) {
-        return this.answers.get(index).getAnwser();
+        return this.answers.get(index).getAnswer();
     }
 
     @Override

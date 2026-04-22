@@ -1,4 +1,4 @@
-package be.helha.clapetteChaussette.view;
+package be.helha.clapetteChaussette.view.editor;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -13,21 +13,20 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.IViewController;
-import be.helha.clapetteChaussette.controller.editor.QcmEditorController;
+import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.exception.InvalidQuestionException;
-import be.helha.clapetteChaussette.model.question.Anwser;
+import be.helha.clapetteChaussette.view.ViewFX;
 
 /**
  * Contrôleur JavaFX de l'interface d'édition de questions QCM.
  * <p>
  * Gère l'affichage dynamique des lignes de réponses et collecte les données
  * saisies par l'utilisateur avant de les transmettre à
- * {@link QcmEditorController}.
+ * {@link EditorController}.
  * La validation métier est déléguée au controller ; cette classe ne gère
  * que la validation visuelle (affichage des erreurs).
  */
-public class QcmEditorFX extends ViewFX {
+public class McqEditorFX extends ViewFX<EditorController> {
     @FXML
     private Button saveQuestionBTN;
 
@@ -38,12 +37,8 @@ public class QcmEditorFX extends ViewFX {
     @FXML
     private Button addAnswerBTN;
 
-    /** Le nombre maximum de réponses autorisées pour un QCM. */
     final int MAX_ANSWERS = 6;
-    /** Le nombre minimum de réponses requises pour un QCM. */
     final int MIN_ANSWERS = 2;
-
-    QcmEditorController controller;
 
     private List<CheckBox> correctAnswerCB = new ArrayList<>();
     private List<TextField> textFields = new ArrayList<>();
@@ -75,7 +70,7 @@ public class QcmEditorFX extends ViewFX {
      * Vérifie si le nombre maximum de réponses autorisées est atteint.
      *
      * @return {@code true} si {@code answersContainer} contient
-     *         {@value MAX_ANSWERS} réponses ou plus
+
      */
     boolean checkMaxAnswers() {
         return answersContainer.getChildren().size() >= MAX_ANSWERS;
@@ -96,10 +91,13 @@ public class QcmEditorFX extends ViewFX {
      */
     @FXML
     private void createQuestion() {
+        String title = getTitle();
+        List<String> answers = textFields.stream().map(TextField::getText).toList();
+        List<Boolean> correctAnswers = correctAnswerCB.stream()
+                .map(CheckBox::isSelected)
+                .toList();
         try {
-            String title = getTitle();
-            List<Anwser> answers = getAnswers();
-            controller.createQcm(title, answers);
+            listener.createMcqQuestion(title, answers, correctAnswers);
         } catch (InvalidQuestionException e) {
             showErrorPopup(e.getMessage());
         }
@@ -116,7 +114,7 @@ public class QcmEditorFX extends ViewFX {
      * aux listes internes {@code correctAnswerCB} et {@code textFields}.
      * <p>
      * La suppression est bloquée et une popup est affichée si le nombre de réponses
-     * est inférieur ou égal à {@value MIN_ANSWERS}.
+
      *
      * @return un {@link HBox} prêt à être ajouté à {@code answersContainer}
      */
@@ -147,25 +145,6 @@ public class QcmEditorFX extends ViewFX {
         });
         answerRow.getChildren().addAll(validAnswerCB, answerTF, deleteBTN);
         return answerRow;
-    }
-
-    /**
-     * Retourne le texte saisi dans chaque champ de réponse.
-     *
-     * @return la liste des textes de toutes les réponses, dans l'ordre d'affichage
-     */
-    List<Anwser> getAnswers() {
-        List<Anwser> answers = new ArrayList<>();
-        int i = 0;
-        for (TextField field : textFields) {
-            boolean isCorrect = false;
-            if (correctAnswerCB.get(i).isSelected()) {
-                isCorrect = true;
-            }
-            answers.add(new Anwser(field.getText(), isCorrect));
-            i++;
-        }
-        return answers;
     }
 
     /**
@@ -208,15 +187,11 @@ public class QcmEditorFX extends ViewFX {
 
     @Override
     protected String getFXMLPath() {
-        return "QcmEditor.fxml";
+        return "McqEditor.fxml";
     }
 
-    @Override
-    public void setOwnViewController(IViewController controller) {
-        if (controller instanceof QcmEditorController) {
-            this.controller = (QcmEditorController) controller;
-        } else {
-            throw new IllegalArgumentException("Controller must be an instance of QcmEditorController");
-        }
+    public interface IMcqEditorListener {
+        void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
+                throws InvalidQuestionException;
     }
 }

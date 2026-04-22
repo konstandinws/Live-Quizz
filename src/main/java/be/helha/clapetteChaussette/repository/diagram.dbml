@@ -5,21 +5,11 @@ Table teacher {
     created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
 }
 
-Table teacher_questionnaire{
-    teacher_uuid UUID [not null, ref: > teacher.uuid]
-    questionnaire_uuid UUID [not null, ref: > questionnaire.quuid]
-}
-
 Table questionnaire {
     quuid UUID [primary key]
     teacher_uuid UUID [not null, ref: > teacher.uuid]
     created_at TIMESTAMP [default: `CURRENT_TIMESTAMP`]
 
-}
-
-Table questionnaire_question {
-    questionnaire_uuid UUID [not null, ref: > questionnaire.quuid]
-    question_uuid UUID [not null, ref: > question.quuid]
 }
 
 Table question {

@@ -5,11 +5,6 @@ CREATE TABLE "teacher" (
   "created_at" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
 );
 
-CREATE TABLE "teacher_questionnaire" (
-  "teacher_uuid" UUID NOT NULL,
-  "questionnaire_uuid" UUID NOT NULL
-);
-
 CREATE TABLE "questionnaire" (
   "quuid" UUID PRIMARY KEY,
   "teacher_uuid" UUID NOT NULL,
@@ -30,10 +25,6 @@ CREATE TABLE "reponse_question" (
   "reponse" TEXT NOT NULL,
   "bonne_reponse" BOOLEAN NOT NULL
 );
-
-ALTER TABLE "teacher_questionnaire" ADD FOREIGN KEY ("teacher_uuid") REFERENCES "teacher" ("uuid");
-
-ALTER TABLE "teacher_questionnaire" ADD FOREIGN KEY ("questionnaire_uuid") REFERENCES "questionnaire" ("quuid");
 
 ALTER TABLE "questionnaire" ADD FOREIGN KEY ("teacher_uuid") REFERENCES "teacher" ("uuid");
 

@@ -18,7 +18,7 @@ import java.util.UUID;
  * in a relational database using JDBC.
  * </p>
  */
-public class JdbcIQuizzRepository implements IQuizzRepository {
+public class JdbcQuizzRepository implements IQuizzRepository {
 
     @Override
     public void save(QuizzDTO quizz) {

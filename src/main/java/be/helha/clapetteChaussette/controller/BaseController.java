@@ -26,6 +26,7 @@ public abstract class BaseController {
     public BaseController(NavigationService navigationService) {
         this.navigationService = navigationService;
     }
+
     public <C extends BaseController> void navigateToView(ViewFX<C> view, String title, C controller) {
         navigationService.navigateTo(view, title);
         view.setOwnController(controller);

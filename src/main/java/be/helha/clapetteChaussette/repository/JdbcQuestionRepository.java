@@ -22,10 +22,10 @@ import java.util.UUID;
  * connections.
  * </p>
  */
-public class JdbcIQuestionRepository implements IQuestionRepository {
+public class JdbcQuestionRepository implements IQuestionRepository {
 
     @Override
-    public void save(QuestionDTO question) {
+    public void save(QuestionDTO question) throws DatabaseException {
 
         String query = "INSERT INTO question (quuid, questionnaire_uuid, content, type) values (?, ?, ?, ?)";
 
@@ -43,6 +43,13 @@ public class JdbcIQuestionRepository implements IQuestionRepository {
         } catch (SQLException e) {
             throw new DatabaseException("Error while saving the question in the Database", e);
 
+        }
+    }
+
+    @Override
+    public void saveQuestions(Iterable<QuestionDTO> questions) throws DatabaseException {
+        for (QuestionDTO question : questions) {
+            save(question);
         }
     }
 

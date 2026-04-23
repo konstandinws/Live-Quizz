@@ -13,6 +13,8 @@ import be.helha.clapetteChaussette.model.question.McqQuestion;
 import be.helha.clapetteChaussette.model.question.OpenQuestion;
 import be.helha.clapetteChaussette.model.question.PollQuestion;
 import be.helha.clapetteChaussette.model.question.Question;
+import be.helha.clapetteChaussette.repository.IQuestionRepository;
+import be.helha.clapetteChaussette.repository.IQuizzRepository;
 
 public class EditorService {
     /**
@@ -23,15 +25,19 @@ public class EditorService {
 
     // #region Fields
 
-    private DbService dbService;
+    private IQuizzRepository quizzRepository;
+    private IQuestionRepository questionRepository;
     private ValidateQuestionEditorService validateQuestionEditorService;
 
     // endregion
 
     // #region Constructor
 
-    public EditorService(DbService dbService, ValidateQuestionEditorService validateQuestionEditorService) {
-        this.dbService = dbService;
+    public EditorService(IQuizzRepository quizzRepository,
+            IQuestionRepository questionRepository,
+            ValidateQuestionEditorService validateQuestionEditorService) {
+        this.quizzRepository = quizzRepository;
+        this.questionRepository = questionRepository;
         this.validateQuestionEditorService = validateQuestionEditorService;
     }
 
@@ -73,8 +79,8 @@ public class EditorService {
 
     public void saveQuizz(Quizz quizz, UUID teacherUuid) {
         QuizzDTO quizzDTO = new QuizzDTO(quizz.getUuid(), quizz.getName(), teacherUuid);
-        dbService.saveQuizz(quizzDTO);
-        dbService.saveQuestions(createQuestionDTOs(quizz.getQuestions(), quizz.getUuid()));
+        quizzRepository.save(quizzDTO);
+        questionRepository.saveQuestions(createQuestionDTOs(quizz.getQuestions(), quizz.getUuid()));
     }
 
     // endregion

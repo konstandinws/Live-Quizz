@@ -2,7 +2,8 @@ package be.helha.clapetteChaussette.view.editor;
 
 import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
-import be.helha.clapetteChaussette.repository.IRepository;
+import be.helha.clapetteChaussette.repository.IQuestionRepository;
+import be.helha.clapetteChaussette.repository.IQuizzRepository;
 import be.helha.clapetteChaussette.view.ControlerComponent.ControlerComponent;
 import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
@@ -15,7 +16,7 @@ import java.util.UUID;
 import java.util.List;
 
 public class QuizzEditorFX extends ViewFX<EditorController> {
-    private IRepository dbService;
+    private IQuizzRepository dbService;
     private UUID teacherUuid;
 
     @FXML
@@ -58,7 +59,7 @@ public class QuizzEditorFX extends ViewFX<EditorController> {
 
     @FXML
     private void initialize() {
-        List<QuizzDTO> quizzes = dbService.findAllQuizzes(teacherUuid);
+        List<QuizzDTO> quizzes = dbService.findAll(teacherUuid);
         for (QuizzDTO quizz : quizzes) {
             try {
                 ControlerComponent carte = ControlerComponent.creerComposent();
@@ -75,8 +76,8 @@ public class QuizzEditorFX extends ViewFX<EditorController> {
         return "QuizzEditor.fxml";
     }
 
-    public void setDbService(IRepository dbService) {
-        this.dbService = dbService;
+    public void setDbService(IQuizzRepository quizzRepository) {
+        this.dbService = quizzRepository;
     }
 
     public interface IQuizzListener {

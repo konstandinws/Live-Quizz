@@ -2,10 +2,12 @@
 package be.helha.clapetteChaussette;
 
 import be.helha.clapetteChaussette.controller.LoginController;
-import be.helha.clapetteChaussette.repository.JdbcIQuestionRepository;
-import be.helha.clapetteChaussette.repository.JdbcIQuizzRepository;
-import be.helha.clapetteChaussette.repository.JdbcITeacherRepository;
-import be.helha.clapetteChaussette.service.DbService;
+import be.helha.clapetteChaussette.repository.IQuestionRepository;
+import be.helha.clapetteChaussette.repository.IQuizzRepository;
+import be.helha.clapetteChaussette.repository.ITeacherRepository;
+import be.helha.clapetteChaussette.repository.JdbcQuestionRepository;
+import be.helha.clapetteChaussette.repository.JdbcQuizzRepository;
+import be.helha.clapetteChaussette.repository.JdbcTeacherRepository;
 import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
@@ -20,15 +22,13 @@ public class AppFX extends Application {
         NavigationService navigationService = new NavigationService(mainstage);
         ValidateQuestionEditorService validateService = new ValidateQuestionEditorService();
 
-        JdbcITeacherRepository teacherRepository = new JdbcITeacherRepository();
-        JdbcIQuestionRepository questionRepository = new JdbcIQuestionRepository();
-        JdbcIQuizzRepository quizzRepository = new JdbcIQuizzRepository();
+        IQuizzRepository QuizzRepo = new JdbcQuizzRepository();
+        IQuestionRepository QuestionRepo = new JdbcQuestionRepository();
+        ITeacherRepository TeacherRepo = new JdbcTeacherRepository();
 
-        DbService dbService = new DbService(teacherRepository, quizzRepository, questionRepository);
-        EditorService editorService = new EditorService(dbService, validateService);
+        EditorService editorService = new EditorService(QuizzRepo, QuestionRepo, validateService);
 
-        // On lance le LoginController au démarrage
-        LoginController loginController = new LoginController(navigationService, dbService, editorService,
+        LoginController loginController = new LoginController(navigationService, TeacherRepo, editorService,
                 validateService);
         loginController.navigateToView(new LoginViewFX(), "Clapette Chaussette - Connexion", loginController);
     }

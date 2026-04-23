@@ -3,7 +3,7 @@ package be.helha.clapetteChaussette.controller;
 
 import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.service.DbService;
+import be.helha.clapetteChaussette.repository.ITeacherRepository;
 import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
@@ -17,20 +17,21 @@ import java.util.UUID;
 public class LoginController
         extends BaseController
         implements ILoginListener {
-    private DbService dbService;
+    private ITeacherRepository teacherRepository;
     private EditorService editorService;
     private ValidateQuestionEditorService validateService;
 
-    public LoginController(NavigationService nav, DbService db, EditorService ed, ValidateQuestionEditorService val) {
+    public LoginController(NavigationService nav, ITeacherRepository db, EditorService ed,
+            ValidateQuestionEditorService val) {
         super(nav);
-        this.dbService = db;
+        this.teacherRepository = db;
         this.editorService = ed;
         this.validateService = val;
     }
 
     public void onLoginRequested(String name, String password) {
 
-        Optional<TeacherDTO> teacher = dbService.findTeacher(name);
+        Optional<TeacherDTO> teacher = teacherRepository.findByName(name);
         if (teacher.isPresent()) {
             goToEditor(teacher.get());
         } else {
@@ -41,7 +42,7 @@ public class LoginController
 
     public void onRegisterRequested(String name, String password) {
         TeacherDTO newTeacher = new TeacherDTO(UUID.randomUUID(), name, password); // need to deleguate into a service
-        dbService.saveTeacher(newTeacher);
+        teacherRepository.save(newTeacher);
         goToEditor(newTeacher);
     }
 

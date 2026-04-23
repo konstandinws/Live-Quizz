@@ -18,7 +18,7 @@ import java.util.UUID;
  * in a relational database using raw JDBC connections.
  * </p>
  */
-public class JdbcITeacherRepository implements ITeacherRepository {
+public class JdbcTeacherRepository implements ITeacherRepository {
 
     @Override
     public void save(TeacherDTO teacher) {

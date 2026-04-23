@@ -15,8 +15,8 @@ public class PollQuestion extends Question {
         this.voteCounts = new ArrayList<Integer>();
     }
 
-    public PollQuestion(String Question, List<Answer> options) {
-        this(Question);
+    public PollQuestion(String question, List<Answer> options) {
+        this(question);
         for (Answer option : options) {
             addOption(option);
         }

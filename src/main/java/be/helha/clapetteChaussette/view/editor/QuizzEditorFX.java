@@ -2,20 +2,20 @@ package be.helha.clapetteChaussette.view.editor;
 
 import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
-import be.helha.clapetteChaussette.repository.JdbcIQuizzRepository;
+import be.helha.clapetteChaussette.repository.IRepository;
 import be.helha.clapetteChaussette.view.ControlerComponent.ControlerComponent;
 import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import be.helha.clapetteChaussette.service.QuestionService;
 
 import java.io.IOException;
 import java.util.UUID;
 import java.util.List;
 
 public class QuizzEditorFX extends ViewFX<EditorController> {
+    private IRepository dbService;
     private UUID teacherUuid;
 
     @FXML
@@ -56,15 +56,9 @@ public class QuizzEditorFX extends ViewFX<EditorController> {
         listener.onSaveRequested();
     }
 
-    @Override
-    protected String getFXMLPath() {
-        return "QuizzEditor.fxml";
-    }
-
     @FXML
     private void initialize() {
-        QuestionService quizzliste = new QuestionService(new JdbcIQuizzRepository());
-        List<QuizzDTO> quizzes = quizzliste.getQuizzesByTeacher(teacherUuid);
+        List<QuizzDTO> quizzes = dbService.findAllQuizzes(teacherUuid);
         for (QuizzDTO quizz : quizzes) {
             try {
                 ControlerComponent carte = ControlerComponent.creerComposent();
@@ -74,6 +68,15 @@ public class QuizzEditorFX extends ViewFX<EditorController> {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    protected String getFXMLPath() {
+        return "QuizzEditor.fxml";
+    }
+
+    public void setDbService(IRepository dbService) {
+        this.dbService = dbService;
     }
 
     public interface IQuizzListener {

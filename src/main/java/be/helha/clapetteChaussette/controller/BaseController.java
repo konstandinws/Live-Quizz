@@ -1,6 +1,7 @@
 package be.helha.clapetteChaussette.controller;
 
 import be.helha.clapetteChaussette.service.NavigationService;
+import be.helha.clapetteChaussette.view.IListener;
 import be.helha.clapetteChaussette.view.ViewFX;
 
 public abstract class BaseController {
@@ -27,7 +28,7 @@ public abstract class BaseController {
         this.navigationService = navigationService;
     }
 
-    public <C extends BaseController> void navigateToView(ViewFX<C> view, String title, C controller) {
+    public <C extends IListener> void navigateToView(ViewFX<C> view, String title, C controller) {
         navigationService.navigateTo(view, title);
         view.setOwnController(controller);
     }

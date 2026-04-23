@@ -1,14 +1,15 @@
 package be.helha.clapetteChaussette.view.question;
 
-import be.helha.clapetteChaussette.controller.question.OpenController;
+import be.helha.clapetteChaussette.view.IListener;
 import be.helha.clapetteChaussette.view.IQuestionListener;
 import be.helha.clapetteChaussette.view.ViewFX;
+import be.helha.clapetteChaussette.view.question.OpenQuestionFX.IOpenListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
-public class OpenQuestionFX extends ViewFX<OpenController> {
+public class OpenQuestionFX extends ViewFX<IOpenListener> {
     @FXML
     private Button envoyerBtn;
 
@@ -34,7 +35,7 @@ public class OpenQuestionFX extends ViewFX<OpenController> {
         return "open.fxml";
     }
 
-    public interface IOpenListener extends IQuestionListener<String> {
+    public interface IOpenListener extends IListener, IQuestionListener<String> {
         public void validate(String aws);
     }
 }

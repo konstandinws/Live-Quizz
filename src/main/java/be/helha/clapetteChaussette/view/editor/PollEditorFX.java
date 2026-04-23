@@ -1,6 +1,8 @@
 package be.helha.clapetteChaussette.view.editor;
 
+import be.helha.clapetteChaussette.view.IListener;
 import be.helha.clapetteChaussette.view.ViewFX;
+import be.helha.clapetteChaussette.view.editor.PollEditorFX.IPollEditorListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,14 +15,13 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.exception.editor.InvalidQuestionException;
 
 /**
  * JavaFX controller for the Poll editing interface.
  * Inherits from ViewFX based on the new project architecture.
  */
-public class PollEditorFX extends ViewFX<EditorController> {
+public class PollEditorFX extends ViewFX<IPollEditorListener> {
 
     @FXML
     private VBox answersContainer;
@@ -137,7 +138,7 @@ public class PollEditorFX extends ViewFX<EditorController> {
         return "PollEditor.fxml";
     }
 
-    public interface IPollEditorListener {
+    public interface IPollEditorListener extends IListener {
         void createPoll(String title, List<String> answers) throws InvalidQuestionException;
 
     }

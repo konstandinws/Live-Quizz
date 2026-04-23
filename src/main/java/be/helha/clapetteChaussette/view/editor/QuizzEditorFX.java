@@ -2,9 +2,10 @@ package be.helha.clapetteChaussette.view.editor;
 
 import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
-import be.helha.clapetteChaussette.repository.IQuestionRepository;
 import be.helha.clapetteChaussette.repository.IQuizzRepository;
 import be.helha.clapetteChaussette.view.ControlerComponent.ControlerComponent;
+import be.helha.clapetteChaussette.view.editor.QuizzEditorFX.IQuizzListener;
+import be.helha.clapetteChaussette.view.IListener;
 import be.helha.clapetteChaussette.view.ViewFX;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,7 +16,7 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.List;
 
-public class QuizzEditorFX extends ViewFX<EditorController> {
+public class QuizzEditorFX extends ViewFX<IQuizzListener> {
     private IQuizzRepository dbService;
     private UUID teacherUuid;
 
@@ -80,7 +81,8 @@ public class QuizzEditorFX extends ViewFX<EditorController> {
         this.dbService = quizzRepository;
     }
 
-    public interface IQuizzListener {
+    public interface IQuizzListener extends IListener {
+
         void onAddMcqRequested();
 
         void onAddPollRequested();

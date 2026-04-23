@@ -6,11 +6,13 @@ import javafx.scene.control.Button;
 
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.question.PollController;
+import be.helha.clapetteChaussette.view.IListener;
+import be.helha.clapetteChaussette.view.IQuestionListener;
 import be.helha.clapetteChaussette.view.ViewFX;
+import be.helha.clapetteChaussette.view.question.PollViewFX.IPollListener;
 import javafx.event.ActionEvent;
 
-public class PollViewFX extends ViewFX<PollController> {
+public class PollViewFX extends ViewFX<IPollListener> {
 
     @FXML
     private Label title;
@@ -47,5 +49,8 @@ public class PollViewFX extends ViewFX<PollController> {
     @Override
     protected String getFXMLPath() {
         return "poll.fxml";
+    }
+
+    public interface IPollListener extends IListener, IQuestionListener<String> {
     }
 }

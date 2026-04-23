@@ -33,7 +33,7 @@ public class LoginViewFX extends ViewFX<LoginController> {
     private void initialize() {
     }
 
-    public interface ILoginListener {
+    public interface ILoginListener extends IListener {
         void onLoginRequested(String name, String password);
 
         void onRegisterRequested(String name, String password);

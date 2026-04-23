@@ -15,7 +15,9 @@ import java.util.List;
 
 import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.exception.editor.InvalidQuestionException;
+import be.helha.clapetteChaussette.view.IListener;
 import be.helha.clapetteChaussette.view.ViewFX;
+import be.helha.clapetteChaussette.view.editor.McqEditorFX.IMcqEditorListener;
 
 /**
  * Contrôleur JavaFX de l'interface d'édition de questions QCM.
@@ -26,7 +28,7 @@ import be.helha.clapetteChaussette.view.ViewFX;
  * La validation métier est déléguée au controller ; cette classe ne gère
  * que la validation visuelle (affichage des erreurs).
  */
-public class McqEditorFX extends ViewFX<EditorController> {
+public class McqEditorFX extends ViewFX<IMcqEditorListener> {
     @FXML
     private Button saveQuestionBTN;
 
@@ -190,7 +192,7 @@ public class McqEditorFX extends ViewFX<EditorController> {
         return "McqEditor.fxml";
     }
 
-    public interface IMcqEditorListener {
+    public interface IMcqEditorListener extends IListener {
         void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
                 throws InvalidQuestionException;
     }

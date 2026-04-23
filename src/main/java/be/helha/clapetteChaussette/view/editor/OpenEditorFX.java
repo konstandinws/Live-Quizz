@@ -13,11 +13,12 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.exception.editor.InvalidQuestionException;
+import be.helha.clapetteChaussette.view.IListener;
 import be.helha.clapetteChaussette.view.ViewFX;
+import be.helha.clapetteChaussette.view.editor.OpenEditorFX.IOpenEditorListener;
 
-public class OpenEditorFX extends ViewFX<EditorController> {
+public class OpenEditorFX extends ViewFX<IOpenEditorListener> {
 
     @FXML
     private TextField questionTitle; // Field where the teacher will enter the question
@@ -89,7 +90,7 @@ public class OpenEditorFX extends ViewFX<EditorController> {
         return "OpenEditor.fxml";
     }
 
-    public interface IOpenEditorListener {
+    public interface IOpenEditorListener extends IListener {
         void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
                 throws InvalidQuestionException;
     }

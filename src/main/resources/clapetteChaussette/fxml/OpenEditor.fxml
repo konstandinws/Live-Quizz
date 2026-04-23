@@ -18,13 +18,13 @@
                 <Insets bottom="10.0" top="10.0" />
             </padding>
             <children>
-                <Label text="Nouvelle Question Libre">
+                <Label text="New Open Question">
                     <font>
                         <Font name="System Bold" size="20.0" />
                     </font>
                 </Label>
-                <TextField fx:id="questionTitle" maxWidth="450.0" promptText="Écrivez votre question ici..." />
-                <CheckBox fx:id="pointsCheckBox" mnemonicParsing="false" text="Cette question compte pour des points" />
+                <TextField fx:id="questionTitle" maxWidth="450.0" promptText="Write your question here..." />
+                <CheckBox fx:id="pointsCheckBox" mnemonicParsing="false" text="This question is worth points" />
             </children>
         </VBox>
     </top>
@@ -34,13 +34,13 @@
                 <Insets left="20.0" right="20.0" />
             </padding>
             <children>
-                <Label text="Réponses acceptées :" />
+                <Label text="Accepted answers :" />
                 <ScrollPane fitToWidth="true" prefHeight="200.0">
                     <content>
                         <VBox fx:id="answersContainer" spacing="5.0" />
                     </content>
                 </ScrollPane>
-                <Button fx:id="addAnswerBTN" onAction="#addNewAnswer" text="+ Ajouter une variante" />
+                <Button fx:id="addAnswerBTN" onAction="#addNewAnswer" text="+ Add variant" />
             </children>
         </VBox>
     </center>
@@ -50,7 +50,7 @@
                 <Insets right="20.0" />
             </padding>
             <children>
-                <Button onAction="#saveQuestion" style="-fx-background-color: #2ecc71;" text="Sauvegarder" textFill="WHITE" />
+                <Button onAction="#saveQuestion" style="-fx-background-color: #2ecc71;" text="Save" textFill="WHITE" />
             </children>
         </HBox>
     </bottom>

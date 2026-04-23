@@ -20,13 +20,12 @@ import be.helha.clapetteChaussette.view.ViewFX;
 import be.helha.clapetteChaussette.view.editor.McqEditorFX.IMcqEditorListener;
 
 /**
- * Contrôleur JavaFX de l'interface d'édition de questions QCM.
+ * JavaFX controller for the Multiple Choice Question (MCQ) editing interface.
  * <p>
- * Gère l'affichage dynamique des lignes de réponses et collecte les données
- * saisies par l'utilisateur avant de les transmettre à
- * {@link EditorController}.
- * La validation métier est déléguée au controller ; cette classe ne gère
- * que la validation visuelle (affichage des erreurs).
+ * Manages the dynamic display of answer rows and collects user input
+ * before passing the data to {@link QcmEditorController}.
+ * Business validation is delegated to the main controller; this class
+ * only handles visual validation (error display).
  */
 public class McqEditorFX extends ViewFX<IMcqEditorListener> {
     @FXML
@@ -39,7 +38,9 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
     @FXML
     private Button addAnswerBTN;
 
+    /** The maximum number of answers allowed for an MCQ. */
     final int MAX_ANSWERS = 6;
+    /** The minimum number of answers required for an MCQ. */
     final int MIN_ANSWERS = 2;
 
     private List<CheckBox> correctAnswerCB = new ArrayList<>();
@@ -58,9 +59,9 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
     }
 
     /**
-     * Ajoute une nouvelle ligne de réponse dans {@code answersContainer}.
-     * Désactive le bouton d'ajout si le nombre maximum de réponses est atteint.
-     * Lié au bouton "+" dans le FXML.
+     * Adds a new answer row to {@code answersContainer}.
+     * Disables the add button if the maximum number of answers is reached.
+     * Linked to the "+" button in the FXML.
      */
     @FXML
     private void addNewAnswer() {
@@ -69,17 +70,17 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
     }
 
     /**
-     * Vérifie si le nombre maximum de réponses autorisées est atteint.
+     * Checks if the maximum number of allowed answers has been reached.
      *
-     * @return {@code true} si {@code answersContainer} contient
-     * 
+     * @return {@code true} if {@code answersContainer} contains
+     * {@code MAX_ANSWERS} or more answers.
      */
     boolean checkMaxAnswers() {
         return answersContainer.getChildren().size() >= MAX_ANSWERS;
     }
 
     /**
-     * Active ou désactive le bouton d'ajout de réponse selon
+     * Enables or disables the add answer button based on
      * {@link #checkMaxAnswers()}.
      */
     void setAddAnswerBTNVisibility() {
@@ -87,9 +88,9 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
     }
 
     /**
-     * Collecte les données de la vue et demande au controller de créer la question.
-     * Affiche une popup d'erreur si la validation échoue.
-     * Lié au bouton "Sauvegarder" dans le FXML.
+     * Collects data from the view and requests the controller to create the question.
+     * Displays an error popup if validation fails.
+     * Linked to the "Save" button in the FXML.
      */
     @FXML
     private void createQuestion() {
@@ -106,19 +107,18 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
     }
 
     /**
-     * Crée et configure une ligne représentant une réponse possible pour le QCM.
+     * Creates and configures a row representing a possible answer for the MCQ.
      * <p>
-     * La ligne contient une {@link CheckBox} pour marquer la réponse comme
-     * correcte,
-     * un {@link TextField} pour saisir le texte, et un bouton "Supprimer".
+     * The row contains a {@link CheckBox} to mark the answer as correct,
+     * a {@link TextField} for the text input, and a "Delete" button.
      * <p>
-     * La {@link CheckBox} et le {@link TextField} sont automatiquement ajoutés
-     * aux listes internes {@code correctAnswerCB} et {@code textFields}.
+     * The {@link CheckBox} and {@link TextField} are automatically added
+     * to the internal {@code correctAnswerCB} and {@code textFields} lists.
      * <p>
-     * La suppression est bloquée et une popup est affichée si le nombre de réponses
+     * Deletion is blocked and a popup is displayed if the number of answers
+     * is less than or equal to {@code MIN_ANSWERS}.
      *
-     * 
-     * @return un {@link HBox} prêt à être ajouté à {@code answersContainer}
+     * @return an {@link HBox} ready to be added to {@code answersContainer}
      */
     private HBox createAnswerRow() {
         HBox answerRow = new HBox();
@@ -130,7 +130,7 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
         TextField answerTF = new TextField();
         HBox.setHgrow(answerTF, Priority.ALWAYS);
 
-        Button deleteBTN = new Button("Supprimer");
+        Button deleteBTN = new Button("Delete");
 
         correctAnswerCB.add(validAnswerCB);
         textFields.add(answerTF);
@@ -142,7 +142,7 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
                 textFields.remove(answerTF);
                 setAddAnswerBTNVisibility();
             } else {
-                showErrorPopup("Vous devez avoir au minimum 2 réponses.");
+                showErrorPopup("You must have at least 2 answers.");
             }
         });
         answerRow.getChildren().addAll(validAnswerCB, answerTF, deleteBTN);
@@ -152,7 +152,7 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
     /**
      * Retourne le texte des réponses dont la {@link CheckBox} est cochée.
      *
-     * @return la liste des textes des réponses marquées comme correctes
+     * @return the list of text for all answers marked as correct.
      */
     List<String> getCorrectAnswers() {
         List<String> correctAnswers = new ArrayList<>();
@@ -165,26 +165,26 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
     }
 
     /**
-     * Retourne le texte saisi dans le champ titre de la question.
+     * Returns the text entered in the question title field.
      *
-     * @return le titre de la question, peut être vide
+     * @return the question title; may be empty.
      */
     String getTitle() {
         return questionTitle.getText();
     }
 
     /**
-     * Affiche une popup d'erreur modale avec le message fourni.
-     * L'application est mise en pause jusqu'à la fermeture de la popup.
+     * Displays a modal error popup with the provided message.
+     * The application is paused until the popup is closed.
      *
-     * @param message le message d'erreur à afficher à l'utilisateur
+     * @param message the error message to display to the user.
      */
     private void showErrorPopup(String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-        alert.setTitle("Erreur de saisie");
-        alert.setHeaderText("Impossible de sauvegarder la question");
+        alert.setTitle("Input error");
+        alert.setHeaderText("Unable to save the question");
         alert.setContentText(message);
-        alert.showAndWait(); // Met l'application en pause jusqu'à ce que l'utilisateur clique sur OK
+        alert.showAndWait(); // Pauses the application until the user clicks OK
     }
 
     @Override

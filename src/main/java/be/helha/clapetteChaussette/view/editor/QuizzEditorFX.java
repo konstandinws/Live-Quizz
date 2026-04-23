@@ -1,6 +1,5 @@
 package be.helha.clapetteChaussette.view.editor;
 
-import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
 import be.helha.clapetteChaussette.repository.IQuizzRepository;
 import be.helha.clapetteChaussette.view.ControlerComponent.ControlerComponent;

@@ -10,5 +10,5 @@ public interface IDisplayable {
      * Each IDisplayable must have an Initialize method.
      */
 
-    Scene InitializeView() throws Exception;
+    Scene initializeView() throws Exception;
 }

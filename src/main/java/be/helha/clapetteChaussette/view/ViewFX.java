@@ -10,7 +10,7 @@ public abstract class ViewFX<C extends IListener> implements IDisplayable {
 
     protected abstract String getFXMLPath();
 
-    public Scene InitializeView() throws Exception {
+    public Scene initializeView() throws Exception {
         String fxmlPath = "/clapetteChaussette/fxml/" + this.getFXMLPath();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         loader.setControllerFactory(param -> this);

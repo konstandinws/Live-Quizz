@@ -112,5 +112,5 @@ public class EditorController
         navigateToView(new QuizzEditorFX(), "Éditeur de Quiz", this);
     }
 
-    // //#endregion
+    // #endregion
 }

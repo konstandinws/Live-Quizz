@@ -1,7 +1,7 @@
-package be.helha.clapetteChaussette.service;
+package be.helha.clapetteChaussette.service.repository;
 
-import be.helha.clapetteChaussette.exception.LoginFailedException;
 import be.helha.clapetteChaussette.exception.TeacherAlreadyExistsException;
+import be.helha.clapetteChaussette.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.model.Teacher;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 import be.helha.clapetteChaussette.repository.ITeacherRepository;

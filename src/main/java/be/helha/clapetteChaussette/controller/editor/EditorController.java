@@ -3,12 +3,12 @@ package be.helha.clapetteChaussette.controller.editor;
 import java.util.List;
 
 import be.helha.clapetteChaussette.controller.BaseController;
-import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.exception.editor.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.service.EditorService;
 import be.helha.clapetteChaussette.service.NavigationService;
-import be.helha.clapetteChaussette.service.ValidateQuestionEditorService;
+import be.helha.clapetteChaussette.service.editor.EditorService;
+import be.helha.clapetteChaussette.service.editor.ValidateQuestionEditorService;
 import be.helha.clapetteChaussette.view.editor.McqEditorFX;
 import be.helha.clapetteChaussette.view.editor.OpenEditorFX;
 import be.helha.clapetteChaussette.view.editor.PollEditorFX;

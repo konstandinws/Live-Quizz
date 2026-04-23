@@ -1,10 +1,10 @@
-package be.helha.clapetteChaussette.service;
+package be.helha.clapetteChaussette.service.editor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.exception.editor.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;

@@ -1,11 +1,11 @@
 package clapetteChaussette.service;
 
-import be.helha.clapetteChaussette.exception.LoginFailedException;
 import be.helha.clapetteChaussette.exception.TeacherAlreadyExistsException;
+import be.helha.clapetteChaussette.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.model.Teacher;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
 import be.helha.clapetteChaussette.repository.ITeacherRepository;
-import be.helha.clapetteChaussette.service.TeacherService;
+import be.helha.clapetteChaussette.service.repository.TeacherService;
 import be.helha.clapetteChaussette.utils.PasswordHasher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,7 +74,8 @@ public class TeacherServiceTest {
 
         when(repository.findByName(teacherName)).thenReturn(Optional.empty());
 
-        // I originally used anyString() but the password needs to be at least some characters long
+        // I originally used anyString() but the password needs to be at least some
+        // characters long
         Teacher createdTeacher = teacherService.registerNewTeacher(teacherName, "12345678");
 
         assertNotNull(createdTeacher.getUuid());
@@ -106,7 +107,7 @@ public class TeacherServiceTest {
         when(repository.findByName(teacherName)).thenReturn(Optional.of(dbTeacher));
 
         // try to connect with the wrong password
-        LoginFailedException exception =  assertThrows(LoginFailedException.class, () -> {
+        LoginFailedException exception = assertThrows(LoginFailedException.class, () -> {
             teacherService.teacherLogin(teacherName, wrongPassword);
         });
 

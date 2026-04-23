@@ -1,7 +1,8 @@
-package be.helha.clapetteChaussette.repository;
+package be.helha.clapetteChaussette.repository.db;
 
-import be.helha.clapetteChaussette.exception.DatabaseException;
+import be.helha.clapetteChaussette.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.model.dto.TeacherDTO;
+import be.helha.clapetteChaussette.repository.ITeacherRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

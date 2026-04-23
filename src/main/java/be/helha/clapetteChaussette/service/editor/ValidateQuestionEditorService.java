@@ -1,8 +1,8 @@
-package be.helha.clapetteChaussette.service;
+package be.helha.clapetteChaussette.service.editor;
 
 import java.util.List;
 
-import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.exception.editor.InvalidQuestionException;
 
 public class ValidateQuestionEditorService {
     /**

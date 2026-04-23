@@ -1,4 +1,4 @@
-package be.helha.clapetteChaussette.repository;
+package be.helha.clapetteChaussette.repository.db;
 
 import io.github.cdimascio.dotenv.Dotenv;
 

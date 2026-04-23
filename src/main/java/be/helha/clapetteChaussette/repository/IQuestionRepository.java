@@ -1,6 +1,6 @@
 package be.helha.clapetteChaussette.repository;
 
-import be.helha.clapetteChaussette.exception.DatabaseException;
+import be.helha.clapetteChaussette.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 
 import java.util.Optional;

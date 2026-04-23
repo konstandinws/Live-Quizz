@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.helha.clapetteChaussette.controller.editor.EditorController;
-import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.exception.editor.InvalidQuestionException;
 import be.helha.clapetteChaussette.view.ViewFX;
 
 public class OpenEditorFX extends ViewFX<EditorController> {

@@ -1,4 +1,4 @@
-package be.helha.clapetteChaussette.service;
+package be.helha.clapetteChaussette.service.repository;
 
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.question.Question;

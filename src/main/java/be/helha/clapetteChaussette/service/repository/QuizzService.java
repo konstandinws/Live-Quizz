@@ -1,7 +1,7 @@
-package be.helha.clapetteChaussette.service;
+package be.helha.clapetteChaussette.service.repository;
 
-import be.helha.clapetteChaussette.exception.InvalidQuestionException;
-import be.helha.clapetteChaussette.exception.InvalidQuizzException;
+import be.helha.clapetteChaussette.exception.editor.InvalidQuestionException;
+import be.helha.clapetteChaussette.exception.editor.InvalidQuizzException;
 import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
@@ -14,10 +14,13 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Service layer responsible for orchestrating business logic related to Quizzes and Questions.
+ * Service layer responsible for orchestrating business logic related to Quizzes
+ * and Questions.
  * <p>
- * This service acts as an intermediary between the application's models/UI and the data persistence layer.
- * It enforces business rules, ensures data integrity, and handles the transformation between domain
+ * This service acts as an intermediary between the application's models/UI and
+ * the data persistence layer.
+ * It enforces business rules, ensures data integrity, and handles the
+ * transformation between domain
  * models ({@link Quizz}, {@link Question}) and Data Transfer Objects (DTOs).
  * </p>
  */
@@ -32,7 +35,7 @@ public class QuizzService {
      * @param quizzRepository    The repository for saving and retrieving quizzes.
      * @param questionRepository The repository for saving and retrieving questions.
      */
-    public QuizzService(IQuizzRepository quizzRepository, IQuestionRepository questionRepository){
+    public QuizzService(IQuizzRepository quizzRepository, IQuestionRepository questionRepository) {
         this.quizzRepository = quizzRepository;
         this.questionRepository = questionRepository;
     }
@@ -40,13 +43,17 @@ public class QuizzService {
     /**
      * Registers a new quiz and all its associated questions into the database.
      * <p>
-     * This method performs a complete validation of all questions before attempting any database operations.
-     * If validation passes, it transforms the domain models into DTOs and persists them.
+     * This method performs a complete validation of all questions before attempting
+     * any database operations.
+     * If validation passes, it transforms the domain models into DTOs and persists
+     * them.
      * </p>
      *
      * @param quizz       The domain model representing the quiz to be saved.
      * @param teacherUuid The unique identifier of the teacher creating the quiz.
-     * @throws InvalidQuestionException if any question within the quiz violates business rules (e.g., missing correct answers).
+     * @throws InvalidQuestionException if any question within the quiz violates
+     *                                  business rules (e.g., missing correct
+     *                                  answers).
      * @throws InvalidQuizzException    if the provided teacher UUID is null.
      */
     public void registerNewQuizz(Quizz quizz, UUID teacherUuid) {
@@ -60,7 +67,7 @@ public class QuizzService {
 
         // save all the questions of the quizz in the database
         List<QuestionDTO> questions = createQuestionDTOs(quizz);
-        for(QuestionDTO q : questions) {
+        for (QuestionDTO q : questions) {
             questionRepository.save(q);
         }
     }
@@ -95,7 +102,9 @@ public class QuizzService {
 
     /**
      * Adds a question to an existing quiz in memory.
-     * <p>Note: This does not persist the question to the database.</p>
+     * <p>
+     * Note: This does not persist the question to the database.
+     * </p>
      *
      * @param quizz    The quiz to which the question will be added.
      * @param question The question to add.
@@ -123,8 +132,9 @@ public class QuizzService {
      */
     private List<QuestionDTO> createQuestionDTOs(Quizz quizz) {
         List<QuestionDTO> questionDTO = new ArrayList<>();
-        for(Question q : quizz.getQuestions()) {
-            questionDTO.add(new QuestionDTO(q.getQuuid(), quizz.getUuid(), q.getQuestion(), q.getAnswers(), q.getType()));
+        for (Question q : quizz.getQuestions()) {
+            questionDTO
+                    .add(new QuestionDTO(q.getQuuid(), quizz.getUuid(), q.getQuestion(), q.getAnswers(), q.getType()));
         }
         return questionDTO;
     }

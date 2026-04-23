@@ -1,4 +1,4 @@
-package be.helha.clapetteChaussette.exception;
+package be.helha.clapetteChaussette.exception.login;
 
 public class LoginFailedException extends RuntimeException {
     public LoginFailedException() {

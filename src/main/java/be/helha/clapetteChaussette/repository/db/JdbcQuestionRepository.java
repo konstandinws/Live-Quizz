@@ -1,9 +1,10 @@
-package be.helha.clapetteChaussette.repository;
+package be.helha.clapetteChaussette.repository.db;
 
-import be.helha.clapetteChaussette.exception.DatabaseException;
+import be.helha.clapetteChaussette.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.enums.QuestionType;
 import be.helha.clapetteChaussette.model.question.Answer;
+import be.helha.clapetteChaussette.repository.IQuestionRepository;
 
 import java.sql.*;
 import java.util.ArrayList;

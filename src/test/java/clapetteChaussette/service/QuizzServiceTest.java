@@ -1,6 +1,6 @@
 package clapetteChaussette.service;
 
-import be.helha.clapetteChaussette.exception.InvalidQuizzException;
+import be.helha.clapetteChaussette.exception.editor.InvalidQuizzException;
 import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
@@ -9,7 +9,8 @@ import be.helha.clapetteChaussette.model.question.McqQuestion;
 import be.helha.clapetteChaussette.model.question.Question;
 import be.helha.clapetteChaussette.repository.IQuestionRepository;
 import be.helha.clapetteChaussette.repository.IQuizzRepository;
-import be.helha.clapetteChaussette.service.QuizzService;
+import be.helha.clapetteChaussette.service.repository.QuizzService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -81,8 +82,7 @@ public class QuizzServiceTest {
         UUID teacherUuid = UUID.randomUUID();
         List<QuizzDTO> expectedQuizzes = List.of(
                 new QuizzDTO(UUID.randomUUID(), "Math", teacherUuid),
-                new QuizzDTO(UUID.randomUUID(), "Science", teacherUuid)
-        );
+                new QuizzDTO(UUID.randomUUID(), "Science", teacherUuid));
 
         when(IQuizzRepository.findAll(teacherUuid)).thenReturn(expectedQuizzes);
 
@@ -113,12 +113,10 @@ public class QuizzServiceTest {
 
         List<Answer> answersQ1 = List.of(
                 new Answer("Paris", true),
-                new Answer("Londres", false)
-        );
+                new Answer("Londres", false));
         List<Answer> answersQ2 = List.of(
                 new Answer("4", true),
-                new Answer("5", false)
-        );
+                new Answer("5", false));
 
         Question q1 = new McqQuestion("Quelle est la capitale de la France?", answersQ1);
         Question q2 = new McqQuestion("Combien font 2+2?", answersQ2);

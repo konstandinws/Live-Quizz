@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.helha.clapetteChaussette.controller.editor.EditorController;
-import be.helha.clapetteChaussette.exception.InvalidQuestionException;
+import be.helha.clapetteChaussette.exception.editor.InvalidQuestionException;
 import be.helha.clapetteChaussette.view.ViewFX;
 
 /**
@@ -70,7 +70,7 @@ public class McqEditorFX extends ViewFX<EditorController> {
      * Vérifie si le nombre maximum de réponses autorisées est atteint.
      *
      * @return {@code true} si {@code answersContainer} contient
-
+     * 
      */
     boolean checkMaxAnswers() {
         return answersContainer.getChildren().size() >= MAX_ANSWERS;
@@ -114,8 +114,8 @@ public class McqEditorFX extends ViewFX<EditorController> {
      * aux listes internes {@code correctAnswerCB} et {@code textFields}.
      * <p>
      * La suppression est bloquée et une popup est affichée si le nombre de réponses
-
      *
+     * 
      * @return un {@link HBox} prêt à être ajouté à {@code answersContainer}
      */
     private HBox createAnswerRow() {

@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.controller.editor.EditorController;
 import be.helha.clapetteChaussette.exception.editor.InvalidQuestionException;
 import be.helha.clapetteChaussette.view.IListener;
 import be.helha.clapetteChaussette.view.ViewFX;
@@ -73,7 +72,7 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
      * Checks if the maximum number of allowed answers has been reached.
      *
      * @return {@code true} if {@code answersContainer} contains
-     * {@code MAX_ANSWERS} or more answers.
+     *         {@code MAX_ANSWERS} or more answers.
      */
     boolean checkMaxAnswers() {
         return answersContainer.getChildren().size() >= MAX_ANSWERS;
@@ -88,7 +87,8 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
     }
 
     /**
-     * Collects data from the view and requests the controller to create the question.
+     * Collects data from the view and requests the controller to create the
+     * question.
      * Displays an error popup if validation fails.
      * Linked to the "Save" button in the FXML.
      */

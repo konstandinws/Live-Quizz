@@ -3,24 +3,26 @@ package be.helha.clapetteChaussette.view.question;
 import java.util.List;
 
 import be.helha.clapetteChaussette.view.IListener;
-import be.helha.clapetteChaussette.view.IQuestionListener;
 import be.helha.clapetteChaussette.view.ViewFX;
 import be.helha.clapetteChaussette.view.question.McqViewFX.IMcqListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 public class McqViewFX extends ViewFX<IMcqListener> {
-
     @FXML
     private Label questionLabel;
 
+    @FXML
+    private VBox AnwserContainer;
+    private List<CheckBox> answersCheckBoxs;
+
     private String question;
     private List<String> answers;
-
-    private List<CheckBox> answersCheckBoxs;
+    private boolean asAlreadySent = false;
 
     /**
      * Initializes the MCQ editor view by setting the question text and the four
@@ -37,6 +39,32 @@ public class McqViewFX extends ViewFX<IMcqListener> {
 
     @FXML
     private void initialize() {
+        questionLabel.setText(question);
+        int counter = 0;
+        for (String answer : answers) {
+            CheckBox checkBox = new CheckBox(); // Create a new CheckBox for each answer
+            checkBox.setText(answer);
+            checkBox.setOnAction(event -> send(event)); // we use a lambda who is anonymous function to call the send
+                                                        // method when the CheckBox is clicked. Here we just pass the
+                                                        // ActionEvent to the send method, which can be used to
+                                                        // determine which CheckBox was clicked and perform the
+                                                        // appropriate action based on that.
+
+            HBox hBox; // Determine which HBox to add the CheckBox to based on the counter
+            if (counter < 2) {
+                hBox = (HBox) AnwserContainer.getChildren().get(0);
+            } else if (counter < 4) {
+                hBox = (HBox) AnwserContainer.getChildren().get(1);
+            } else if (counter < 6) {
+                hBox = (HBox) AnwserContainer.getChildren().get(2);
+            } else {
+                throw new IllegalStateException("Too many answers provided for MCQ view");
+            }
+
+            hBox.getChildren().add(checkBox); // Add the CheckBox to the appropriate HBox
+            answersCheckBoxs.add(checkBox);
+            counter++;
+        }
     }
 
     @Override
@@ -44,21 +72,19 @@ public class McqViewFX extends ViewFX<IMcqListener> {
         return "question/mcq.fxml";
     }
 
-    @FXML
-    private void CBisChecked(ActionEvent event) {
-        CheckBox source = (CheckBox) event.getSource();
-        if (source.isSelected()) {
-            verify(source.getText());
-        } else {
-            source.setTextFill(Color.BLACK);
+    private void send(ActionEvent event) {
+        if (!asAlreadySent) {
+            asAlreadySent = true;
+
+            CheckBox sourceCheckBox = (CheckBox) event.getSource();
+            int selectedIndex = answersCheckBoxs.indexOf(sourceCheckBox);
+            if (selectedIndex != -1) {
+                listener.onMcqAnswerSelected(selectedIndex);
+            }
         }
-
     }
 
-    private void verify(String answer) {
-    }
-
-    public interface IMcqListener extends IListener, IQuestionListener<Integer> {
-
+    public interface IMcqListener extends IListener {
+        void onMcqAnswerSelected(int index);
     }
 }

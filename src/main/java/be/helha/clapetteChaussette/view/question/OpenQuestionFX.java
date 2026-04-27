@@ -1,7 +1,6 @@
 package be.helha.clapetteChaussette.view.question;
 
 import be.helha.clapetteChaussette.view.IListener;
-import be.helha.clapetteChaussette.view.IQuestionListener;
 import be.helha.clapetteChaussette.view.ViewFX;
 import be.helha.clapetteChaussette.view.question.OpenQuestionFX.IOpenListener;
 import javafx.fxml.FXML;
@@ -26,7 +25,7 @@ public class OpenQuestionFX extends ViewFX<IOpenListener> {
     @FXML
     private void handleSendAction() {
         if (textArea != null) {
-            listener.validate(textArea.getText());
+            listener.onOpenAnswerSelected(textArea.getText());
         }
     }
 
@@ -35,7 +34,7 @@ public class OpenQuestionFX extends ViewFX<IOpenListener> {
         return "question/open.fxml";
     }
 
-    public interface IOpenListener extends IListener, IQuestionListener<String> {
-        public void validate(String aws);
+    public interface IOpenListener extends IListener {
+        void onOpenAnswerSelected(String answer);
     }
 }

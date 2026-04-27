@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import java.util.List;
 
 import be.helha.clapetteChaussette.view.IListener;
-import be.helha.clapetteChaussette.view.IQuestionListener;
 import be.helha.clapetteChaussette.view.ViewFX;
 import be.helha.clapetteChaussette.view.question.PollViewFX.IPollListener;
 import javafx.event.ActionEvent;
@@ -39,7 +38,8 @@ public class PollViewFX extends ViewFX<IPollListener> {
 
     @FXML
     private void handleButtonClick(ActionEvent event) {
-        listener.validate(((Button) event.getSource()).getText());
+        Button clickedButton = (Button) event.getSource();
+        listener.onPollAnswerSelected(clickedButton.getText());
     }
 
     @FXML
@@ -51,6 +51,7 @@ public class PollViewFX extends ViewFX<IPollListener> {
         return "question/poll.fxml";
     }
 
-    public interface IPollListener extends IListener, IQuestionListener<String> {
+    public interface IPollListener extends IListener {
+        void onPollAnswerSelected(String answer);
     }
 }

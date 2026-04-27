@@ -24,7 +24,7 @@ public abstract class BaseController {
      *
      */
 
-    public BaseController(NavigationService navigationService) {
+    protected BaseController(NavigationService navigationService) {
         this.navigationService = navigationService;
     }
 

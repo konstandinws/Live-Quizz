@@ -189,7 +189,7 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
 
     @Override
     protected String getFXMLPath() {
-        return "McqEditor.fxml";
+        return "editor/McqEditor.fxml";
     }
 
     public interface IMcqEditorListener extends IListener {

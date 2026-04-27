@@ -17,42 +17,31 @@ public class McqViewFX extends ViewFX<IMcqListener> {
     @FXML
     private Label questionLabel;
 
-    @FXML
-    private CheckBox CheckBox1;
+    private String question;
+    private List<String> answers;
 
-    @FXML
-    private CheckBox CheckBox2;
-
-    @FXML
-    private CheckBox CheckBox3;
-
-    @FXML
-    private CheckBox CheckBox4;
-
-    @FXML
-    private void initialize() {
-    }
+    private List<CheckBox> answersCheckBoxs;
 
     /**
      * Initializes the MCQ editor view by setting the question text and the four
      * answer options.
      *
      * @param answers  a list of answer labels to display in the checkboxes
-     *                 (expected order: first to fourth option)
-     * @param question the question text to show at the top of the editor
+     *                 ed order: first to fourth option)
+     * @param question stion text to show at the top of the editor
      */
     public McqViewFX(List<String> answers, String question) {
-        questionLabel.setText(question);
-        CheckBox1.setText(answers.get(0));
-        CheckBox2.setText(answers.get(1));
-        CheckBox3.setText(answers.get(2));
-        CheckBox4.setText(answers.get(3));
+        this.answers = answers;
+        this.question = question;
+    }
 
+    @FXML
+    private void initialize() {
     }
 
     @Override
     protected String getFXMLPath() {
-        return "mcq.fxml";
+        return "question/mcq.fxml";
     }
 
     @FXML
@@ -67,10 +56,9 @@ public class McqViewFX extends ViewFX<IMcqListener> {
     }
 
     private void verify(String answer) {
-        listener.validate(answer);
     }
 
-    public interface IMcqListener extends IListener, IQuestionListener<String> {
+    public interface IMcqListener extends IListener, IQuestionListener<Integer> {
 
     }
 }

@@ -48,7 +48,7 @@ public class PollViewFX extends ViewFX<IPollListener> {
 
     @Override
     protected String getFXMLPath() {
-        return "poll.fxml";
+        return "question/poll.fxml";
     }
 
     public interface IPollListener extends IListener, IQuestionListener<String> {

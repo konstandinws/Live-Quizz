@@ -73,7 +73,7 @@ public class QuizzEditorFX extends ViewFX<IQuizzListener> {
 
     @Override
     protected String getFXMLPath() {
-        return "QuizzEditor.fxml";
+        return "editor/QuizzEditor.fxml";
     }
 
     public void setDbService(IQuizzRepository quizzRepository) {

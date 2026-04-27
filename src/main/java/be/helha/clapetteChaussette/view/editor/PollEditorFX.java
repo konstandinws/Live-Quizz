@@ -135,7 +135,7 @@ public class PollEditorFX extends ViewFX<IPollEditorListener> {
      */
     @Override
     protected String getFXMLPath() {
-        return "PollEditor.fxml";
+        return "editor/PollEditor.fxml";
     }
 
     public interface IPollEditorListener extends IListener {

@@ -11,7 +11,7 @@ import javafx.scene.control.TextArea;
 
 public class OpenQuestionFX extends ViewFX<IOpenListener> {
     @FXML
-    private Button envoyerBtn;
+    private Button submitButton;
 
     @FXML
     private Label questionFree;
@@ -32,7 +32,7 @@ public class OpenQuestionFX extends ViewFX<IOpenListener> {
 
     @Override
     protected String getFXMLPath() {
-        return "open.fxml";
+        return "question/open.fxml";
     }
 
     public interface IOpenListener extends IListener, IQuestionListener<String> {

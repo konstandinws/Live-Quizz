@@ -7,11 +7,12 @@ import javafx.scene.control.Button;
 import java.util.List;
 
 import be.helha.clapetteChaussette.view.IListener;
+import be.helha.clapetteChaussette.view.IQuestionView;
 import be.helha.clapetteChaussette.view.ViewFX;
 import be.helha.clapetteChaussette.view.question.PollViewFX.IPollListener;
 import javafx.event.ActionEvent;
 
-public class PollViewFX extends ViewFX<IPollListener> {
+public class PollViewFX extends ViewFX<IPollListener> implements IQuestionView {
 
     @FXML
     private Label title;
@@ -50,6 +51,23 @@ public class PollViewFX extends ViewFX<IPollListener> {
     protected String getFXMLPath() {
         return "question/poll.fxml";
     }
+
+    @Override
+    public void showWaiting() {
+        choix1.setDisable(true);
+        choix2.setDisable(true);
+        choix3.setDisable(true);
+        choix4.setDisable(true);
+    }
+
+    @Override // this method should be nothing because the poll question is not about being
+              // correct or incorrect
+    public void showCorrect() {
+    };
+
+    @Override
+    public void showIncorrect() {
+    };
 
     public interface IPollListener extends IListener {
         void onPollAnswerSelected(String answer);

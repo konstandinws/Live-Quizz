@@ -4,6 +4,7 @@ import be.helha.clapetteChaussette.controller.BaseController;
 import be.helha.clapetteChaussette.model.question.Question;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.question.QuestionService;
+import be.helha.clapetteChaussette.view.IQuestionView;
 import be.helha.clapetteChaussette.view.question.McqViewFX.IMcqListener;
 import be.helha.clapetteChaussette.view.question.OpenQuestionFX.IOpenListener;
 import be.helha.clapetteChaussette.view.question.PollViewFX.IPollListener;
@@ -12,10 +13,14 @@ public class QuestionController extends BaseController implements IOpenListener,
     private Question question;
     private QuestionService questionService;
 
-    public QuestionController(NavigationService navigationService, Question question, QuestionService questionService) {
+    private IQuestionView view;
+
+    public QuestionController(NavigationService navigationService, Question question, QuestionService questionService,
+            IQuestionView view) {
         super(navigationService);
         this.question = question;
         this.questionService = questionService;
+        this.view = view;
     }
 
     public void updateQuestion(Question newQuestion) {
@@ -25,23 +30,33 @@ public class QuestionController extends BaseController implements IOpenListener,
     // #region IQuestionListener methods
     @Override
     public void onMcqAnswerSelected(int index) {
-        // TODO Auto-generated method stub
+        view.showWaiting();
+        boolean isCorrect = questionService.isMcqCorrect(question, index);
+        validateOnView(isCorrect);
     }
     // #endregion
 
     // #region IOpenListener methods
     @Override
     public void onOpenAnswerSelected(String answer) {
-        // TODO Auto-generated method stub
-
+        view.showWaiting();
+        boolean isCorrect = questionService.isReponseCorrect(question, answer);
+        validateOnView(isCorrect);
     }
     // #endregion
 
     // #region IPollListener methods
     @Override
     public void onPollAnswerSelected(String answer) {
-        // TODO Auto-generated method stub
-
+        view.showWaiting();
     }
     // #endregion
+
+    private void validateOnView(boolean isCorrect) {
+        if (isCorrect) {
+            view.showCorrect();
+        } else {
+            view.showIncorrect();
+        }
+    }
 }

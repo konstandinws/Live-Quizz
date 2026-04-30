@@ -3,6 +3,7 @@ package be.helha.clapetteChaussette.view.question;
 import java.util.List;
 
 import be.helha.clapetteChaussette.view.IListener;
+import be.helha.clapetteChaussette.view.IQuestionView;
 import be.helha.clapetteChaussette.view.ViewFX;
 import be.helha.clapetteChaussette.view.question.McqViewFX.IMcqListener;
 import javafx.event.ActionEvent;
@@ -12,7 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class McqViewFX extends ViewFX<IMcqListener> {
+public class McqViewFX extends ViewFX<IMcqListener> implements IQuestionView {
     @FXML
     private Label questionLabel;
 
@@ -23,6 +24,7 @@ public class McqViewFX extends ViewFX<IMcqListener> {
     private String question;
     private List<String> answers;
     private boolean asAlreadySent = false;
+    private int selectedIndex = -1;
 
     /**
      * Initializes the MCQ editor view by setting the question text and the four
@@ -81,8 +83,28 @@ public class McqViewFX extends ViewFX<IMcqListener> {
             if (selectedIndex != -1) {
                 listener.onMcqAnswerSelected(selectedIndex);
             }
+            this.selectedIndex = selectedIndex;
         }
     }
+
+    @Override
+    public void showWaiting() {
+        answersCheckBoxs.forEach(checkBox -> checkBox.setDisable(true));
+    }
+
+    @Override
+    public void showCorrect() {
+        if (selectedIndex != -1) {
+            answersCheckBoxs.get(selectedIndex).setStyle("-fx-background-color: green;");
+        }
+    }
+
+    @Override
+    public void showIncorrect() {
+        if (selectedIndex != -1) {
+            answersCheckBoxs.get(selectedIndex).setStyle("-fx-background-color: red;");
+        }
+    };
 
     public interface IMcqListener extends IListener {
         void onMcqAnswerSelected(int index);

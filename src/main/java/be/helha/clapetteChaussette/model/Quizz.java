@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import be.helha.clapetteChaussette.model.question.Question;
 
-// on stocke le choix des questions du mode d'édition
+// Stores the selected questions from the editing mode
 public class Quizz {
     private UUID uuid;
     String name;
@@ -29,6 +29,7 @@ public class Quizz {
         return Collections.unmodifiableList(questions);
     }
 
+    // Polymorphic method to add any question type that extends the Question class
     public void addQuestion(Question question) {
         this.questions.add(question);
     }

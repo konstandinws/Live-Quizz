@@ -7,12 +7,12 @@ import javafx.scene.control.Button;
 import java.util.List;
 
 import be.helha.clapetteChaussette.view.IListener;
-import be.helha.clapetteChaussette.view.IQuestionListener;
+import be.helha.clapetteChaussette.view.IQuestionView;
 import be.helha.clapetteChaussette.view.ViewFX;
 import be.helha.clapetteChaussette.view.question.PollViewFX.IPollListener;
 import javafx.event.ActionEvent;
 
-public class PollViewFX extends ViewFX<IPollListener> {
+public class PollViewFX extends ViewFX<IPollListener> implements IQuestionView {
 
     @FXML
     private Label title;
@@ -39,7 +39,8 @@ public class PollViewFX extends ViewFX<IPollListener> {
 
     @FXML
     private void handleButtonClick(ActionEvent event) {
-        listener.validate(((Button) event.getSource()).getText());
+        Button clickedButton = (Button) event.getSource();
+        listener.onPollAnswerSelected(clickedButton.getText());
     }
 
     @FXML
@@ -48,9 +49,27 @@ public class PollViewFX extends ViewFX<IPollListener> {
 
     @Override
     protected String getFXMLPath() {
-        return "poll.fxml";
+        return "question/poll.fxml";
     }
 
-    public interface IPollListener extends IListener, IQuestionListener<String> {
+    @Override
+    public void showWaiting() {
+        choix1.setDisable(true);
+        choix2.setDisable(true);
+        choix3.setDisable(true);
+        choix4.setDisable(true);
+    }
+
+    @Override // this method should be nothing because the poll question is not about being
+              // correct or incorrect
+    public void showCorrect() {
+    };
+
+    @Override
+    public void showIncorrect() {
+    };
+
+    public interface IPollListener extends IListener {
+        void onPollAnswerSelected(String answer);
     }
 }

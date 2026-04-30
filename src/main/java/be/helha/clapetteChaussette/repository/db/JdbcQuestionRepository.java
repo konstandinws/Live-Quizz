@@ -87,7 +87,7 @@ public class JdbcQuestionRepository implements IQuestionRepository {
 
                     List<Answer> answers = new ArrayList<>();
 
-                    // on remplit les 2 listes avec les choix et les bonne réponses
+                    // Fills lists with choices and correct answers
                     findAnswers(questionUuid, connection, answers);
 
                     return Optional.of(new QuestionDTO(questionUuid, quizzUuid, content, answers,
@@ -103,8 +103,9 @@ public class JdbcQuestionRepository implements IQuestionRepository {
         return Optional.empty();
     }
 
-    // on va aller chercher les choix et les bonnes reponses pour chaque question
-    private void findAnswers(UUID questionUuid, Connection connection, List<Answer> answers) throws SQLException {
+    // Fetch the choices and correct answers for each question
+    public void findAnswers(UUID questionUuid, Connection connection, List<Answer> answers)
+            throws SQLException {
         String query = "SELECT reponse, bonne_reponse FROM reponse_question WHERE question_uuid = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {

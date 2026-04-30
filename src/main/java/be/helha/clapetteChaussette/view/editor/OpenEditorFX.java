@@ -87,7 +87,7 @@ public class OpenEditorFX extends ViewFX<IOpenEditorListener> {
 
     @Override
     protected String getFXMLPath() {
-        return "OpenEditor.fxml";
+        return "editor/OpenEditor.fxml";
     }
 
     public interface IOpenEditorListener extends IListener {

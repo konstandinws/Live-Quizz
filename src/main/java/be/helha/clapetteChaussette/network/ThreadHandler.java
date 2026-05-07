@@ -3,12 +3,9 @@ package be.helha.clapetteChaussette.network;
 
 import java.io.IOException;
 
-public class ThreadHandler extends Thread {
-    private Thread thread;
+public class ThreadHandler implements Runnable {
     private final Listener listener;
     ObjectSocket objectSocket ;
-    private Server serverSocket;
-    private Client clientSocket;
     public ThreadHandler(ObjectSocket objectSocket, Listener listener) {
         this.objectSocket = objectSocket;
         this.listener = listener;
@@ -20,6 +17,7 @@ public class ThreadHandler extends Thread {
                 listener.onObjectReceived(obj);
             }
         }catch (IOException | ClassNotFoundException e){
+            objectSocket.close();
 
         }
     }

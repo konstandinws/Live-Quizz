@@ -5,6 +5,7 @@ import java.io.IOException;
 
 public class ThreadHandler implements Runnable {
     private final Listener listener;
+
     ObjectSocket objectSocket ;
     public ThreadHandler(ObjectSocket objectSocket, Listener listener) {
         this.objectSocket = objectSocket;
@@ -13,15 +14,23 @@ public class ThreadHandler implements Runnable {
     public void run(){
         try {
             while (true) {
-                Object obj = objectSocket.read();
-                listener.onObjectReceived(obj);
+                Object received = objectSocket.receive();
+                Object transformed = transform(received);
+                listener.onReceive(transformed);
             }
         }catch (IOException | ClassNotFoundException e){
+            listener.onError(e);
+            listener.onDisconnect();
             objectSocket.close();
-
         }
     }
+    private Object transform(Object received) {
+        //see how we're going to transform
+        return received;
+    }
     private interface  Listener {
-        void onObjectReceived(Object obj);
+        void onReceive(Object obj);
+        void onDisconnect();
+        void onError(Exception e);
     }
 }

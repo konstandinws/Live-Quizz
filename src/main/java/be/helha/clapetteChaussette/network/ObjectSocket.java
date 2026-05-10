@@ -25,6 +25,10 @@ public class ObjectSocket {
     public <T> T read() throws IOException, ClassNotFoundException {
         return (T) in.readObject();
     }
+    public Object receive() throws IOException, ClassNotFoundException {
+        return in.readObject();
+    }
+
     public void close() {
         try {
             this.in.close();

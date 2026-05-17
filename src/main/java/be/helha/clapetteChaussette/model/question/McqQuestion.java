@@ -1,7 +1,6 @@
 package be.helha.clapetteChaussette.model.question;
 
 import be.helha.clapetteChaussette.model.enums.QuestionType;
-
 import java.util.Collections;
 import java.util.List;
 

@@ -2,6 +2,7 @@ package be.helha.clapetteChaussette.network;
 
 
 import java.io.IOException;
+import be.helha.clapetteChaussette.model.question.Answer;
 
 public class ThreadHandler implements Runnable {
     private final Listener listener;
@@ -24,9 +25,11 @@ public class ThreadHandler implements Runnable {
             objectSocket.close();
         }
     }
-    private Object transform(Object received) {
-        //see how we're going to transform
-        return received;
+    private Answer transform(Object received) {
+        if (received instanceof Answer answer) {
+            return answer;
+        }
+        throw new IllegalArgumentException("L'objet reçu n'est pas un Answer : " + received.getClass());
     }
     private interface  Listener {
         void onReceive(Object obj);

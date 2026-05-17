@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "darkMode": false,
+  "gridEnabling": false,
+  "detailLevel": "All",
+  "tablePositions": [
+    {
+      "name": "teacher",
+      "schemaName": "public",
+      "x": -28.373461546874978,
+      "y": 61.67895994285347
+    },
+    {
+      "name": "questionnaire",
+      "schemaName": "public",
+      "x": 3.398999390625022,
+      "y": 272.5640509398896
+    },
+    {
+      "name": "question",
+      "schemaName": "public",
+      "x": -6.613963149286192,
+      "y": 437.2349970739417
+    },
+    {
+      "name": "reponse_question",
+      "schemaName": "public",
+      "x": 386.22137612996306,
+      "y": 437.2349970739417
+    }
+  ],
+  "tableGroupCollapseStates": [],
+  "stickyNoteLayouts": [],
+  "referencePaths": [
+    {
+      "firstFieldNames": [
+        "uuid"
+      ],
+      "firstTableName": "teacher",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "teacher_uuid"
+      ],
+      "secondTableName": "questionnaire",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "quuid"
+      ],
+      "firstTableName": "questionnaire",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "questionnaire_uuid"
+      ],
+      "secondTableName": "question",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "quuid"
+      ],
+      "firstTableName": "question",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "question_uuid"
+      ],
+      "secondTableName": "reponse_question",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    }
+  ]
+}

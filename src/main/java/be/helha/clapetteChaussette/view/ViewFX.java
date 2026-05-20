@@ -1,12 +1,18 @@
 package be.helha.clapetteChaussette.view;
 
+import be.helha.clapetteChaussette.service.NavigationService;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 
 public abstract class ViewFX<C extends IListener> implements IDisplayable {
 
     protected C listener;
+
+    @FXML
+    protected Button returnBTN;
 
     protected abstract String getFXMLPath();
 
@@ -20,6 +26,12 @@ public abstract class ViewFX<C extends IListener> implements IDisplayable {
 
     public void setOwnController(C controller) {
         this.listener = controller;
+    }
+
+    public void setNavigationService(NavigationService nav) {
+        if (returnBTN != null) {
+            returnBTN.setOnAction(e -> nav.goBack());
+        }
     }
 
 }

@@ -35,4 +35,13 @@ public class NavigationService {
         }
         stage.show();
     }
+
+    public void goBack() {
+        if (!History.isEmpty()) {
+            Scene previous = History.remove(History.size() - 1);
+            currentSceneIndex--;
+            stage.setScene(previous);
+            stage.show();
+        }
+    }
 }

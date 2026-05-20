@@ -37,4 +37,8 @@ public class ObjectSocket {
             LOGGER.log(Level.WARNING, "Error closing ObjectSocket streams", e);
         }
     }
+    public void send(Object object) throws IOException {
+        this.out.writeObject(object);
+        this.out.flush();
+    }
 }

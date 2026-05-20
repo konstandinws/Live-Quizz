@@ -29,9 +29,9 @@ public class ThreadHandler implements Runnable {
         if (received instanceof Answer answer) {
             return answer;
         }
-        throw new IllegalArgumentException("L'objet reçu n'est pas un Answer : " + received.getClass());
+        throw new IllegalArgumentException("The received object is not an Answer : " + received.getClass());
     }
-    private interface  Listener {
+    public interface  Listener {
         void onReceive(Object obj);
         void onDisconnect();
         void onError(Exception e);

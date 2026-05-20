@@ -1,7 +1,6 @@
 package be.helha.clapetteChaussette.view.editor;
 
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
-import be.helha.clapetteChaussette.repository.IQuizzRepository;
 import be.helha.clapetteChaussette.view.ControlerComponent.ControlerComponent;
 import be.helha.clapetteChaussette.view.editor.QuizzEditorFX.IQuizzListener;
 import be.helha.clapetteChaussette.view.IListener;
@@ -12,12 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.util.UUID;
 import java.util.List;
 
 public class QuizzEditorFX extends ViewFX<IQuizzListener> {
-    private IQuizzRepository dbService;
-    private UUID teacherUuid;
 
     @FXML
     private Button mcqButton;
@@ -57,13 +53,12 @@ public class QuizzEditorFX extends ViewFX<IQuizzListener> {
         listener.onSaveRequested();
     }
 
-    @FXML
-    private void initialize() {
-        List<QuizzDTO> quizzes = dbService.findAll(teacherUuid);
+    public void displayQuizzes(List<QuizzDTO> quizzes) {
+        questionListVbox.getChildren().clear();
         for (QuizzDTO quizz : quizzes) {
             try {
                 ControlerComponent carte = ControlerComponent.creerComposent();
-                carte.setData(quizz); // ← passe les données à la carte
+                carte.setData(quizz);
                 questionListVbox.getChildren().add(carte.getRoot());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -74,10 +69,6 @@ public class QuizzEditorFX extends ViewFX<IQuizzListener> {
     @Override
     protected String getFXMLPath() {
         return "editor/QuizzEditor.fxml";
-    }
-
-    public void setDbService(IQuizzRepository quizzRepository) {
-        this.dbService = quizzRepository;
     }
 
     public interface IQuizzListener extends IListener {

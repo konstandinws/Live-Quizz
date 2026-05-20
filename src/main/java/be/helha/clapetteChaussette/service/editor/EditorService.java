@@ -77,6 +77,10 @@ public class EditorService {
         return new PollQuestion(title, answerObjects);
     }
 
+    public List<QuizzDTO> getQuizzesForTeacher(UUID teacherUuid) {
+        return quizzRepository.findAll(teacherUuid);
+    }
+
     public void saveQuizz(Quizz quizz, UUID teacherUuid) {
         QuizzDTO quizzDTO = new QuizzDTO(quizz.getUuid(), quizz.getName(), teacherUuid);
         quizzRepository.save(quizzDTO);

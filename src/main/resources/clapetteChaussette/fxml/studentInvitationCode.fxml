@@ -20,5 +20,6 @@
          </font>
       </TextField>
       <Button layoutX="330.0" layoutY="181.0" mnemonicParsing="false" onAction="#handleJoin" prefHeight="38.0" prefWidth="71.0" text="Rejoindre" />
+      <Button fx:id="returnBTN" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Retour" />
    </children>
 </AnchorPane>

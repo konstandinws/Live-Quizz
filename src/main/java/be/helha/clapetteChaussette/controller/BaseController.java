@@ -30,6 +30,7 @@ public abstract class BaseController {
 
     public <C extends IListener> void navigateToView(ViewFX<C> view, String title, C controller) {
         navigationService.navigateTo(view, title);
+        view.setNavigationService(navigationService);
         view.setOwnController(controller);
     }
 }

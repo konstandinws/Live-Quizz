@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.helha.clapetteChaussette.view.teacher.TeacherQuizzChoicesViewFX">
    <children>
       <Label fx:id="usernameLabel" layoutX="186.0" layoutY="37.0" prefHeight="35.0" prefWidth="228.0">
          <font>
@@ -20,7 +20,7 @@
             <VBox fx:id="quizzVbox" prefHeight="214.0" prefWidth="332.0" />
          </content>
       </ScrollPane>
-      <Button fx:id="newQuizzBTN" layoutX="386.0" layoutY="344.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="80.0" text="Nouveau" />
+      <Button fx:id="newQuizzBTN" layoutX="386.0" layoutY="344.0" mnemonicParsing="false" onAction="#handleNewQuizz" prefHeight="35.0" prefWidth="80.0" text="Nouveau" />
       <Label layoutX="218.0" layoutY="89.0" text="Mes Questionnaires">
          <font>
             <Font size="19.0" />

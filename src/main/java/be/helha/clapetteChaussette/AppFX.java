@@ -1,7 +1,7 @@
 // be.helha.clapetteChaussette.AppFX
 package be.helha.clapetteChaussette;
 
-import be.helha.clapetteChaussette.controller.LoginController;
+import be.helha.clapetteChaussette.controller.HomeController;
 import be.helha.clapetteChaussette.repository.IQuestionRepository;
 import be.helha.clapetteChaussette.repository.IQuizzRepository;
 import be.helha.clapetteChaussette.repository.ITeacherRepository;
@@ -11,7 +11,7 @@ import be.helha.clapetteChaussette.repository.db.JdbcTeacherRepository;
 import be.helha.clapetteChaussette.service.NavigationService;
 import be.helha.clapetteChaussette.service.editor.EditorService;
 import be.helha.clapetteChaussette.service.editor.ValidateQuestionEditorService;
-import be.helha.clapetteChaussette.view.LoginViewFX;
+import be.helha.clapetteChaussette.view.HomeViewFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -22,15 +22,14 @@ public class AppFX extends Application {
         NavigationService navigationService = new NavigationService(mainstage);
         ValidateQuestionEditorService validateService = new ValidateQuestionEditorService();
 
-        IQuizzRepository QuizzRepo = new JdbcQuizzRepository();
-        IQuestionRepository QuestionRepo = new JdbcQuestionRepository();
-        ITeacherRepository TeacherRepo = new JdbcTeacherRepository();
+        IQuizzRepository quizzRepo = new JdbcQuizzRepository();
+        IQuestionRepository questionRepo = new JdbcQuestionRepository();
+        ITeacherRepository teacherRepo = new JdbcTeacherRepository();
 
-        EditorService editorService = new EditorService(QuizzRepo, QuestionRepo, validateService);
+        EditorService editorService = new EditorService(quizzRepo, questionRepo, validateService);
 
-        LoginController loginController = new LoginController(navigationService, TeacherRepo, editorService,
-                validateService);
-        loginController.navigateToView(new LoginViewFX(), "Clapette Chaussette - Connexion", loginController);
+        HomeController homeController = new HomeController(navigationService, teacherRepo, editorService, validateService);
+        homeController.navigateToView(new HomeViewFX(), "Clapette Chaussette", homeController);
     }
 
     public static void main(String[] args) {

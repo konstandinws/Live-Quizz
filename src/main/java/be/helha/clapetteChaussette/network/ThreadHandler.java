@@ -3,6 +3,7 @@ package be.helha.clapetteChaussette.network;
 
 import java.io.IOException;
 import be.helha.clapetteChaussette.model.question.Answer;
+import be.helha.clapetteChaussette.model.question.Question;
 
 public class ThreadHandler implements Runnable {
     private final Listener listener;
@@ -16,7 +17,7 @@ public class ThreadHandler implements Runnable {
         try {
             while (true) {
                 Object received = objectSocket.receive();
-                Object transformed = transform(received);
+                Object transformed = transformAnsword(received);
                 listener.onReceive(transformed);
             }
         }catch (IOException | ClassNotFoundException e){
@@ -25,11 +26,21 @@ public class ThreadHandler implements Runnable {
             objectSocket.close();
         }
     }
-    private Answer transform(Object received) {
+    private Object transformAnsword(Object received) {
         if (received instanceof Answer answer) {
             return answer;
         }
-        throw new IllegalArgumentException("The received object is not an Answer : " + received.getClass());
+        // Question → vient du serveur (eventquestion)
+        if (received instanceof Question question) {
+            return question;
+        }
+        // String → message générique (result, erreur...)
+        if (received instanceof String message) {
+            return message;
+        }
+        throw new IllegalArgumentException(
+                "Objet reçu non supporté : " + received.getClass().getName()
+        );
     }
     public interface  Listener {
         void onReceive(Object obj);

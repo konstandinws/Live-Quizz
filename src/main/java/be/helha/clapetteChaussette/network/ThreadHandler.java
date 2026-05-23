@@ -30,14 +30,6 @@ public class ThreadHandler implements Runnable {
         if (received instanceof Answer answer) {
             return answer;
         }
-        // Question → vient du serveur (eventquestion)
-        if (received instanceof Question question) {
-            return question;
-        }
-        // String → message générique (result, erreur...)
-        if (received instanceof String message) {
-            return message;
-        }
         throw new IllegalArgumentException(
                 "Objet reçu non supporté : " + received.getClass().getName()
         );

@@ -71,8 +71,10 @@ public class OpenEditorFX extends ViewFX<IOpenEditorListener> {
             String title = questionTitle.getText();
             boolean hasPoints = pointsCheckBox.isSelected();
             List<String> answerText = answerFields.stream().map(TextField::getText).toList();
+            List<Boolean> correctAnswers = answerFields.stream().map(TextField::getText)
+                    .map(text -> !text.trim().isEmpty()).toList();
 
-            listener.createOpenQuestion(title, answerText, hasPoints);
+            listener.createOpenQuestion(title, answerText, correctAnswers, hasPoints);
 
         } catch (InvalidQuestionException e) {
             showError(e.getMessage());
@@ -91,7 +93,7 @@ public class OpenEditorFX extends ViewFX<IOpenEditorListener> {
     }
 
     public interface IOpenEditorListener extends IListener {
-        void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
+        void createOpenQuestion(String title, List<String> answerTexts, List<Boolean> correctAnswers, boolean hasPoints)
                 throws InvalidQuestionException;
     }
 }

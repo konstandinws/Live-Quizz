@@ -8,10 +8,9 @@ import be.helha.clapetteChaussette.exception.editor.InvalidQuestionException;
 import be.helha.clapetteChaussette.model.Quizz;
 import be.helha.clapetteChaussette.model.dto.QuestionDTO;
 import be.helha.clapetteChaussette.model.dto.QuizzDTO;
-import be.helha.clapetteChaussette.model.question.Answer;
-import be.helha.clapetteChaussette.model.question.McqQuestion;
-import be.helha.clapetteChaussette.model.question.OpenQuestion;
-import be.helha.clapetteChaussette.model.question.PollQuestion;
+import be.helha.clapetteChaussette.model.question.McqFactory;
+import be.helha.clapetteChaussette.model.question.OpenFactory;
+import be.helha.clapetteChaussette.model.question.PollFactory;
 import be.helha.clapetteChaussette.model.question.Question;
 import be.helha.clapetteChaussette.repository.IQuestionRepository;
 import be.helha.clapetteChaussette.repository.IQuizzRepository;
@@ -44,37 +43,26 @@ public class EditorService {
     // endregion
 
     // #region Public Methods
-    public OpenQuestion createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
+    public Question createOpenQuestion(String title, List<String> answerTexts, List<Boolean> correctAnswers,
+            boolean hasPoints)
             throws InvalidQuestionException {
         validateQuestionEditorService.validateOpenQuestion(title, answerTexts);
 
-        List<Answer> answers = answerTexts.stream()
-                .map(String::trim)
-                .filter(text -> !text.isBlank())
-                .map(text -> new Answer(text, true)) // by default all the answers given are correct
-                .toList();
-
-        return new OpenQuestion(title, answers, hasPoints);
+        return new OpenFactory().createQuestion(title, answerTexts,
+                correctAnswers, hasPoints);
     }
 
-    public McqQuestion createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
+    public Question createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
             throws InvalidQuestionException {
         validateQuestionEditorService.validateMcqQuestion(title, answers, correctAnswers);
-        List<Answer> answerObjects = new ArrayList<>();
-        for (int i = 0; i < answers.size(); i++) {
-            answerObjects.add(new Answer(answers.get(i), correctAnswers.get(i)));
-        }
-        return new McqQuestion(title, answerObjects);
+
+        return new McqFactory().createQuestion(title, answers, correctAnswers, true);
     }
 
-    public PollQuestion createPollQuestion(String title, List<String> answers) throws InvalidQuestionException {
+    public Question createPollQuestion(String title, List<String> answers) throws InvalidQuestionException {
         validateQuestionEditorService.validatePollQuestion(title, answers);
-        List<Answer> answerObjects = answers.stream()
-                .map(String::trim)
-                .filter(text -> !text.isBlank())
-                .map(text -> new Answer(text, false)) // in a poll, there are no correct answers
-                .toList();
-        return new PollQuestion(title, answerObjects);
+
+        return new PollFactory().createQuestion(title, answers, null, false);
     }
 
     public List<QuizzDTO> getQuizzesForTeacher(UUID teacherUuid) {

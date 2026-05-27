@@ -85,9 +85,10 @@ public class EditorController
     // #region IOpenEditorListener methods
 
     @Override
-    public void createOpenQuestion(String title, List<String> answerTexts, boolean hasPoints)
+    public void createOpenQuestion(String title, List<String> answerTexts, List<Boolean> correctAnswers,
+            boolean hasPoints)
             throws InvalidQuestionException {
-        quizz.addQuestion(editorService.createOpenQuestion(title, answerTexts, hasPoints));
+        quizz.addQuestion(editorService.createOpenQuestion(title, answerTexts, correctAnswers, hasPoints));
         navigateToView(new QuizzEditorFX(), "Éditeur de Quiz", this);
     }
 

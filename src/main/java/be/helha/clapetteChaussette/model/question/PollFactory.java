@@ -1,5 +1,7 @@
 package be.helha.clapetteChaussette.model.question;
 
+import java.util.List;
+
 public class PollFactory extends QuestionFactory {
 
     /**
@@ -14,7 +16,8 @@ public class PollFactory extends QuestionFactory {
      * @return a new PollQuestion instance
      */
     @Override
-    public Question createQuestion(String questionText, String[] answers, boolean[] correctAnswers, boolean asPoints) {
+    public Question createQuestion(String questionText, List<String> answers, List<Boolean> correctAnswers,
+            boolean asPoints) {
         return new PollQuestion(questionText);
     }
 

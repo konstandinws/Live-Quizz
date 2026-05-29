@@ -1,5 +1,6 @@
 package be.helha.clapetteChaussette.common.dto;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -13,4 +14,6 @@ import java.util.UUID;
  * @param name The display name of the quiz (e.g., "Math 101 Midterm").
  * @param teacherUuid The identifier of the teacher who owns and manages this quiz.
  */
-public record QuizzDTO(UUID uuid, String name, UUID teacherUuid) {}
+public record QuizzDTO(UUID uuid, String name, UUID teacherUuid) implements Serializable {
+    private static final long serialVersionUID = 1L;
+}

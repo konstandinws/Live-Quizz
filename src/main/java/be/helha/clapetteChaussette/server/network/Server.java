@@ -1,11 +1,15 @@
 package be.helha.clapetteChaussette.server.network;
 
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
+import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
+import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsException;
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.common.models.Teacher;
+import be.helha.clapetteChaussette.server.repository.IQuizzRepository;
+import be.helha.clapetteChaussette.server.repository.db.JdbcQuizzRepository;
 import be.helha.clapetteChaussette.server.repository.db.JdbcTeacherRepository;
 import be.helha.clapetteChaussette.client.service.repository.TeacherService;
 
@@ -39,6 +43,8 @@ public class Server implements ClientThreadHandler.Listener {
     private final List<ClientThreadHandler> clientHandlerThreads = new ArrayList<>();
 
     private final TeacherService teacherService = new TeacherService(new JdbcTeacherRepository());
+
+    private final IQuizzRepository quizzRepository = new JdbcQuizzRepository();
 
     public static void main(String[] args) {
             Server server = new Server(3001);
@@ -82,8 +88,23 @@ public class Server implements ClientThreadHandler.Listener {
             // Le mot de passe en clair est vérifié ici via BCrypt (hashage côté serveur).
             Teacher teacher = teacherService.teacherLogin(name, loginRequest.getPassword());
             System.out.println("Connecté avec " + teacher.getName());
+
+            List<QuizzDTO> quizzes = quizzRepository.findAll(teacher.getUuid());
+            reply(clientThreadHandler, new LoginResponse(true, teacher, quizzes, "OK"));
         } catch (LoginFailedException e) {
             System.out.println("Échec de connexion pour " + name);
+            reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Identifiants invalides"));
+        }
+    }
+
+    /**
+     * Sends a response back to the client, logging any network error.
+     */
+    private void reply(ClientThreadHandler clientThreadHandler, LoginResponse response) {
+        try {
+            clientThreadHandler.send(response);
+        } catch (IOException e) {
+            System.err.println("Impossible d'envoyer la réponse au client : " + e.getMessage());
         }
     }
 
@@ -94,10 +115,16 @@ public class Server implements ClientThreadHandler.Listener {
             // Le serveur hashe le mot de passe (BCrypt) avant de le persister.
             Teacher teacher = teacherService.registerNewTeacher(name, registerRequest.getPassword());
             System.out.println("Nouveau prof créé : " + teacher.getName());
+
+            // On répond comme pour un login réussi afin que le client bascule d'écran.
+            List<QuizzDTO> quizzes = quizzRepository.findAll(teacher.getUuid());
+            reply(clientThreadHandler, new LoginResponse(true, teacher, quizzes, "OK"));
         } catch (TeacherAlreadyExistsException e) {
             System.out.println("Le prof existe déjà : " + name);
+            reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Ce professeur existe déjà"));
         } catch (IllegalArgumentException e) {
             System.out.println("Données d'inscription invalides : " + e.getMessage());
+            reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Données d'inscription invalides"));
         }
     }
 }

@@ -1,6 +1,7 @@
-package be.helha.clapetteChaussette.server.network;
+package be.helha.clapetteChaussette.client.network;
 
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
+import be.helha.clapetteChaussette.server.network.ClientThreadHandler;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -8,7 +9,7 @@ import java.net.Socket;
  * Manages the network connection on the client side for the application.
  * Handles connecting to the server, sending objects, and disconnecting.
  */
-public class Client {
+public class NetworkController {
 
     private final String host;
     private final int port;
@@ -23,7 +24,7 @@ public class Client {
      * @param host The IP address or domain name of the server.
      * @param port The port number the server is listening on.
      */
-    public Client(String host, int port) {
+    public NetworkController(String host, int port) {
         this.host = host;
         this.port = port;
     }
@@ -50,7 +51,7 @@ public class Client {
         } catch (IOException e) {
             this.isConnected = false;
             if (listener != null) {
-//                listener.onError(e);
+                listener.onError(e);
             }
         }
     }

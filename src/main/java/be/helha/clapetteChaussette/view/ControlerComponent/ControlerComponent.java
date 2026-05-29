@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import be.helha.clapetteChaussette.service.editor.EditorService;
 
 import java.io.IOException;
 
@@ -35,6 +36,9 @@ public class ControlerComponent extends VBox {
     }
 
     public void setData(QuizzDTO question) {
+        labelTitre.setText(question.name());
+        labelQuestion.setText(question.name());
+        root.setStyle("-fx-background-color: #f0f0f0");
 
     }
 

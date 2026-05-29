@@ -33,4 +33,14 @@ public abstract class BaseController {
         view.setNavigationService(navigationService);
         view.setOwnController(controller);
     }
+
+    /**
+     * Comme {@link #navigateToView} mais remplace l'écran courant sans empiler le
+     * détour dans l'historique (retour d'un sous-éditeur vers l'éditeur de quiz).
+     */
+    public <C extends IListener> void replaceView(ViewFX<C> view, String title, C controller) {
+        navigationService.returnAndReplace(view, title);
+        view.setNavigationService(navigationService);
+        view.setOwnController(controller);
+    }
 }

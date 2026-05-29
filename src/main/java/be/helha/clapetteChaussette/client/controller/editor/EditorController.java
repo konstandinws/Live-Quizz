@@ -122,7 +122,7 @@ public class EditorController
      */
     private void showQuizzEditor() {
         QuizzEditorFX editorView = new QuizzEditorFX();
-        navigateToView(editorView, "Éditeur de Quiz", this);
+        replaceView(editorView, "Éditeur de Quiz", this);
         editorView.displayQuestions(quizz.getQuestions());
     }
 

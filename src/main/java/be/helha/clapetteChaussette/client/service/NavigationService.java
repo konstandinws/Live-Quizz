@@ -44,4 +44,27 @@ public class NavigationService {
             stage.show();
         }
     }
+
+    /**
+     * Affiche {@code displayable} à la place de l'écran courant tout en supprimant
+     * le dernier écran empilé dans l'historique.
+     * <p>
+     * Sert à revenir d'un sous-éditeur (ex. éditeur de QCM) vers l'éditeur de quiz :
+     * on ne veut pas empiler le détour, sinon le bouton « Retour » repasserait par
+     * l'éditeur de question au lieu de revenir à la liste des questionnaires.
+     */
+    public void returnAndReplace(IDisplayable displayable, String title) {
+        if (!History.isEmpty()) {
+            // enlève l'écran empilé lors de l'ouverture du sous-éditeur
+            History.remove(History.size() - 1);
+            currentSceneIndex--;
+        }
+        stage.setTitle(title);
+        try {
+            stage.setScene(displayable.initializeView());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        stage.show();
+    }
 }

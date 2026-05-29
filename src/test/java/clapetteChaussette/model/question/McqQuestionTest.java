@@ -2,8 +2,8 @@ package clapetteChaussette.model.question;
 
 import org.junit.jupiter.api.Test;
 
-import be.helha.clapetteChaussette.model.question.Answer;
-import be.helha.clapetteChaussette.model.question.McqQuestion;
+import be.helha.clapetteChaussette.common.models.questions.Answer;
+import be.helha.clapetteChaussette.common.models.questions.McqQuestion;
 
 import java.util.Arrays;
 import java.util.List;

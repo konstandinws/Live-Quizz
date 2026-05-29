@@ -1,17 +1,17 @@
 // be.helha.clapetteChaussette.AppFX
 package be.helha.clapetteChaussette;
 
-import be.helha.clapetteChaussette.controller.HomeController;
-import be.helha.clapetteChaussette.repository.IQuestionRepository;
-import be.helha.clapetteChaussette.repository.IQuizzRepository;
-import be.helha.clapetteChaussette.repository.ITeacherRepository;
-import be.helha.clapetteChaussette.repository.db.JdbcQuestionRepository;
-import be.helha.clapetteChaussette.repository.db.JdbcQuizzRepository;
-import be.helha.clapetteChaussette.repository.db.JdbcTeacherRepository;
-import be.helha.clapetteChaussette.service.NavigationService;
-import be.helha.clapetteChaussette.service.editor.EditorService;
-import be.helha.clapetteChaussette.service.editor.ValidateQuestionEditorService;
-import be.helha.clapetteChaussette.view.HomeViewFX;
+import be.helha.clapetteChaussette.client.controller.HomeController;
+import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
+import be.helha.clapetteChaussette.server.repository.IQuizzRepository;
+import be.helha.clapetteChaussette.server.repository.ITeacherRepository;
+import be.helha.clapetteChaussette.server.repository.db.JdbcQuestionRepository;
+import be.helha.clapetteChaussette.server.repository.db.JdbcQuizzRepository;
+import be.helha.clapetteChaussette.server.repository.db.JdbcTeacherRepository;
+import be.helha.clapetteChaussette.client.service.NavigationService;
+import be.helha.clapetteChaussette.client.service.editor.EditorService;
+import be.helha.clapetteChaussette.client.service.editor.ValidateQuestionEditorService;
+import be.helha.clapetteChaussette.client.view.HomeViewFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

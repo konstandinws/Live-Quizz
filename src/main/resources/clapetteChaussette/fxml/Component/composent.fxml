@@ -3,7 +3,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root fx:id="root" spacing="8" styleClass="carte" stylesheets="@../css/composent.css" type="VBox" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.helha.clapetteChaussette.client.view.ControlerComponent.ControlerComponent">
+<fx:root spacing="8" styleClass="carte" stylesheets="@../css/composent.css" type="VBox" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
 
     <Label fx:id="labelTitre" styleClass="carte-titre" />
     <Label fx:id="labelQuestion" styleClass="carte-question" />

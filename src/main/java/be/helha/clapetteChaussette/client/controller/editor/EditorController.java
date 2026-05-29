@@ -89,7 +89,7 @@ public class EditorController
             boolean hasPoints)
             throws InvalidQuestionException {
         quizz.addQuestion(editorService.createOpenQuestion(title, answerTexts, correctAnswers, hasPoints));
-        navigateToView(new QuizzEditorFX(), "Éditeur de Quiz", this);
+        showQuizzEditor();
     }
 
     // endregion
@@ -100,7 +100,7 @@ public class EditorController
     public void createMcqQuestion(String title, List<String> answers, List<Boolean> correctAnswers)
             throws InvalidQuestionException {
         quizz.addQuestion(editorService.createMcqQuestion(title, answers, correctAnswers));
-        navigateToView(new QuizzEditorFX(), "Éditeur de Quiz", this);
+        showQuizzEditor();
     }
 
     // endregion
@@ -110,7 +110,20 @@ public class EditorController
     @Override
     public void createPoll(String title, List<String> answers) throws InvalidQuestionException {
         quizz.addQuestion(editorService.createPollQuestion(title, answers));
-        navigateToView(new QuizzEditorFX(), "Éditeur de Quiz", this);
+        showQuizzEditor();
+    }
+
+    // #endregion
+
+    // #region Private Methods
+
+    /**
+     * Réaffiche l'éditeur de quiz en listant les questions déjà ajoutées.
+     */
+    private void showQuizzEditor() {
+        QuizzEditorFX editorView = new QuizzEditorFX();
+        navigateToView(editorView, "Éditeur de Quiz", this);
+        editorView.displayQuestions(quizz.getQuestions());
     }
 
     // #endregion

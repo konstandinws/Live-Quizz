@@ -7,6 +7,7 @@ module clapelleChausette {
     requires java.net.http;
 
     opens be.helha.clapetteChaussette.client.view to javafx.fxml;
+    opens be.helha.clapetteChaussette.client.view.ControlerComponent to javafx.fxml;
     opens be.helha.clapetteChaussette.client.view.editor to javafx.fxml;
     opens be.helha.clapetteChaussette.client.view.question to javafx.fxml;
     opens be.helha.clapetteChaussette.client.view.student to javafx.fxml;

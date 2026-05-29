@@ -1,6 +1,7 @@
 package be.helha.clapetteChaussette.client.view.editor;
 
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
+import be.helha.clapetteChaussette.common.models.questions.Question;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ControlerComponent;
 import be.helha.clapetteChaussette.client.view.editor.QuizzEditorFX.IQuizzListener;
 import be.helha.clapetteChaussette.client.view.IListener;
@@ -59,6 +60,20 @@ public class QuizzEditorFX extends ViewFX<IQuizzListener> {
             try {
                 ControlerComponent carte = ControlerComponent.creerComposent();
                 carte.setData(quizz);
+                questionListVbox.getChildren().add(carte.getRoot());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /** Affiche dans l'éditeur la liste des questions déjà ajoutées au quiz. */
+    public void displayQuestions(List<Question> questions) {
+        questionListVbox.getChildren().clear();
+        for (Question question : questions) {
+            try {
+                ControlerComponent carte = ControlerComponent.creerComposent();
+                carte.setData(question);
                 questionListVbox.getChildren().add(carte.getRoot());
             } catch (IOException e) {
                 e.printStackTrace();

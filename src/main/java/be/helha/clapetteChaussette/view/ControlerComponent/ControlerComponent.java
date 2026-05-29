@@ -38,7 +38,6 @@ public class ControlerComponent extends VBox {
     public void setData(QuizzDTO question) {
         labelTitre.setText(question.name());
         labelQuestion.setText(question.name());
-        root.setStyle("-fx-background-color: #f0f0f0");
 
     }
 

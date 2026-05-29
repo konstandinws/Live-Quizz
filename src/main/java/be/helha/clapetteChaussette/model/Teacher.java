@@ -1,14 +1,11 @@
 package be.helha.clapetteChaussette.model;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Domain model representing a Teacher within the application.
  */
-public class Teacher implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class Teacher {
     private UUID uuid;
     private String name;
 

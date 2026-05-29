@@ -1,0 +1,49 @@
+package be.helha.clapetteChaussette.common.models;
+
+import be.helha.clapetteChaussette.common.models.questions.Question;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+// Stores the selected questions from the editing mode
+public class Quizz {
+    private UUID uuid;
+    String name;
+    private List<Question> questions;
+
+    public Quizz(String name) {
+        this.name = name;
+        this.questions = new ArrayList<Question>();
+        this.uuid = UUID.randomUUID();
+    }
+
+    public Quizz(String name, List<Question> questions) {
+        this.name = name;
+        this.questions = questions;
+        this.uuid = UUID.randomUUID();
+    }
+
+    public List<Question> getQuestions() {
+        return Collections.unmodifiableList(questions);
+    }
+
+    // Polymorphic method to add any question type that extends the Question class
+    public void addQuestion(Question question) {
+        this.questions.add(question);
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "QuestionsEdit [questions=" + questions + "]";
+    }
+}

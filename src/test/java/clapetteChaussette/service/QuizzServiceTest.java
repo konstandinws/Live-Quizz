@@ -1,15 +1,15 @@
 package clapetteChaussette.service;
 
-import be.helha.clapetteChaussette.exception.editor.InvalidQuizzException;
-import be.helha.clapetteChaussette.model.Quizz;
-import be.helha.clapetteChaussette.model.dto.QuestionDTO;
-import be.helha.clapetteChaussette.model.dto.QuizzDTO;
-import be.helha.clapetteChaussette.model.question.Answer;
-import be.helha.clapetteChaussette.model.question.McqQuestion;
-import be.helha.clapetteChaussette.model.question.Question;
-import be.helha.clapetteChaussette.repository.IQuestionRepository;
-import be.helha.clapetteChaussette.repository.IQuizzRepository;
-import be.helha.clapetteChaussette.service.repository.QuizzService;
+import be.helha.clapetteChaussette.common.exception.editor.InvalidQuizzException;
+import be.helha.clapetteChaussette.common.models.Quizz;
+import be.helha.clapetteChaussette.common.dto.QuestionDTO;
+import be.helha.clapetteChaussette.common.dto.QuizzDTO;
+import be.helha.clapetteChaussette.common.models.questions.Answer;
+import be.helha.clapetteChaussette.common.models.questions.McqQuestion;
+import be.helha.clapetteChaussette.common.models.questions.Question;
+import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
+import be.helha.clapetteChaussette.server.repository.IQuizzRepository;
+import be.helha.clapetteChaussette.client.service.repository.QuizzService;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

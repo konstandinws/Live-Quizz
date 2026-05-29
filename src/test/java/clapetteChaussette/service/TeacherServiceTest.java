@@ -1,12 +1,12 @@
 package clapetteChaussette.service;
 
-import be.helha.clapetteChaussette.exception.TeacherAlreadyExistsException;
-import be.helha.clapetteChaussette.exception.login.LoginFailedException;
-import be.helha.clapetteChaussette.model.Teacher;
-import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.repository.ITeacherRepository;
-import be.helha.clapetteChaussette.service.repository.TeacherService;
-import be.helha.clapetteChaussette.utils.PasswordHasher;
+import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsException;
+import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
+import be.helha.clapetteChaussette.common.models.Teacher;
+import be.helha.clapetteChaussette.common.dto.TeacherDTO;
+import be.helha.clapetteChaussette.server.repository.ITeacherRepository;
+import be.helha.clapetteChaussette.client.service.repository.TeacherService;
+import be.helha.clapetteChaussette.server.utils.PasswordHasher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -34,7 +34,7 @@ public class Client {
      *
      * @param listener The listener that handles received messages and errors.
      */
-    public synchronized void connect(ThreadHandler.Listener listener) {
+    public synchronized void connect(ClientThreadHandler.Listener listener) {
         if (isConnected) {
             return;
         }
@@ -43,14 +43,14 @@ public class Client {
             this.objectSocket = new ObjectSocket(this.socket);
             this.isConnected = true;
 
-            ThreadHandler threadHandler = new ThreadHandler(this.objectSocket, listener);
+            ClientThreadHandler threadHandler = new ClientThreadHandler(this.objectSocket, listener);
 
             this.networkThread = new Thread(threadHandler, "clapetteChaussette-Client-Network");
             this.networkThread.start();
         } catch (IOException e) {
             this.isConnected = false;
             if (listener != null) {
-                listener.onError(e);
+//                listener.onError(e);
             }
         }
     }

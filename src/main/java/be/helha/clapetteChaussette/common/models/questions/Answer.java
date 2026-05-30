@@ -1,6 +1,10 @@
 package be.helha.clapetteChaussette.common.models.questions;
 
-public class Answer {
+import java.io.Serializable;
+
+public class Answer implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     String answer;
     boolean isCorrect;
 

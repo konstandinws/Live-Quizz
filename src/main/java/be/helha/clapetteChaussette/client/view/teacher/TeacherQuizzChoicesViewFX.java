@@ -5,7 +5,13 @@ import be.helha.clapetteChaussette.client.view.IListener;
 import be.helha.clapetteChaussette.client.view.ViewFX;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
@@ -41,13 +47,39 @@ public class TeacherQuizzChoicesViewFX extends ViewFX<TeacherQuizzChoicesControl
      */
     public void displayQuizzes(List<QuizzDTO> quizzes) {
         quizzVbox.getChildren().clear();
+        quizzVbox.setSpacing(10);
+        quizzVbox.setPadding(new Insets(10));
         if (quizzes == null || quizzes.isEmpty()) {
             quizzVbox.getChildren().add(new Label("Aucun questionnaire pour le moment."));
             return;
         }
         for (QuizzDTO quizz : quizzes) {
-            quizzVbox.getChildren().add(new Label(quizz.name()));
+            quizzVbox.getChildren().add(createQuizzRow(quizz));
         }
+    }
+
+    /**
+     * Builds a rectangle for a quizz: its name on the left and a button on the
+     * right that launches the quizz and navigates to the waiting screen.
+     *
+     * @param quizz the quizz to display.
+     * @return the styled row representing the quizz.
+     */
+    private HBox createQuizzRow(QuizzDTO quizz) {
+        Label nameLabel = new Label(quizz.name());
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button launchBtn = new Button("Lancer");
+        launchBtn.setOnAction(e -> listener.onLaunchQuizzRequested(quizz));
+
+        HBox row = new HBox(10, nameLabel, spacer, launchBtn);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setPadding(new Insets(10));
+        row.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;"
+                + " -fx-border-color: #c0c0c0; -fx-border-radius: 5;");
+        return row;
     }
 
     @Override
@@ -57,5 +89,7 @@ public class TeacherQuizzChoicesViewFX extends ViewFX<TeacherQuizzChoicesControl
 
     public interface ITeacherQuizzChoicesListener extends IListener {
         void onNewQuizzRequested();
+
+        void onLaunchQuizzRequested(QuizzDTO quizz);
     }
 }

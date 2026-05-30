@@ -15,6 +15,13 @@ public class StudentWaitingViewFX extends ViewFX<StudentWaitingController> {
         participantNumberLabel.setText(String.valueOf(count));
     }
 
+    /** Overrides the default "Retour" action (e.g. to leave the session first). */
+    public void setOnReturn(Runnable action) {
+        if (returnBTN != null) {
+            returnBTN.setOnAction(e -> action.run());
+        }
+    }
+
     @Override
     protected String getFXMLPath() {
         return "studentWaintingForQuizz.fxml";

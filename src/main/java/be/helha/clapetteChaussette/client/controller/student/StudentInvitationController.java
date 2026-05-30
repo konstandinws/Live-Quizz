@@ -8,6 +8,7 @@ import be.helha.clapetteChaussette.client.view.student.StudentInvitationViewFX.I
 import be.helha.clapetteChaussette.client.view.student.StudentWaitingViewFX;
 import be.helha.clapetteChaussette.common.models.events.JoinSessionRequest;
 import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
+import be.helha.clapetteChaussette.common.models.events.LeaveSessionRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
@@ -50,10 +51,22 @@ public class StudentInvitationController extends BaseController
                 waitingView = new StudentWaitingViewFX();
                 navigateToView(waitingView, "En attente du lancement...", waitingCtrl);
                 waitingView.setParticipantCount(response.getParticipantCount());
+                waitingView.setOnReturn(this::leaveSession);
             } else {
                 ErrorPopup.show(response.getMessage());
             }
         });
+    }
+
+    // Leaves the session on the server, then navigates back.
+    private void leaveSession() {
+        try {
+            networkController.send(new LeaveSessionRequest());
+        } catch (IOException e) {
+            ErrorPopup.show("Impossible de joindre le serveur.");
+        }
+        waitingView = null;
+        navigationService.goBack();
     }
 
     @Override

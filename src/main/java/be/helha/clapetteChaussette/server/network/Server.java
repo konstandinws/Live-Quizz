@@ -2,6 +2,7 @@ package be.helha.clapetteChaussette.server.network;
 
 import be.helha.clapetteChaussette.common.models.events.JoinSessionRequest;
 import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
+import be.helha.clapetteChaussette.common.models.events.LeaveSessionRequest;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
@@ -255,6 +256,30 @@ public class Server implements ClientThreadHandler.Listener {
             clientThreadHandler.send(event);
         } catch (IOException e) {
             System.err.println("Impossible d'envoyer un message au client : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void onLeaveSession(ClientThreadHandler clientThreadHandler, LeaveSessionRequest request) {
+        removeFromSession(clientThreadHandler);
+    }
+
+    @Override
+    public void onDisconnect(ClientThreadHandler clientThreadHandler) {
+        // A student dropping out decrements the count; a teacher dropping ends the session.
+        removeFromSession(clientThreadHandler);
+        sessions.values().removeIf(session -> session.getHost() == clientThreadHandler);
+    }
+
+    /**
+     * Removes a student from its session (if any) and refreshes the count.
+     */
+    private void removeFromSession(ClientThreadHandler clientThreadHandler) {
+        for (Session session : sessions.values()) {
+            if (session.getClients().remove(clientThreadHandler)) {
+                broadcastParticipantCount(session);
+                break;
+            }
         }
     }
 }

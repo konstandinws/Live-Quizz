@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import be.helha.clapetteChaussette.common.models.events.JoinSessionRequest;
 import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
+import be.helha.clapetteChaussette.common.models.events.LeaveSessionRequest;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
@@ -56,6 +57,8 @@ public class ClientThreadHandler extends Thread {
                         listener.onLaunchQuizz(this, (LaunchQuizzRequest) event);
                     } else if (event instanceof JoinSessionRequest) {
                         listener.onJoinSession(this, (JoinSessionRequest) event);
+                    } else if (event instanceof LeaveSessionRequest) {
+                        listener.onLeaveSession(this, (LeaveSessionRequest) event);
                     } else if (event instanceof LoginResponse) {
                         listener.onLoginResponse((LoginResponse) event);
                     } else if (event instanceof SaveQuizzResponse) {
@@ -75,7 +78,7 @@ public class ClientThreadHandler extends Thread {
             listener.onError(e);
         } finally {
             objectSocket.close();
-            listener.onDisconnect();
+            listener.onDisconnect(this);
         }
     }
 
@@ -101,6 +104,12 @@ public class ClientThreadHandler extends Thread {
          * No-op by default so the client side does not need to implement it.
          */
         default void onJoinSession(ClientThreadHandler clientThreadHandler, JoinSessionRequest joinSessionRequest) {}
+
+        /**
+         * Called on the server side when a student leaves a session on purpose.
+         * No-op by default so the client side does not need to implement it.
+         */
+        default void onLeaveSession(ClientThreadHandler clientThreadHandler, LeaveSessionRequest leaveSessionRequest) {}
 
         /**
          * Called on the client side when the server replies to a login request.
@@ -140,6 +149,6 @@ public class ClientThreadHandler extends Thread {
         /**
          * Called once the connection has been closed. No-op by default.
          */
-        default void onDisconnect() {}
+        default void onDisconnect(ClientThreadHandler clientThreadHandler) {}
     }
 }

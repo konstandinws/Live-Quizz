@@ -9,6 +9,8 @@ import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.NetworkEvent;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
+import be.helha.clapetteChaussette.common.models.events.SaveQuizzRequest;
+import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
 
 public class ClientThreadHandler extends Thread {
@@ -43,8 +45,12 @@ public class ClientThreadHandler extends Thread {
                         listener.onLogin(this, (LoginRequest) event);
                     } else if (event instanceof RegisterRequest) {
                         listener.onRegister(this, (RegisterRequest) event);
+                    } else if (event instanceof SaveQuizzRequest) {
+                        listener.onSaveQuizz(this, (SaveQuizzRequest) event);
                     } else if (event instanceof LoginResponse) {
                         listener.onLoginResponse((LoginResponse) event);
+                    } else if (event instanceof SaveQuizzResponse) {
+                        listener.onSaveQuizzResponse((SaveQuizzResponse) event);
                     } else {
                         LOGGER.log(Level.WARNING, "Unsupported network event received: {0}",
                                 event == null ? "null" : event.getClass().getName());
@@ -64,10 +70,22 @@ public class ClientThreadHandler extends Thread {
         void onRegister(ClientThreadHandler clientThreadHandler, RegisterRequest registerRequest);
 
         /**
+         * Called on the server side when a client asks to persist a quizz.
+         * No-op by default so the client side does not need to implement it.
+         */
+        default void onSaveQuizz(ClientThreadHandler clientThreadHandler, SaveQuizzRequest saveQuizzRequest) {}
+
+        /**
          * Called on the client side when the server replies to a login request.
          * No-op by default so the server side does not need to implement it.
          */
         default void onLoginResponse(LoginResponse loginResponse) {}
+
+        /**
+         * Called on the client side when the server replies to a save-quizz request.
+         * No-op by default so the server side does not need to implement it.
+         */
+        default void onSaveQuizzResponse(SaveQuizzResponse saveQuizzResponse) {}
 
         /**
          * Called when a network error breaks the connection. No-op by default.

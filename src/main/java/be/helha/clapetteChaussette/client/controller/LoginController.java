@@ -96,7 +96,9 @@ public class LoginController
         // Réponse reçue sur le thread réseau : on repasse sur le thread JavaFX.
         Platform.runLater(() -> {
             if (response.isSuccess()) {
-                showTeacherQuizzChoices(loggedInTeacher, response.getQuizzes());
+                // On dépile l'éditeur de l'historique : après l'enregistrement,
+                // « Retour » depuis le menu ne doit pas ramener sur l'éditeur.
+                showTeacherQuizzChoices(loggedInTeacher, response.getQuizzes(), true);
             } else {
                 ErrorPopup.show(response.getMessage());
             }
@@ -108,19 +110,27 @@ public class LoginController
         TeacherDTO teacherDTO = new TeacherDTO(teacher.getUuid(), teacher.getName(), null);
         this.loggedInTeacher = teacherDTO;
 
-        showTeacherQuizzChoices(teacherDTO, response.getQuizzes());
+        showTeacherQuizzChoices(teacherDTO, response.getQuizzes(), false);
     }
 
     /**
      * Affiche (ou réaffiche) l'écran « Mes questionnaires » avec la liste fournie.
      * Réutilisé après le login et après une sauvegarde réussie.
+     *
+     * @param replace {@code true} pour remplacer l'écran courant (l'éditeur) sans
+     *                l'empiler dans l'historique ; {@code false} pour empiler
+     *                normalement (cas du login).
      */
-    private void showTeacherQuizzChoices(TeacherDTO teacher, List<QuizzDTO> quizzes) {
+    private void showTeacherQuizzChoices(TeacherDTO teacher, List<QuizzDTO> quizzes, boolean replace) {
         TeacherQuizzChoicesController controller =
                 new TeacherQuizzChoicesController(navigationService, teacher, editorService, validateService);
         TeacherQuizzChoicesViewFX view = new TeacherQuizzChoicesViewFX(teacher.name());
 
-        navigateToView(view, "Mes questionnaires", controller);
+        if (replace) {
+            replaceView(view, "Mes questionnaires", controller);
+        } else {
+            navigateToView(view, "Mes questionnaires", controller);
+        }
         view.displayQuizzes(quizzes);
     }
 }

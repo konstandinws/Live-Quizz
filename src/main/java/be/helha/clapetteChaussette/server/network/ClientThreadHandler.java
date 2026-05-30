@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import be.helha.clapetteChaussette.common.models.events.LaunchQuizzRequest;
+import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.NetworkEvent;
@@ -47,10 +49,14 @@ public class ClientThreadHandler extends Thread {
                         listener.onRegister(this, (RegisterRequest) event);
                     } else if (event instanceof SaveQuizzRequest) {
                         listener.onSaveQuizz(this, (SaveQuizzRequest) event);
+                    } else if (event instanceof LaunchQuizzRequest) {
+                        listener.onLaunchQuizz(this, (LaunchQuizzRequest) event);
                     } else if (event instanceof LoginResponse) {
                         listener.onLoginResponse((LoginResponse) event);
                     } else if (event instanceof SaveQuizzResponse) {
                         listener.onSaveQuizzResponse((SaveQuizzResponse) event);
+                    } else if (event instanceof LaunchQuizzResponse) {
+                        listener.onLaunchQuizzResponse((LaunchQuizzResponse) event);
                     } else {
                         LOGGER.log(Level.WARNING, "Unsupported network event received: {0}",
                                 event == null ? "null" : event.getClass().getName());
@@ -76,6 +82,12 @@ public class ClientThreadHandler extends Thread {
         default void onSaveQuizz(ClientThreadHandler clientThreadHandler, SaveQuizzRequest saveQuizzRequest) {}
 
         /**
+         * Called on the server side when a teacher asks to launch a quizz session.
+         * No-op by default so the client side does not need to implement it.
+         */
+        default void onLaunchQuizz(ClientThreadHandler clientThreadHandler, LaunchQuizzRequest launchQuizzRequest) {}
+
+        /**
          * Called on the client side when the server replies to a login request.
          * No-op by default so the server side does not need to implement it.
          */
@@ -86,6 +98,12 @@ public class ClientThreadHandler extends Thread {
          * No-op by default so the server side does not need to implement it.
          */
         default void onSaveQuizzResponse(SaveQuizzResponse saveQuizzResponse) {}
+
+        /**
+         * Called on the client side when the server replies to a launch-quizz request.
+         * No-op by default so the server side does not need to implement it.
+         */
+        default void onLaunchQuizzResponse(LaunchQuizzResponse launchQuizzResponse) {}
 
         /**
          * Called when a network error breaks the connection. No-op by default.

@@ -5,25 +5,32 @@ import be.helha.clapetteChaussette.client.controller.editor.EditorController;
 import be.helha.clapetteChaussette.common.models.Quizz;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
+import be.helha.clapetteChaussette.common.models.events.LaunchQuizzRequest;
+import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.service.editor.EditorService;
 import be.helha.clapetteChaussette.client.service.editor.ValidateQuestionEditorService;
+import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.editor.QuizzEditorFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX.ITeacherQuizzChoicesListener;
-import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX;
+
+import java.io.IOException;
 
 public class TeacherQuizzChoicesController extends BaseController implements ITeacherQuizzChoicesListener {
 
     private final TeacherDTO teacher;
     private final EditorService editorService;
     private final ValidateQuestionEditorService validateService;
+    private final NetworkController networkController;
 
     public TeacherQuizzChoicesController(NavigationService nav, TeacherDTO teacher,
-                                         EditorService editorService, ValidateQuestionEditorService validateService) {
+                                         EditorService editorService, ValidateQuestionEditorService validateService,
+                                         NetworkController networkController) {
         super(nav);
         this.teacher = teacher;
         this.editorService = editorService;
         this.validateService = validateService;
+        this.networkController = networkController;
     }
 
     @Override
@@ -37,8 +44,10 @@ public class TeacherQuizzChoicesController extends BaseController implements ITe
 
     @Override
     public void onLaunchQuizzRequested(QuizzDTO quizz) {
-        TeacherWaitingController waitingCtrl = new TeacherWaitingController(navigationService);
-        TeacherWaitingViewFX waitingView = new TeacherWaitingViewFX();
-        navigateToView(waitingView, "En attente de lancement", waitingCtrl);
+        try {
+            networkController.send(new LaunchQuizzRequest(quizz));
+        } catch (IOException e) {
+            ErrorPopup.show("Impossible de joindre le serveur.");
+        }
     }
 }

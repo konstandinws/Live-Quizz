@@ -1,5 +1,7 @@
 package be.helha.clapetteChaussette.server.network;
 
+import be.helha.clapetteChaussette.common.models.events.LaunchQuizzRequest;
+import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
@@ -11,17 +13,21 @@ import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsExceptio
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.models.Teacher;
+import be.helha.clapetteChaussette.server.models.Session;
 import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
 import be.helha.clapetteChaussette.server.repository.IQuizzRepository;
 import be.helha.clapetteChaussette.server.repository.db.JdbcQuestionRepository;
 import be.helha.clapetteChaussette.server.repository.db.JdbcQuizzRepository;
 import be.helha.clapetteChaussette.server.repository.db.JdbcTeacherRepository;
+import be.helha.clapetteChaussette.server.utils.CodeGenerator;
 import be.helha.clapetteChaussette.client.service.repository.TeacherService;
 
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Represents the server for the Clapette Chaussette application.
@@ -52,6 +58,9 @@ public class Server implements ClientThreadHandler.Listener {
     private final IQuizzRepository quizzRepository = new JdbcQuizzRepository();
 
     private final IQuestionRepository questionRepository = new JdbcQuestionRepository();
+
+    /** Sessions de quiz en cours, indexées par leur code d'invitation. */
+    private final Map<String, Session> sessions = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
             Server server = new Server(3001);
@@ -156,6 +165,41 @@ public class Server implements ClientThreadHandler.Listener {
      * Sends a save-quizz response back to the client, logging any network error.
      */
     private void reply(ClientThreadHandler clientThreadHandler, SaveQuizzResponse response) {
+        try {
+            clientThreadHandler.send(response);
+        } catch (IOException e) {
+            System.err.println("Impossible d'envoyer la réponse au client : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void onLaunchQuizz(ClientThreadHandler clientThreadHandler, LaunchQuizzRequest request) {
+        QuizzDTO quizz = request.getQuizz();
+
+        // Génère un code unique et crée la session liée au prof (sa connexion).
+        String code = generateUniqueCode();
+        Session session = new Session(code, quizz, clientThreadHandler);
+        sessions.put(code, session);
+        System.out.println("Session lancée : code " + code + " pour le questionnaire « " + quizz.name() + " »");
+
+        reply(clientThreadHandler, new LaunchQuizzResponse(true, code, session.getNumberParticipants(), "OK"));
+    }
+
+    /**
+     * Génère un code d'invitation non déjà utilisé par une session active.
+     */
+    private String generateUniqueCode() {
+        String code;
+        do {
+            code = CodeGenerator.generate();
+        } while (sessions.containsKey(code));
+        return code;
+    }
+
+    /**
+     * Sends a launch-quizz response back to the client, logging any network error.
+     */
+    private void reply(ClientThreadHandler clientThreadHandler, LaunchQuizzResponse response) {
         try {
             clientThreadHandler.send(response);
         } catch (IOException e) {

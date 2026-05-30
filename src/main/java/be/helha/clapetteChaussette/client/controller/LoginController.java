@@ -5,13 +5,16 @@ import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
+import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.controller.teacher.TeacherQuizzChoicesController;
+import be.helha.clapetteChaussette.client.controller.teacher.TeacherWaitingController;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX;
+import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX;
 import be.helha.clapetteChaussette.server.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.server.repository.ITeacherRepository;
 import be.helha.clapetteChaussette.client.service.NavigationService;
@@ -105,6 +108,22 @@ public class LoginController
         });
     }
 
+    @Override
+    public void onLaunchQuizzResponse(LaunchQuizzResponse response) {
+        // Réponse reçue sur le thread réseau : on repasse sur le thread JavaFX.
+        Platform.runLater(() -> {
+            if (response.isSuccess()) {
+                TeacherWaitingController waitingCtrl = new TeacherWaitingController(navigationService);
+                TeacherWaitingViewFX waitingView = new TeacherWaitingViewFX();
+                navigateToView(waitingView, "En attente de lancement", waitingCtrl);
+                waitingView.setCode(response.getCode());
+                waitingView.setParticipantCount(response.getParticipantCount());
+            } else {
+                ErrorPopup.show(response.getMessage());
+            }
+        });
+    }
+
     private void openTeacherQuizzChoices(LoginResponse response) {
         Teacher teacher = response.getTeacher();
         TeacherDTO teacherDTO = new TeacherDTO(teacher.getUuid(), teacher.getName(), null);
@@ -123,7 +142,8 @@ public class LoginController
      */
     private void showTeacherQuizzChoices(TeacherDTO teacher, List<QuizzDTO> quizzes, boolean replace) {
         TeacherQuizzChoicesController controller =
-                new TeacherQuizzChoicesController(navigationService, teacher, editorService, validateService);
+                new TeacherQuizzChoicesController(navigationService, teacher, editorService, validateService,
+                        networkController);
         TeacherQuizzChoicesViewFX view = new TeacherQuizzChoicesViewFX(teacher.name());
 
         if (replace) {

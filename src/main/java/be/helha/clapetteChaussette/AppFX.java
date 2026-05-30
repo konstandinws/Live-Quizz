@@ -22,7 +22,7 @@ public class AppFX extends Application {
         NavigationService navigationService = new NavigationService(mainstage);
         ValidateQuestionEditorService validateService = new ValidateQuestionEditorService();
 
-        // Connexion réseau partagée par toute l'application (login + sauvegarde).
+        // Network connection shared across the whole application (login + save).
         NetworkController networkController = new NetworkController(SERVER_HOST, SERVER_PORT);
 
         ITeacherRepository teacherRepo = new JdbcTeacherRepository();

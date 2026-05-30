@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import be.helha.clapetteChaussette.common.models.events.JoinSessionRequest;
+import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.NetworkEvent;
+import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
@@ -51,12 +54,18 @@ public class ClientThreadHandler extends Thread {
                         listener.onSaveQuizz(this, (SaveQuizzRequest) event);
                     } else if (event instanceof LaunchQuizzRequest) {
                         listener.onLaunchQuizz(this, (LaunchQuizzRequest) event);
+                    } else if (event instanceof JoinSessionRequest) {
+                        listener.onJoinSession(this, (JoinSessionRequest) event);
                     } else if (event instanceof LoginResponse) {
                         listener.onLoginResponse((LoginResponse) event);
                     } else if (event instanceof SaveQuizzResponse) {
                         listener.onSaveQuizzResponse((SaveQuizzResponse) event);
                     } else if (event instanceof LaunchQuizzResponse) {
                         listener.onLaunchQuizzResponse((LaunchQuizzResponse) event);
+                    } else if (event instanceof JoinSessionResponse) {
+                        listener.onJoinSessionResponse((JoinSessionResponse) event);
+                    } else if (event instanceof ParticipantCountUpdate) {
+                        listener.onParticipantCountUpdate((ParticipantCountUpdate) event);
                     } else {
                         LOGGER.log(Level.WARNING, "Unsupported network event received: {0}",
                                 event == null ? "null" : event.getClass().getName());
@@ -88,6 +97,12 @@ public class ClientThreadHandler extends Thread {
         default void onLaunchQuizz(ClientThreadHandler clientThreadHandler, LaunchQuizzRequest launchQuizzRequest) {}
 
         /**
+         * Called on the server side when a student asks to join a session.
+         * No-op by default so the client side does not need to implement it.
+         */
+        default void onJoinSession(ClientThreadHandler clientThreadHandler, JoinSessionRequest joinSessionRequest) {}
+
+        /**
          * Called on the client side when the server replies to a login request.
          * No-op by default so the server side does not need to implement it.
          */
@@ -104,6 +119,18 @@ public class ClientThreadHandler extends Thread {
          * No-op by default so the server side does not need to implement it.
          */
         default void onLaunchQuizzResponse(LaunchQuizzResponse launchQuizzResponse) {}
+
+        /**
+         * Called on the client side when the server replies to a join-session request.
+         * No-op by default so the server side does not need to implement it.
+         */
+        default void onJoinSessionResponse(JoinSessionResponse joinSessionResponse) {}
+
+        /**
+         * Called on the client side when the participant count of the session changes.
+         * No-op by default so the server side does not need to implement it.
+         */
+        default void onParticipantCountUpdate(ParticipantCountUpdate participantCountUpdate) {}
 
         /**
          * Called when a network error breaks the connection. No-op by default.

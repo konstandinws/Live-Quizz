@@ -1,9 +1,12 @@
 package be.helha.clapetteChaussette.server.network;
 
+import be.helha.clapetteChaussette.common.models.events.JoinSessionRequest;
+import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
+import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
@@ -59,7 +62,7 @@ public class Server implements ClientThreadHandler.Listener {
 
     private final IQuestionRepository questionRepository = new JdbcQuestionRepository();
 
-    /** Sessions de quiz en cours, indexées par leur code d'invitation. */
+    /** Active quizz sessions, indexed by their invitation code. */
     private final Map<String, Session> sessions = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
@@ -152,7 +155,7 @@ public class Server implements ClientThreadHandler.Listener {
             questionRepository.saveQuestions(request.getQuestions());
             System.out.println("Questionnaire enregistré : " + quizz.name());
 
-            // On renvoie la liste à jour pour rafraîchir l'écran du prof.
+            // Return the refreshed list so the teacher's screen can update.
             List<QuizzDTO> quizzes = quizzRepository.findAll(quizz.teacherUuid());
             reply(clientThreadHandler, new SaveQuizzResponse(true, "OK", quizzes));
         } catch (DatabaseException e) {
@@ -176,7 +179,7 @@ public class Server implements ClientThreadHandler.Listener {
     public void onLaunchQuizz(ClientThreadHandler clientThreadHandler, LaunchQuizzRequest request) {
         QuizzDTO quizz = request.getQuizz();
 
-        // Génère un code unique et crée la session liée au prof (sa connexion).
+        // Generate a unique code and create the session tied to the teacher's connection.
         String code = generateUniqueCode();
         Session session = new Session(code, quizz, clientThreadHandler);
         sessions.put(code, session);
@@ -186,7 +189,7 @@ public class Server implements ClientThreadHandler.Listener {
     }
 
     /**
-     * Génère un code d'invitation non déjà utilisé par une session active.
+     * Generates an invitation code not already used by an active session.
      */
     private String generateUniqueCode() {
         String code;
@@ -204,6 +207,54 @@ public class Server implements ClientThreadHandler.Listener {
             clientThreadHandler.send(response);
         } catch (IOException e) {
             System.err.println("Impossible d'envoyer la réponse au client : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void onJoinSession(ClientThreadHandler clientThreadHandler, JoinSessionRequest request) {
+        Session session = sessions.get(request.getCode());
+        if (session == null) {
+            reply(clientThreadHandler, new JoinSessionResponse(false, 0, "Code invalide"));
+            return;
+        }
+
+        session.addClient(clientThreadHandler);
+        int count = session.getNumberParticipants();
+        System.out.println("Élève rejoint la session " + request.getCode() + " (" + count + " participant(s))");
+
+        reply(clientThreadHandler, new JoinSessionResponse(true, count, "OK"));
+
+        // Notify the teacher and the students already in the session.
+        broadcastParticipantCount(session);
+    }
+
+    /**
+     * Sends a join-session response back to the client, logging any network error.
+     */
+    private void reply(ClientThreadHandler clientThreadHandler, JoinSessionResponse response) {
+        try {
+            clientThreadHandler.send(response);
+        } catch (IOException e) {
+            System.err.println("Impossible d'envoyer la réponse au client : " + e.getMessage());
+        }
+    }
+
+    /**
+     * Notifies the teacher (host) and every student of the session's participant count.
+     */
+    private void broadcastParticipantCount(Session session) {
+        ParticipantCountUpdate update = new ParticipantCountUpdate(session.getNumberParticipants());
+        send(session.getHost(), update);
+        for (ClientThreadHandler client : session.getClients()) {
+            send(client, update);
+        }
+    }
+
+    private void send(ClientThreadHandler clientThreadHandler, Object event) {
+        try {
+            clientThreadHandler.send(event);
+        } catch (IOException e) {
+            System.err.println("Impossible d'envoyer un message au client : " + e.getMessage());
         }
     }
 }

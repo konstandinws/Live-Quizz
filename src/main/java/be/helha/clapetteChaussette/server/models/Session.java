@@ -43,6 +43,10 @@ public class Session {
         clients.add(client);
     }
 
+    public List<ClientThreadHandler> getClients() {
+        return clients;
+    }
+
     public int getNumberParticipants() {
         return clients.size();
     }

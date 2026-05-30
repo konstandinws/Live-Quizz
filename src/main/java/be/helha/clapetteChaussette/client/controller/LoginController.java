@@ -6,6 +6,7 @@ import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
+import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
@@ -38,8 +39,11 @@ public class LoginController
 
     private final NetworkController networkController;
 
-    /** Prof connecté, mémorisé pour rafraîchir l'écran après une sauvegarde. */
+    /** Logged-in teacher, kept to refresh the screen after a save. */
     private TeacherDTO loggedInTeacher;
+
+    // Teacher's waiting screen, updated as students join.
+    private TeacherWaitingViewFX teacherWaitingView;
 
     public LoginController(NavigationService nav, ITeacherRepository db, EditorService ed,
             ValidateQuestionEditorService val, NetworkController networkController) {
@@ -82,7 +86,7 @@ public class LoginController
     @Override
     public void onLoginResponse(LoginResponse response) {
         if (response.isSuccess()) {
-            // La réponse arrive sur le thread réseau : on repasse sur le thread JavaFX.
+            // Response arrives on the network thread: hop back onto the JavaFX thread.
             Platform.runLater(() -> openTeacherQuizzChoices(response));
         } else {
             ErrorPopup.show(response.getMessage());
@@ -96,11 +100,10 @@ public class LoginController
 
     @Override
     public void onSaveQuizzResponse(SaveQuizzResponse response) {
-        // Réponse reçue sur le thread réseau : on repasse sur le thread JavaFX.
+        // Response received on the network thread: hop back onto the JavaFX thread.
         Platform.runLater(() -> {
             if (response.isSuccess()) {
-                // On dépile l'éditeur de l'historique : après l'enregistrement,
-                // « Retour » depuis le menu ne doit pas ramener sur l'éditeur.
+                // Replace the editor so "Retour" does not lead back to it.
                 showTeacherQuizzChoices(loggedInTeacher, response.getQuizzes(), true);
             } else {
                 ErrorPopup.show(response.getMessage());
@@ -110,16 +113,25 @@ public class LoginController
 
     @Override
     public void onLaunchQuizzResponse(LaunchQuizzResponse response) {
-        // Réponse reçue sur le thread réseau : on repasse sur le thread JavaFX.
+        // Response received on the network thread: hop back onto the JavaFX thread.
         Platform.runLater(() -> {
             if (response.isSuccess()) {
                 TeacherWaitingController waitingCtrl = new TeacherWaitingController(navigationService);
-                TeacherWaitingViewFX waitingView = new TeacherWaitingViewFX();
-                navigateToView(waitingView, "En attente de lancement", waitingCtrl);
-                waitingView.setCode(response.getCode());
-                waitingView.setParticipantCount(response.getParticipantCount());
+                teacherWaitingView = new TeacherWaitingViewFX();
+                navigateToView(teacherWaitingView, "En attente de lancement", waitingCtrl);
+                teacherWaitingView.setCode(response.getCode());
+                teacherWaitingView.setParticipantCount(response.getParticipantCount());
             } else {
                 ErrorPopup.show(response.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onParticipantCountUpdate(ParticipantCountUpdate update) {
+        Platform.runLater(() -> {
+            if (teacherWaitingView != null) {
+                teacherWaitingView.setParticipantCount(update.getParticipantCount());
             }
         });
     }
@@ -133,12 +145,12 @@ public class LoginController
     }
 
     /**
-     * Affiche (ou réaffiche) l'écran « Mes questionnaires » avec la liste fournie.
-     * Réutilisé après le login et après une sauvegarde réussie.
+     * Shows (or re-shows) the "Mes questionnaires" screen with the given list.
+     * Reused after login and after a successful save.
      *
-     * @param replace {@code true} pour remplacer l'écran courant (l'éditeur) sans
-     *                l'empiler dans l'historique ; {@code false} pour empiler
-     *                normalement (cas du login).
+     * @param replace {@code true} to replace the current screen (the editor) without
+     *                pushing it onto the history; {@code false} to push normally
+     *                (login case).
      */
     private void showTeacherQuizzChoices(TeacherDTO teacher, List<QuizzDTO> quizzes, boolean replace) {
         TeacherQuizzChoicesController controller =

@@ -36,7 +36,7 @@ public class HomeController extends BaseController implements IHomeListener {
 
     @Override
     public void onStudentSelected() {
-        StudentInvitationController studentCtrl = new StudentInvitationController(navigationService);
+        StudentInvitationController studentCtrl = new StudentInvitationController(navigationService, networkController);
         navigateToView(new StudentInvitationViewFX(), "Rejoindre un Quiz", studentCtrl);
     }
 }

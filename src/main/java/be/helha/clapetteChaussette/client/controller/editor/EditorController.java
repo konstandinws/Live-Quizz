@@ -79,8 +79,7 @@ public class EditorController
 
     @Override
     public void onSaveRequested() {
-        // L'envoi est asynchrone : le retour à la liste se fait à la réception
-        // de la réponse du serveur (géré par LoginController, écouteur réseau).
+        // Navigation back to the list happens when the server response arrives.
         try {
             editorService.saveQuizz(quizz, teacher.uuid());
         } catch (IOException e) {

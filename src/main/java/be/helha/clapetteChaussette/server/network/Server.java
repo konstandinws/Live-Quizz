@@ -3,12 +3,17 @@ package be.helha.clapetteChaussette.server.network;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
+import be.helha.clapetteChaussette.common.models.events.SaveQuizzRequest;
+import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsException;
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
+import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.models.Teacher;
+import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
 import be.helha.clapetteChaussette.server.repository.IQuizzRepository;
+import be.helha.clapetteChaussette.server.repository.db.JdbcQuestionRepository;
 import be.helha.clapetteChaussette.server.repository.db.JdbcQuizzRepository;
 import be.helha.clapetteChaussette.server.repository.db.JdbcTeacherRepository;
 import be.helha.clapetteChaussette.client.service.repository.TeacherService;
@@ -45,6 +50,8 @@ public class Server implements ClientThreadHandler.Listener {
     private final TeacherService teacherService = new TeacherService(new JdbcTeacherRepository());
 
     private final IQuizzRepository quizzRepository = new JdbcQuizzRepository();
+
+    private final IQuestionRepository questionRepository = new JdbcQuestionRepository();
 
     public static void main(String[] args) {
             Server server = new Server(3001);
@@ -125,6 +132,34 @@ public class Server implements ClientThreadHandler.Listener {
         } catch (IllegalArgumentException e) {
             System.out.println("Données d'inscription invalides : " + e.getMessage());
             reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Données d'inscription invalides"));
+        }
+    }
+
+    @Override
+    public void onSaveQuizz(ClientThreadHandler clientThreadHandler, SaveQuizzRequest request) {
+        QuizzDTO quizz = request.getQuizz();
+        try {
+            quizzRepository.save(quizz);
+            questionRepository.saveQuestions(request.getQuestions());
+            System.out.println("Questionnaire enregistré : " + quizz.name());
+
+            // On renvoie la liste à jour pour rafraîchir l'écran du prof.
+            List<QuizzDTO> quizzes = quizzRepository.findAll(quizz.teacherUuid());
+            reply(clientThreadHandler, new SaveQuizzResponse(true, "OK", quizzes));
+        } catch (DatabaseException e) {
+            System.err.println("Échec de l'enregistrement du questionnaire : " + e.getMessage());
+            reply(clientThreadHandler, new SaveQuizzResponse(false, "Impossible d'enregistrer le questionnaire", List.of()));
+        }
+    }
+
+    /**
+     * Sends a save-quizz response back to the client, logging any network error.
+     */
+    private void reply(ClientThreadHandler clientThreadHandler, SaveQuizzResponse response) {
+        try {
+            clientThreadHandler.send(response);
+        } catch (IOException e) {
+            System.err.println("Impossible d'envoyer la réponse au client : " + e.getMessage());
         }
     }
 }

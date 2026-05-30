@@ -1,8 +1,10 @@
 package be.helha.clapetteChaussette.client.controller.editor;
 
+import java.io.IOException;
 import java.util.List;
 
 import be.helha.clapetteChaussette.client.controller.BaseController;
+import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.common.exception.editor.InvalidQuestionException;
 import be.helha.clapetteChaussette.common.models.Quizz;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
@@ -77,7 +79,13 @@ public class EditorController
 
     @Override
     public void onSaveRequested() {
-        editorService.saveQuizz(quizz, teacher.uuid());
+        // L'envoi est asynchrone : le retour à la liste se fait à la réception
+        // de la réponse du serveur (géré par LoginController, écouteur réseau).
+        try {
+            editorService.saveQuizz(quizz, teacher.uuid());
+        } catch (IOException e) {
+            ErrorPopup.show("Impossible de joindre le serveur.");
+        }
     }
 
     // endregion

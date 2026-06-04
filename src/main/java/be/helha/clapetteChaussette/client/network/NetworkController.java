@@ -69,6 +69,8 @@ public class NetworkController {
         try {
             this.objectSocket.send(object);
         } catch (IOException e) {
+            // it look weird to catch an IOException just to rethrow it, but this way we can
+            // add a custom message and preserve the stack trace.
             throw new IOException("Echec d'envoi de l'objet au serveur: " + e.getMessage(), e);
         }
     }
@@ -78,18 +80,14 @@ public class NetworkController {
      * listening Thread.
      * If the client is not connected, this method does nothing.
      */
-    public synchronized void disconnect() {
+    public synchronized void disconnect() throws IOException {
         if (!isConnected) {
             return;
         }
         this.isConnected = false;
 
         if (objectSocket != null) {
-            try {
-                objectSocket.close();
-            } catch (IOException e) {
-                listener.onError(e);
-            }
+            objectSocket.close();
         }
 
         if (listenerThread != null && listenerThread.isAlive()) {

@@ -57,27 +57,32 @@ public class ClientThreadHandler implements Runnable {
         /**
          * Called on the client side when the server replies to a login request.
          */
-        void onLoginResponse(LoginResponse loginResponse);
+        default void onLoginResponse(LoginResponse loginResponse) {
+        }
 
         /**
          * Called on the client side when the server replies to a save-quizz request.
          */
-        void onSaveQuizzResponse(SaveQuizzResponse saveQuizzResponse);
+        default void onSaveQuizzResponse(SaveQuizzResponse saveQuizzResponse) {
+        }
 
         /**
          * Called on the client side when the server replies to a launch-quizz request.
          */
-        void onLaunchQuizzResponse(LaunchQuizzResponse launchQuizzResponse);
+        default void onLaunchQuizzResponse(LaunchQuizzResponse launchQuizzResponse) {
+        }
 
         /**
          * Called on the client side when the server replies to a join-session request.
          */
-        void onJoinSessionResponse(JoinSessionResponse joinSessionResponse);
+        default void onJoinSessionResponse(JoinSessionResponse joinSessionResponse) {
+        }
 
         /**
          * Called on the client side when the participant count of the session changes.
          */
-        void onParticipantCountUpdate(ParticipantCountUpdate participantCountUpdate);
+        default void onParticipantCountUpdate(ParticipantCountUpdate participantCountUpdate) {
+        }
 
         /**
          * Called when a network error breaks the connection. No-op by default.

@@ -5,6 +5,7 @@ import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
+import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.Teacher;
@@ -24,6 +25,7 @@ import be.helha.clapetteChaussette.client.view.LoginViewFX.ILoginListener;
 
 import javafx.application.Platform;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,29 +52,27 @@ public class LoginController
         this.networkController = networkController;
     }
 
-    public void onLoginRequested(String name, String password) {
+    public void onLoginRequested(String name, String password) throws IOException {
         Teacher teacher = new Teacher(UUID.randomUUID(), name);
         send(new LoginRequest(teacher, password));
     }
 
-    public void onRegisterRequested(String name, String password) {
+    public void onRegisterRequested(String name, String password) throws IOException {
         Teacher teacher = new Teacher(UUID.randomUUID(), name);
         send(new RegisterRequest(teacher, password));
     }
 
-    private void send(Object event) {
+    private void send(Object event) throws IOException {
         if (!networkController.isConnected()) {
-            networkController.connect();
+            networkController.connect(this);
         }
         networkController.send(event);
     }
 
     @Override
-    public void onLogin(ClientThreadHandler handler, LoginRequest request) {
-    }
+    public void onJoinSessionResponse(JoinSessionResponse joinSessionResponse) {
+        // TODO Auto-generated method stub
 
-    @Override
-    public void onRegister(ClientThreadHandler handler, RegisterRequest request) {
     }
 
     @Override

@@ -1,7 +1,6 @@
 package be.helha.clapetteChaussette.client.network;
 
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
-import be.helha.clapetteChaussette.server.network.ClientThreadHandler;
 
 import java.io.IOException;
 
@@ -15,7 +14,7 @@ public class NetworkController {
     private final int port;
 
     private ObjectSocket objectSocket;
-    private Thread networkThread;
+    private Thread listenerThread;
     private boolean isConnected = false;
 
     /**
@@ -44,10 +43,10 @@ public class NetworkController {
             this.objectSocket = new ObjectSocket(host, port);
             this.isConnected = true;
 
-            ClientThreadHandler threadHandler = new ClientThreadHandler(this.objectSocket, listener);
+            ClientThreadHandler handler = new ClientThreadHandler(objectSocket, listener);
+            this.listenerThread = new Thread(handler);
+            this.listenerThread.start();
 
-            this.networkThread = new Thread(threadHandler, "clapetteChaussette-Client-Network");
-            this.networkThread.start();
         } catch (IOException e) {
             this.isConnected = false;
             if (listener != null) {
@@ -65,9 +64,13 @@ public class NetworkController {
      */
     public synchronized void send(Object object) throws IOException {
         if (!isConnected || objectSocket == null) {
-            throw new IOException("Client not connected");
+            throw new IOException("Le client n'est pas connecté au serveur.");
         }
-        this.objectSocket.send(object);
+        try {
+            this.objectSocket.send(object);
+        } catch (IOException e) {
+            throw new IOException("Echec d'envoi de l'objet au serveur: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -75,18 +78,22 @@ public class NetworkController {
      * listening Thread.
      * If the client is not connected, this method does nothing.
      */
-    public synchronized void disconnect() throws IOException {
+    public synchronized void disconnect() {
         if (!isConnected) {
             return;
         }
         this.isConnected = false;
 
         if (objectSocket != null) {
-            objectSocket.close();
+            try {
+                objectSocket.close();
+            } catch (IOException e) {
+                listener.onError(e);
+            }
         }
 
-        if (networkThread != null && networkThread.isAlive()) {
-            networkThread.interrupt();
+        if (listenerThread != null && listenerThread.isAlive()) {
+            listenerThread.interrupt();
         }
     }
 

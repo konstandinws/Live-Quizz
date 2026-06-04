@@ -44,7 +44,7 @@ public class Server implements ClientThreadHandler.Listener {
 
     private static final int SERVER_PORT = 3001;
 
-    private final List<ClientThreadHandler> clientHandlerThreads = new ArrayList<>();
+    private final List<Thread> listenerThreads = new ArrayList<>();
 
     private final TeacherService teacherService = new TeacherService(new JdbcTeacherRepository());
 
@@ -83,9 +83,10 @@ public class Server implements ClientThreadHandler.Listener {
                 System.out.println("New connection from " + socket.getInetAddress());
                 ObjectSocket objectSocket = new ObjectSocket(socket);
 
-                ClientThreadHandler thread = new ClientThreadHandler(objectSocket, this);
-                this.clientHandlerThreads.add(thread);
-                thread.start();
+                ClientThreadHandler handler = new ClientThreadHandler(objectSocket, this);
+                Thread listenerThread = new Thread(handler);
+                this.listenerThreads.add(listenerThread);
+                listenerThread.start();
             }
         } catch (IOException e) {
             System.err.println("Server network error: " + e.getMessage());

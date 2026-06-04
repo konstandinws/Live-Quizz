@@ -24,8 +24,8 @@ public class TeacherQuizzChoicesController extends BaseController implements ITe
     private final NetworkController networkController;
 
     public TeacherQuizzChoicesController(NavigationService nav, TeacherDTO teacher,
-                                         EditorService editorService, ValidateQuestionEditorService validateService,
-                                         NetworkController networkController) {
+            EditorService editorService, ValidateQuestionEditorService validateService,
+            NetworkController networkController) {
         super(nav);
         this.teacher = teacher;
         this.editorService = editorService;
@@ -36,7 +36,8 @@ public class TeacherQuizzChoicesController extends BaseController implements ITe
     @Override
     public void onNewQuizzRequested() {
         Quizz quizz = new Quizz("Nouveau Quiz");
-        EditorController editorCtrl = new EditorController(quizz, teacher, editorService, navigationService, validateService);
+        EditorController editorCtrl = new EditorController(quizz, teacher, editorService, navigationService,
+                validateService);
         QuizzEditorFX editorView = new QuizzEditorFX();
         navigateToView(editorView, "Éditeur de Quiz", editorCtrl);
         editorView.displayQuestions(quizz.getQuestions());
@@ -44,10 +45,6 @@ public class TeacherQuizzChoicesController extends BaseController implements ITe
 
     @Override
     public void onLaunchQuizzRequested(QuizzDTO quizz) {
-        try {
-            networkController.send(new LaunchQuizzRequest(quizz));
-        } catch (IOException e) {
-            ErrorPopup.show("Impossible de joindre le serveur.");
-        }
+        networkController.send(new LaunchQuizzRequest(quizz));
     }
 }

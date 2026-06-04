@@ -12,14 +12,13 @@ import be.helha.clapetteChaussette.common.models.events.LeaveSessionRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
-import be.helha.clapetteChaussette.server.network.ClientThreadHandler;
 
 import javafx.application.Platform;
 
 import java.io.IOException;
 
 public class StudentInvitationController extends BaseController
-        implements IStudentInvitationListener, ClientThreadHandler.Listener {
+        implements IStudentInvitationListener {
 
     private final NetworkController networkController;
 
@@ -34,7 +33,7 @@ public class StudentInvitationController extends BaseController
     @Override
     public void onJoinRequested(String code, String pseudo) throws IOException {
         if (!networkController.isConnected()) {
-            networkController.connect(this);
+            networkController.connect();
         }
         networkController.send(new JoinSessionRequest(code, pseudo));
 
@@ -57,11 +56,7 @@ public class StudentInvitationController extends BaseController
 
     // Leaves the session on the server, then navigates back.
     private void leaveSession() {
-        try {
-            networkController.send(new LeaveSessionRequest());
-        } catch (IOException e) {
-            ErrorPopup.show(e.getMessage());
-        }
+        networkController.send(new LeaveSessionRequest());
         waitingView = null;
         navigationService.goBack();
     }

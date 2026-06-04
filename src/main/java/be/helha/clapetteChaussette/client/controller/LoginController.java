@@ -10,13 +10,13 @@ import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
+import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.controller.teacher.TeacherQuizzChoicesController;
 import be.helha.clapetteChaussette.client.controller.teacher.TeacherWaitingController;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX;
-import be.helha.clapetteChaussette.server.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.service.editor.EditorService;
 import be.helha.clapetteChaussette.client.service.editor.ValidateQuestionEditorService;
@@ -24,7 +24,6 @@ import be.helha.clapetteChaussette.client.view.LoginViewFX.ILoginListener;
 
 import javafx.application.Platform;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,13 +62,9 @@ public class LoginController
 
     private void send(Object event) {
         if (!networkController.isConnected()) {
-            networkController.connect(this);
+            networkController.connect();
         }
-        try {
-            networkController.send(event);
-        } catch (IOException e) {
-            ErrorPopup.show("Impossible de joindre le serveur.");
-        }
+        networkController.send(event);
     }
 
     @Override

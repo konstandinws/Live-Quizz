@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ObjectSocket {
-    private static final Logger LOGGER = Logger.getLogger(ObjectSocket.class.getName());
     /**
      * Output stream for sending objects
      */
@@ -35,9 +32,7 @@ public class ObjectSocket {
      * @throws IOException
      */
     public ObjectSocket(String host, int port) throws IOException {
-        this.socket = new Socket(host, port);
-        this.out = new ObjectOutputStream(socket.getOutputStream());
-        this.in = new ObjectInputStream(socket.getInputStream());
+        this(new Socket(host, port));
     }
 
     /**

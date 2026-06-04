@@ -74,9 +74,16 @@ public class ClientThreadHandler extends Thread {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
+            // error during reading from the socket (e.g., client disconnected, network
+            // error, invalid data)
             listener.onError(e);
         } finally {
-            objectSocket.close();
+            try {
+                objectSocket.close();
+            } catch (IOException e) {
+                // error while closing the socket
+                listener.onError(e);
+            }
             listener.onDisconnect(this);
         }
     }

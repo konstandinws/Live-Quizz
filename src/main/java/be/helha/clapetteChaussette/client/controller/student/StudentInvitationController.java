@@ -32,15 +32,12 @@ public class StudentInvitationController extends BaseController
     }
 
     @Override
-    public void onJoinRequested(String code) {
+    public void onJoinRequested(String code, String pseudo) throws IOException {
         if (!networkController.isConnected()) {
             networkController.connect(this);
         }
-        try {
-            networkController.send(new JoinSessionRequest(code));
-        } catch (IOException e) {
-            ErrorPopup.show("Impossible de joindre le serveur.");
-        }
+        networkController.send(new JoinSessionRequest(code, pseudo));
+
     }
 
     @Override
@@ -63,7 +60,7 @@ public class StudentInvitationController extends BaseController
         try {
             networkController.send(new LeaveSessionRequest());
         } catch (IOException e) {
-            ErrorPopup.show("Impossible de joindre le serveur.");
+            ErrorPopup.show(e.getMessage());
         }
         waitingView = null;
         navigationService.goBack();
@@ -80,7 +77,7 @@ public class StudentInvitationController extends BaseController
 
     @Override
     public void onError(Exception e) {
-        ErrorPopup.show("Impossible de joindre le serveur.");
+        ErrorPopup.show(e.getMessage());
     }
 
     // Server-side only: nothing to do on the student client.

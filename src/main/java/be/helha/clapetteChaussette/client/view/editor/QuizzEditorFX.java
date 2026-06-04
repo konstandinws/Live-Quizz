@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class QuizzEditorFX extends ViewFX<IQuizzListener> {
+    @FXML
+    private Button returnBTN;
 
     @FXML
     private Button mcqButton;
@@ -95,5 +97,11 @@ public class QuizzEditorFX extends ViewFX<IQuizzListener> {
         void onAddQuestionFreeRequested();
 
         void onSaveRequested();
+    }
+
+    @FXML
+    private void initialize() {
+        // Hint: initialize() will be called when the associated FXML has been
+        // completely loaded.
     }
 }

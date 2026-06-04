@@ -42,18 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Server implements ClientThreadHandler.Listener {
 
-    /**
-     * The listening port on which the server waits for connections.
-     */
-    private final int port;
-
-    /**
-     * Initializes a new instance of the server.
-     * @param port The port number (e.g., 8080) on which the server should listen.
-     */
-    public Server(int port){
-        this.port = port;
-    }
+    private static final int SERVER_PORT = 3001;
 
     private final List<ClientThreadHandler> clientHandlerThreads = new ArrayList<>();
 
@@ -67,8 +56,8 @@ public class Server implements ClientThreadHandler.Listener {
     private final Map<String, Session> sessions = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
-            Server server = new Server(3001);
-            server.startServer();
+        Server server = new Server();
+        server.startServer();
     }
 
     /**
@@ -77,16 +66,18 @@ public class Server implements ClientThreadHandler.Listener {
      * The {@link ServerSocket#accept()} method is used to block execution
      * until a client connects.
      * </p>
-     * @throws IOException if a network communication error occurs during the socket creation
-     * or while accepting a connection.
+     * 
+     * @throws IOException if a network communication error occurs during the socket
+     *                     creation
+     *                     or while accepting a connection.
      */
-    public void startServer(){
+    public void startServer() {
         System.out.println("Starting server...");
         // Use try-with-resources to ensure the ServerSocket is closed automatically
-        try(ServerSocket serverSocket = new ServerSocket(port)){
-            System.out.println("Server started on port " + port);
+        try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
+            System.out.println("Server started on port " + SERVER_PORT + ". Waiting for connections...");
 
-            while(true) {
+            while (true) {
                 // Wait for a student to connect (blocking method)
                 Socket socket = serverSocket.accept();
                 System.out.println("New connection from " + socket.getInetAddress());
@@ -161,7 +152,8 @@ public class Server implements ClientThreadHandler.Listener {
             reply(clientThreadHandler, new SaveQuizzResponse(true, "OK", quizzes));
         } catch (DatabaseException e) {
             System.err.println("Échec de l'enregistrement du questionnaire : " + e.getMessage());
-            reply(clientThreadHandler, new SaveQuizzResponse(false, "Impossible d'enregistrer le questionnaire", List.of()));
+            reply(clientThreadHandler,
+                    new SaveQuizzResponse(false, "Impossible d'enregistrer le questionnaire", List.of()));
         }
     }
 
@@ -180,7 +172,8 @@ public class Server implements ClientThreadHandler.Listener {
     public void onLaunchQuizz(ClientThreadHandler clientThreadHandler, LaunchQuizzRequest request) {
         QuizzDTO quizz = request.getQuizz();
 
-        // Generate a unique code and create the session tied to the teacher's connection.
+        // Generate a unique code and create the session tied to the teacher's
+        // connection.
         String code = generateUniqueCode();
         Session session = new Session(code, quizz, clientThreadHandler);
         sessions.put(code, session);
@@ -241,7 +234,8 @@ public class Server implements ClientThreadHandler.Listener {
     }
 
     /**
-     * Notifies the teacher (host) and every student of the session's participant count.
+     * Notifies the teacher (host) and every student of the session's participant
+     * count.
      */
     private void broadcastParticipantCount(Session session) {
         ParticipantCountUpdate update = new ParticipantCountUpdate(session.getNumberParticipants());
@@ -266,7 +260,8 @@ public class Server implements ClientThreadHandler.Listener {
 
     @Override
     public void onDisconnect(ClientThreadHandler clientThreadHandler) {
-        // A student dropping out decrements the count; a teacher dropping ends the session.
+        // A student dropping out decrements the count; a teacher dropping ends the
+        // session.
         removeFromSession(clientThreadHandler);
         sessions.values().removeIf(session -> session.getHost() == clientThreadHandler);
     }

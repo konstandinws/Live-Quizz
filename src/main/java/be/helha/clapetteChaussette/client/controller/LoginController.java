@@ -17,7 +17,6 @@ import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX;
 import be.helha.clapetteChaussette.server.network.ClientThreadHandler;
-import be.helha.clapetteChaussette.server.repository.ITeacherRepository;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.service.editor.EditorService;
 import be.helha.clapetteChaussette.client.service.editor.ValidateQuestionEditorService;
@@ -33,7 +32,6 @@ public class LoginController
         extends BaseController
         implements ILoginListener, ClientThreadHandler.Listener {
 
-    private ITeacherRepository teacherRepository;
     private EditorService editorService;
     private ValidateQuestionEditorService validateService;
 
@@ -45,10 +43,9 @@ public class LoginController
     // Teacher's waiting screen, updated as students join.
     private TeacherWaitingViewFX teacherWaitingView;
 
-    public LoginController(NavigationService nav, ITeacherRepository db, EditorService ed,
+    public LoginController(NavigationService nav, EditorService ed,
             ValidateQuestionEditorService val, NetworkController networkController) {
         super(nav);
-        this.teacherRepository = db;
         this.editorService = ed;
         this.validateService = val;
         this.networkController = networkController;
@@ -148,14 +145,15 @@ public class LoginController
      * Shows (or re-shows) the "Mes questionnaires" screen with the given list.
      * Reused after login and after a successful save.
      *
-     * @param replace {@code true} to replace the current screen (the editor) without
+     * @param replace {@code true} to replace the current screen (the editor)
+     *                without
      *                pushing it onto the history; {@code false} to push normally
      *                (login case).
      */
     private void showTeacherQuizzChoices(TeacherDTO teacher, List<QuizzDTO> quizzes, boolean replace) {
-        TeacherQuizzChoicesController controller =
-                new TeacherQuizzChoicesController(navigationService, teacher, editorService, validateService,
-                        networkController);
+        TeacherQuizzChoicesController controller = new TeacherQuizzChoicesController(navigationService, teacher,
+                editorService, validateService,
+                networkController);
         TeacherQuizzChoicesViewFX view = new TeacherQuizzChoicesViewFX(teacher.name());
 
         if (replace) {

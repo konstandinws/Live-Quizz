@@ -6,12 +6,18 @@ package be.helha.clapetteChaussette.common.models.events;
 public class JoinSessionRequest extends NetworkEvent {
 
     private final String code;
+    private final String pseudo;
 
-    public JoinSessionRequest(String code) {
+    public JoinSessionRequest(String code, String pseudo) {
         this.code = code;
+        this.pseudo = pseudo;
     }
 
     public String getCode() {
         return code;
+    }
+
+    public String getPseudo() {
+        return pseudo;
     }
 }

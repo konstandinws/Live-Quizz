@@ -17,6 +17,11 @@ import javafx.scene.layout.VBox;
 import java.util.List;
 
 public class TeacherQuizzChoicesViewFX extends ViewFX<TeacherQuizzChoicesController> {
+    @FXML
+    private Button newQuizzBTN;
+
+    @FXML
+    private Button returnBTN;
 
     private final String teacherName;
 

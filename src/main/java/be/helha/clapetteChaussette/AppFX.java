@@ -3,8 +3,6 @@ package be.helha.clapetteChaussette;
 
 import be.helha.clapetteChaussette.client.controller.HomeController;
 import be.helha.clapetteChaussette.client.network.NetworkController;
-import be.helha.clapetteChaussette.server.repository.ITeacherRepository;
-import be.helha.clapetteChaussette.server.repository.db.JdbcTeacherRepository;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.service.editor.EditorService;
 import be.helha.clapetteChaussette.client.service.editor.ValidateQuestionEditorService;
@@ -25,11 +23,9 @@ public class AppFX extends Application {
         // Network connection shared across the whole application (login + save).
         NetworkController networkController = new NetworkController(SERVER_HOST, SERVER_PORT);
 
-        ITeacherRepository teacherRepo = new JdbcTeacherRepository();
-
         EditorService editorService = new EditorService(networkController, validateService);
 
-        HomeController homeController = new HomeController(navigationService, teacherRepo, editorService,
+        HomeController homeController = new HomeController(navigationService, editorService,
                 validateService, networkController);
         homeController.navigateToView(new HomeViewFX(), "Clapette Chaussette", homeController);
     }

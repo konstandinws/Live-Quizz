@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import be.helha.clapetteChaussette.common.models.events.NetworkEvent;
+
 public class ObjectSocket {
     /**
      * Output stream for sending objects
@@ -49,8 +51,8 @@ public class ObjectSocket {
         this.in = new ObjectInputStream(socket.getInputStream());
     }
 
-    public <T> T read() throws IOException, ClassNotFoundException {
-        return (T) in.readObject();
+    public NetworkEvent read() throws IOException, ClassNotFoundException {
+        return (NetworkEvent) in.readObject();
     }
 
     public void send(Object object) throws IOException {

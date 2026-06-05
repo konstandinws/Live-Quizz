@@ -4,6 +4,7 @@ import be.helha.clapetteChaussette.client.controller.BaseController;
 import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
+import be.helha.clapetteChaussette.client.service.auth.CodeValidatorService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.student.StudentInvitationViewFX.IStudentInvitationListener;
 import be.helha.clapetteChaussette.client.view.student.StudentWaitingViewFX;
@@ -22,19 +23,24 @@ public class StudentInvitationController extends BaseController
 
     // Waiting screen shown once the session is joined, updated as students arrive.
     private StudentWaitingViewFX waitingView;
+    private CodeValidatorService codeValidatorService;
 
     public StudentInvitationController(NavigationService nav, NetworkController networkController) {
         super(nav);
         this.networkController = networkController;
+        this.codeValidatorService = new CodeValidatorService(); // not dependency injected bc it's the only one to use
+                                                                // it
     }
 
     @Override
-    public void onJoinRequested(String code, String pseudo) throws IOException {
+    public void onJoinRequested(String code, String pseudo) throws IOException, IllegalArgumentException {
         if (!networkController.isConnected()) {
             networkController.connect(this);
         }
+        if (!codeValidatorService.validateSessionCodeAndPseudo(code, pseudo)) {
+            throw new IllegalArgumentException("Code de session ou pseudo invalide.");
+        }
         networkController.send(new JoinSessionRequest(code, pseudo));
-
     }
 
     @Override

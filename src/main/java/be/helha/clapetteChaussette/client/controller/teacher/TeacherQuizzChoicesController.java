@@ -1,5 +1,7 @@
 package be.helha.clapetteChaussette.client.controller.teacher;
 
+import java.io.IOException;
+
 import be.helha.clapetteChaussette.client.controller.BaseController;
 import be.helha.clapetteChaussette.client.controller.editor.EditorController;
 import be.helha.clapetteChaussette.common.models.Quizz;
@@ -10,11 +12,8 @@ import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.service.editor.EditorService;
 import be.helha.clapetteChaussette.client.service.editor.ValidateQuestionEditorService;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.editor.QuizzEditorFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX.ITeacherQuizzChoicesListener;
-
-import java.io.IOException;
 
 public class TeacherQuizzChoicesController extends BaseController implements ITeacherQuizzChoicesListener {
 
@@ -44,7 +43,7 @@ public class TeacherQuizzChoicesController extends BaseController implements ITe
     }
 
     @Override
-    public void onLaunchQuizzRequested(QuizzDTO quizz) {
+    public void onLaunchQuizzRequested(QuizzDTO quizz) throws IOException {
         networkController.send(new LaunchQuizzRequest(quizz));
     }
 }

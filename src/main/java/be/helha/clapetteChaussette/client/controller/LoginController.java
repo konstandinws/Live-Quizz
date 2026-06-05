@@ -8,6 +8,7 @@ import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
+import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
@@ -70,12 +71,6 @@ public class LoginController
     }
 
     @Override
-    public void onJoinSessionResponse(JoinSessionResponse joinSessionResponse) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void onLoginResponse(LoginResponse response) {
         if (response.isSuccess()) {
             // Response arrives on the network thread: hop back onto the JavaFX thread.
@@ -124,6 +119,15 @@ public class LoginController
         Platform.runLater(() -> {
             if (teacherWaitingView != null) {
                 teacherWaitingView.setParticipantCount(update.getParticipantCount());
+            }
+        });
+    }
+
+    @Override
+    public void onParticipantNameUpdate(ParticipantNameUpdate update) {
+        Platform.runLater(() -> {
+            if (teacherWaitingView != null) {
+                teacherWaitingView.setParticipantNames(update.getParticipantNames());
             }
         });
     }

@@ -8,6 +8,7 @@ import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
+import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
@@ -213,14 +214,14 @@ public class Server implements ClientThreadHandler.Listener {
             return;
         }
 
-        session.addClient(clientThreadHandler);
+        session.addClient(clientThreadHandler, request.getPseudo());
         int count = session.getNumberParticipants();
         System.out.println("Élève rejoint la session " + request.getCode() + " (" + count + " participant(s))");
 
         reply(clientThreadHandler, new JoinSessionResponse(true, count, "OK"));
 
         // Notify the teacher and the students already in the session.
-        broadcastParticipantCount(session);
+        broadcastParticipantUpdate(session);
     }
 
     /**
@@ -238,11 +239,17 @@ public class Server implements ClientThreadHandler.Listener {
      * Notifies the teacher (host) and every student of the session's participant
      * count.
      */
-    private void broadcastParticipantCount(Session session) {
-        ParticipantCountUpdate update = new ParticipantCountUpdate(session.getNumberParticipants());
-        send(session.getHost(), update);
+    private void broadcastParticipantUpdate(Session session) {
+        ParticipantCountUpdate updateNumber = new ParticipantCountUpdate(session.getNumberParticipants());
+        ParticipantNameUpdate updateNames = new ParticipantNameUpdate(session.getParticipantPseudos());
+        System.out.println("Notification de mise à jour du nombre de participants ("
+                + updateNumber.getParticipantCount()
+                + ") et des pseudos (" + String.join(", ", updateNames.getParticipantNames()) + ") à la session "
+                + session.getCode());
+        send(session.getHost(), updateNumber);
+        send(session.getHost(), updateNames);
         for (ClientThreadHandler client : session.getClients()) {
-            send(client, update);
+            send(client, updateNumber);
         }
     }
 
@@ -272,9 +279,9 @@ public class Server implements ClientThreadHandler.Listener {
      */
     private void removeFromSession(ClientThreadHandler clientThreadHandler) {
         for (Session session : sessions.values()) {
-            if (session.getClients().remove(clientThreadHandler)) {
-                broadcastParticipantCount(session);
-                break;
+            if (session.getClients().contains(clientThreadHandler)) {
+                session.removeClient(clientThreadHandler);
+                broadcastParticipantUpdate(session);
             }
         }
     }

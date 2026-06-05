@@ -3,6 +3,7 @@ package be.helha.clapetteChaussette.client.view.teacher;
 import be.helha.clapetteChaussette.client.controller.teacher.TeacherQuizzChoicesController;
 import be.helha.clapetteChaussette.client.view.IListener;
 import be.helha.clapetteChaussette.client.view.ViewFX;
+import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -14,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.util.List;
 
 public class TeacherQuizzChoicesViewFX extends ViewFX<TeacherQuizzChoicesController> {
@@ -77,7 +79,13 @@ public class TeacherQuizzChoicesViewFX extends ViewFX<TeacherQuizzChoicesControl
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         Button launchBtn = new Button("Lancer");
-        launchBtn.setOnAction(e -> listener.onLaunchQuizzRequested(quizz));
+        launchBtn.setOnAction(e -> {
+            try {
+                listener.onLaunchQuizzRequested(quizz);
+            } catch (IOException ex) {
+                ErrorPopup.show("Erreur lors de la tentative de lancement du quiz : " + ex.getMessage());
+            }
+        });
 
         HBox row = new HBox(10, nameLabel, spacer, launchBtn);
         row.setAlignment(Pos.CENTER_LEFT);
@@ -95,6 +103,6 @@ public class TeacherQuizzChoicesViewFX extends ViewFX<TeacherQuizzChoicesControl
     public interface ITeacherQuizzChoicesListener extends IListener {
         void onNewQuizzRequested();
 
-        void onLaunchQuizzRequested(QuizzDTO quizz);
+        void onLaunchQuizzRequested(QuizzDTO quizz) throws IOException;
     }
 }

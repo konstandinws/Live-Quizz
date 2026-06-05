@@ -5,7 +5,6 @@ import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
-import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;

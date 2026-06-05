@@ -40,5 +40,6 @@
             <VBox fx:id="nameVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="260.0" prefWidth="235.0" />
          </content>
       </ScrollPane>
+      <Button fx:id="launchButton" layoutX="293.0" layoutY="330.0" mnemonicParsing="false" onAction="#onLaunch" prefHeight="42.0" prefWidth="163.0" text="Lancer" wrapText="true" />
    </children>
 </AnchorPane>

@@ -3,6 +3,7 @@ package be.helha.clapetteChaussette.client.network;
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
 
 import java.io.IOException;
+import java.net.Socket;
 
 /**
  * Manages the network connection on the client side for the application.
@@ -10,12 +11,11 @@ import java.io.IOException;
  */
 public class NetworkController {
 
-    private final String host;
-    private final int port;
-
+    private Socket socket;
     private ObjectSocket objectSocket;
     private Thread listenerThread;
     private boolean isConnected = false;
+    private ClientThreadHandler handler;
 
     /**
      * Creates a new client with the specified server address and port.
@@ -23,9 +23,9 @@ public class NetworkController {
      * @param host The IP address or domain name of the server.
      * @param port The port number the server is listening on.
      */
-    public NetworkController(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public NetworkController(String host, int port) throws IOException {
+        this.socket = new Socket(host, port);
+        this.objectSocket = new ObjectSocket(socket);
     }
 
     /**
@@ -39,20 +39,18 @@ public class NetworkController {
         if (isConnected) {
             return;
         }
-        try {
-            this.objectSocket = new ObjectSocket(host, port);
-            this.isConnected = true;
 
-            ClientThreadHandler handler = new ClientThreadHandler(objectSocket, listener);
-            this.listenerThread = new Thread(handler);
-            this.listenerThread.start();
+        this.isConnected = true;
+        this.handler = new ClientThreadHandler(objectSocket, listener);
+        this.listenerThread = new Thread(handler);
+        this.listenerThread.start();
+    }
 
-        } catch (IOException e) {
-            this.isConnected = false;
-            if (listener != null) {
-                listener.onError(e);
-            }
+    public void addListener(ClientThreadHandler.Listener listener) throws IOException {
+        if (!isConnected) {
+            throw new IllegalStateException("Le client n'est pas connecté au serveur.");
         }
+        this.handler.addListener(listener);
     }
 
     /**

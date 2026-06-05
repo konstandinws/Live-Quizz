@@ -1,20 +1,14 @@
-// be.helha.clapetteChaussette.controller.LoginController
 package be.helha.clapetteChaussette.client.controller;
 
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
-import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
-import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
-import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
-import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
 import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.controller.teacher.TeacherQuizzChoicesController;
-import be.helha.clapetteChaussette.client.controller.teacher.TeacherWaitingController;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX;
@@ -84,52 +78,25 @@ public class LoginController
         ErrorPopup.show("Impossible de joindre le serveur.");
     }
 
-    @Override
-    public void onSaveQuizzResponse(SaveQuizzResponse response) {
-        // Response received on the network thread: hop back onto the JavaFX thread.
-        Platform.runLater(() -> {
-            if (response.isSuccess()) {
-                // Replace the editor so "Retour" does not lead back to it.
-                showTeacherQuizzChoices(loggedInTeacher, response.getQuizzes(), true);
-            } else {
-                ErrorPopup.show(response.getMessage());
-            }
-        });
-    }
+    // need to be moved at the right place
+    // @Override
+    // public void onParticipantCountUpdate(ParticipantCountUpdate update) {
+    // Platform.runLater(() -> {
+    // if (teacherWaitingView != null) {
+    // teacherWaitingView.setParticipantCount(update.getParticipantCount());
+    // }
+    // });
+    // }
 
-    @Override
-    public void onLaunchQuizzResponse(LaunchQuizzResponse response) {
-        // Response received on the network thread: hop back onto the JavaFX thread.
-        Platform.runLater(() -> {
-            if (response.isSuccess()) {
-                TeacherWaitingController waitingCtrl = new TeacherWaitingController(navigationService);
-                teacherWaitingView = new TeacherWaitingViewFX();
-                navigateToView(teacherWaitingView, "En attente de lancement", waitingCtrl);
-                teacherWaitingView.setCode(response.getCode());
-                teacherWaitingView.setParticipantCount(response.getParticipantCount());
-            } else {
-                ErrorPopup.show(response.getMessage());
-            }
-        });
-    }
-
-    @Override
-    public void onParticipantCountUpdate(ParticipantCountUpdate update) {
-        Platform.runLater(() -> {
-            if (teacherWaitingView != null) {
-                teacherWaitingView.setParticipantCount(update.getParticipantCount());
-            }
-        });
-    }
-
-    @Override
-    public void onParticipantNameUpdate(ParticipantNameUpdate update) {
-        Platform.runLater(() -> {
-            if (teacherWaitingView != null) {
-                teacherWaitingView.setParticipantNames(update.getParticipantNames());
-            }
-        });
-    }
+    // need to be moved at the right place
+    // @Override
+    // public void onParticipantNameUpdate(ParticipantNameUpdate update) {
+    // Platform.runLater(() -> {
+    // if (teacherWaitingView != null) {
+    // teacherWaitingView.setParticipantNames(update.getParticipantNames());
+    // }
+    // });
+    // }
 
     private void openTeacherQuizzChoices(LoginResponse response) {
         Teacher teacher = response.getTeacher();
@@ -149,16 +116,15 @@ public class LoginController
      *                (login case).
      */
     private void showTeacherQuizzChoices(TeacherDTO teacher, List<QuizzDTO> quizzes, boolean replace) {
+        TeacherQuizzChoicesViewFX view = new TeacherQuizzChoicesViewFX(teacher.name(), quizzes);
         TeacherQuizzChoicesController controller = new TeacherQuizzChoicesController(navigationService, teacher,
                 editorService, validateService,
-                networkController);
-        TeacherQuizzChoicesViewFX view = new TeacherQuizzChoicesViewFX(teacher.name());
+                networkController, view);
 
         if (replace) {
             replaceView(view, "Mes questionnaires", controller);
         } else {
             navigateToView(view, "Mes questionnaires", controller);
         }
-        view.displayQuizzes(quizzes);
     }
 }

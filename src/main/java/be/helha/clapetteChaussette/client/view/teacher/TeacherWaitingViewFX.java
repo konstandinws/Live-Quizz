@@ -2,16 +2,18 @@ package be.helha.clapetteChaussette.client.view.teacher;
 
 import java.util.List;
 
-import be.helha.clapetteChaussette.client.controller.teacher.TeacherWaitingController;
 import be.helha.clapetteChaussette.client.view.IListener;
 import be.helha.clapetteChaussette.client.view.ViewFX;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
+import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX.ITeacherWaitingListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-public class TeacherWaitingViewFX extends ViewFX<TeacherWaitingController> {
+public class TeacherWaitingViewFX extends ViewFX<ITeacherWaitingListener> {
+    @FXML
+    private Button launchButton;
 
     @FXML
     private Button returnBTN;
@@ -44,6 +46,10 @@ public class TeacherWaitingViewFX extends ViewFX<TeacherWaitingController> {
         participantNumberLabel.setText(String.valueOf(count));
     }
 
+    public void onLaunch() {
+        listener.onStartQuizzRequested();
+    }
+
     @Override
     protected String getFXMLPath() {
         return "teacherWaitingForQuizz.fxml";
@@ -51,5 +57,9 @@ public class TeacherWaitingViewFX extends ViewFX<TeacherWaitingController> {
 
     public interface ITeacherWaitingListener extends IListener {
         void onStartQuizzRequested();
+    }
+
+    @FXML
+    private void initialize() {
     }
 }

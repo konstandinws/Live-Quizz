@@ -1,6 +1,8 @@
 package be.helha.clapetteChaussette.client.network;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,32 +19,19 @@ public class ClientThreadHandler implements Runnable {
 
     ObjectSocket objectSocket;
     private static final Logger LOGGER = Logger.getLogger(ClientThreadHandler.class.getName());
-    Listener listener;
+    private final List<Listener> listeners = new ArrayList<>();
 
     public ClientThreadHandler(ObjectSocket objectSocket, Listener listener) {
         this.objectSocket = objectSocket;
-        this.listener = listener;
+        this.listeners.add(listener);
     }
 
     public void run() {
         try {
             while (true) {
                 NetworkEvent event = objectSocket.read();
-                if (event instanceof LoginResponse) {
-                    listener.onLoginResponse((LoginResponse) event);
-                } else if (event instanceof SaveQuizzResponse) {
-                    listener.onSaveQuizzResponse((SaveQuizzResponse) event);
-                } else if (event instanceof LaunchQuizzResponse) {
-                    listener.onLaunchQuizzResponse((LaunchQuizzResponse) event);
-                } else if (event instanceof JoinSessionResponse) {
-                    listener.onJoinSessionResponse((JoinSessionResponse) event);
-                } else if (event instanceof ParticipantCountUpdate) {
-                    listener.onParticipantCountUpdate((ParticipantCountUpdate) event);
-                } else if (event instanceof ParticipantNameUpdate) {
-                    listener.onParticipantNameUpdate((ParticipantNameUpdate) event);
-                } else {
-                    LOGGER.log(Level.WARNING, "Unsupported network event received: {0}",
-                            event == null ? "null" : event.getClass().getName());
+                for (Listener listener : listeners) {
+                    dispatchEventToListener(event, listener);
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -54,6 +43,29 @@ public class ClientThreadHandler implements Runnable {
                 LOGGER.severe("Error closing client socket: " + e.getMessage());
             }
         }
+    }
+
+    private void dispatchEventToListener(NetworkEvent event, Listener listener) {
+        if (event instanceof LoginResponse) {
+            listener.onLoginResponse((LoginResponse) event);
+        } else if (event instanceof SaveQuizzResponse) {
+            listener.onSaveQuizzResponse((SaveQuizzResponse) event);
+        } else if (event instanceof LaunchQuizzResponse) {
+            listener.onLaunchQuizzResponse((LaunchQuizzResponse) event);
+        } else if (event instanceof JoinSessionResponse) {
+            listener.onJoinSessionResponse((JoinSessionResponse) event);
+        } else if (event instanceof ParticipantCountUpdate) {
+            listener.onParticipantCountUpdate((ParticipantCountUpdate) event);
+        } else if (event instanceof ParticipantNameUpdate) {
+            listener.onParticipantNameUpdate((ParticipantNameUpdate) event);
+        } else {
+            LOGGER.log(Level.WARNING, "Unsupported network event received: {0}",
+                    event == null ? "null" : event.getClass().getName());
+        }
+    }
+
+    public void addListener(Listener listener) {
+        this.listeners.add(listener);
     }
 
     public interface Listener {
@@ -96,9 +108,10 @@ public class ClientThreadHandler implements Runnable {
         }
 
         /**
-         * Called when a network error breaks the connection. No-op by default.
+         * Called when a network error breaks the connection.
          */
-        void onError(Exception e);
+        default void onError(Exception e) {
+        }
 
     }
 }

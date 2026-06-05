@@ -242,10 +242,6 @@ public class Server implements ClientThreadHandler.Listener {
     private void broadcastParticipantUpdate(Session session) {
         ParticipantCountUpdate updateNumber = new ParticipantCountUpdate(session.getNumberParticipants());
         ParticipantNameUpdate updateNames = new ParticipantNameUpdate(session.getParticipantPseudos());
-        System.out.println("Notification de mise à jour du nombre de participants ("
-                + updateNumber.getParticipantCount()
-                + ") et des pseudos (" + String.join(", ", updateNames.getParticipantNames()) + ") à la session "
-                + session.getCode());
         send(session.getHost(), updateNumber);
         send(session.getHost(), updateNames);
         for (ClientThreadHandler client : session.getClients()) {

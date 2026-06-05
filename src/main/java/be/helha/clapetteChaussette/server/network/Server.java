@@ -17,6 +17,7 @@ import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsException;
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
+import be.helha.clapetteChaussette.common.models.Quizz;
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.server.models.Session;
 import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
@@ -181,7 +182,7 @@ public class Server implements ClientThreadHandler.Listener {
         sessions.put(code, session);
         System.out.println("Session lancée : code " + code + " pour le questionnaire « " + quizz.name() + " »");
 
-        reply(clientThreadHandler, new LaunchQuizzResponse(true, code, session.getNumberParticipants(), "OK"));
+        reply(clientThreadHandler, new LaunchQuizzResponse(true, code, session.getNumberParticipants(), "OK", quizz));
     }
 
     /**

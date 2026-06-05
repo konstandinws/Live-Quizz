@@ -9,16 +9,22 @@ import be.helha.clapetteChaussette.common.models.Quizz;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzRequest;
+import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
+import javafx.application.Platform;
+import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.service.editor.EditorService;
 import be.helha.clapetteChaussette.client.service.editor.ValidateQuestionEditorService;
+import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.editor.QuizzEditorFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX;
+import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX.ITeacherQuizzChoicesListener;
 
 public class TeacherQuizzChoicesController extends BaseController
-        implements ITeacherQuizzChoicesListener {
+        implements ITeacherQuizzChoicesListener, ClientThreadHandler.Listener {
+
     private final TeacherDTO teacher;
     private final EditorService editorService;
     private final ValidateQuestionEditorService validateService;
@@ -59,21 +65,20 @@ public class TeacherQuizzChoicesController extends BaseController
         networkController.send(new LaunchQuizzRequest(quizz));
     }
 
-    // @Override
-    // public void onLaunchQuizzResponse(LaunchQuizzResponse response) {
-    // // Response received on the network thread: hop back onto the JavaFX thread.
-    // Platform.runLater(() -> {
-    // if (response.isSuccess()) {
-    // TeacherWaitingController waitingCtrl = new
-    // TeacherWaitingController(navigationService,
-    // response.getQuizz());
-    // teacherWaitingView = new TeacherWaitingViewFX();
-    // navigateToView(teacherWaitingView, "En attente de lancement", waitingCtrl);
-    // teacherWaitingView.setCode(response.getCode());
-    // teacherWaitingView.setParticipantCount(response.getParticipantCount());
-    // } else {
-    // ErrorPopup.show(response.getMessage());
-    // }
-    // });
-    // }
+    @Override
+    public void onLaunchQuizzResponse(LaunchQuizzResponse response) {
+        // Response received on the network thread: hop back onto the JavaFX thread.
+        Platform.runLater(() -> {
+            if (response.isSuccess()) {
+                TeacherWaitingController waitingCtrl = new TeacherWaitingController(navigationService,
+                        response.getQuizz());
+                TeacherWaitingViewFX teacherWaitingView = new TeacherWaitingViewFX();
+                navigateToView(teacherWaitingView, "En attente de lancement", waitingCtrl);
+                teacherWaitingView.setCode(response.getCode());
+                teacherWaitingView.setParticipantCount(response.getParticipantCount());
+            } else {
+                ErrorPopup.show(response.getMessage());
+            }
+        });
+    }
 }

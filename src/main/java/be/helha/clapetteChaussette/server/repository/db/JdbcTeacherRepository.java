@@ -22,7 +22,7 @@ import java.util.UUID;
 public class JdbcTeacherRepository implements ITeacherRepository {
 
     @Override
-    public void save(TeacherDTO teacher) {
+    public void save(TeacherDTO teacher) throws DatabaseException {
 
         String query = "INSERT INTO teacher (uuid, name, password_hash) values (?, ?, ?)";
 
@@ -42,7 +42,7 @@ public class JdbcTeacherRepository implements ITeacherRepository {
     }
 
     @Override
-    public Optional<TeacherDTO> findByName(String name) {
+    public Optional<TeacherDTO> findByName(String name) throws DatabaseException {
         String query = "SELECT uuid, name, password_hash FROM teacher WHERE name = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();

@@ -53,6 +53,12 @@ public class NetworkController {
         this.handler.addListener(listener);
     }
 
+    public void removeListener(ClientThreadHandler.Listener listener) {
+        if (this.handler != null) {
+            this.handler.removeListener(listener);
+        }
+    }
+
     /**
      * Sends an object to the server through the network stream.
      *

@@ -9,6 +9,7 @@ import be.helha.clapetteChaussette.client.view.ViewFX;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -30,6 +31,9 @@ public class QuizzEditorFX extends ViewFX<IQuizzListener> {
     @FXML
     private Button btnSauvegarder;
 
+    @FXML
+    private TextField titleTextField;
+
     // Modification ici : le nom doit correspondre au fx:id="VboxListe" du FXML
     @FXML
     private VBox questionListVbox;
@@ -38,22 +42,26 @@ public class QuizzEditorFX extends ViewFX<IQuizzListener> {
     // FXML
     @FXML
     void onQcmClick(ActionEvent event) {
-        listener.onAddMcqRequested();
+        listener.onAddMcqRequested(titleTextField.getText());
     }
 
     @FXML
     void onPollClick(ActionEvent event) {
-        listener.onAddPollRequested();
+        listener.onAddPollRequested(titleTextField.getText());
     }
 
     @FXML
     void onQuestionFreeClick(ActionEvent event) {
-        listener.onAddQuestionFreeRequested();
+        listener.onAddQuestionFreeRequested(titleTextField.getText());
     }
 
     @FXML
     void onSaveClick(ActionEvent event) {
-        listener.onSaveRequested();
+        listener.onSaveRequested(titleTextField.getText());
+    }
+
+    public void setTitle(String title) {
+        titleTextField.setText(title);
     }
 
     public void displayQuizzes(List<QuizzDTO> quizzes) {
@@ -90,13 +98,13 @@ public class QuizzEditorFX extends ViewFX<IQuizzListener> {
 
     public interface IQuizzListener extends IListener {
 
-        void onAddMcqRequested();
+        void onAddMcqRequested(String title);
 
-        void onAddPollRequested();
+        void onAddPollRequested(String title);
 
-        void onAddQuestionFreeRequested();
+        void onAddQuestionFreeRequested(String title);
 
-        void onSaveRequested();
+        void onSaveRequested(String title);
     }
 
     @FXML

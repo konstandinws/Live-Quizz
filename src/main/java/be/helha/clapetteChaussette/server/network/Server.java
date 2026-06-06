@@ -108,6 +108,9 @@ public class Server implements ClientThreadHandler.Listener {
         } catch (LoginFailedException e) {
             System.out.println("Échec de connexion pour " + name);
             reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Identifiants invalides"));
+        } catch (DatabaseException e) {
+            System.err.println("Erreur base de données lors de la connexion : " + e.getMessage());
+            reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Erreur serveur, réessayez plus tard"));
         }
     }
 
@@ -139,6 +142,9 @@ public class Server implements ClientThreadHandler.Listener {
         } catch (IllegalArgumentException e) {
             System.out.println("Données d'inscription invalides : " + e.getMessage());
             reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Données d'inscription invalides"));
+        } catch (DatabaseException e) {
+            System.err.println("Erreur base de données lors de l'inscription : " + e.getMessage());
+            reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Erreur serveur, réessayez plus tard"));
         }
     }
 

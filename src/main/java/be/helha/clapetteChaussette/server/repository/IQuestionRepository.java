@@ -19,7 +19,7 @@ public interface IQuestionRepository {
      *                 details and answers.
      * @throws DatabaseException if a database access error occurs during insertion.
      */
-    void save(QuestionDTO question);
+    void save(QuestionDTO question) throws DatabaseException;
 
     /**
      * Saves multiple questions and their associated answers into the database.
@@ -28,7 +28,7 @@ public interface IQuestionRepository {
      *                  questions.
      * @throws DatabaseException if a database access error occurs during insertion.
      */
-    void saveQuestions(Iterable<QuestionDTO> questions);
+    void saveQuestions(Iterable<QuestionDTO> questions) throws DatabaseException;
 
     /**
      * Retrieves a question and all its associated possible answers from the
@@ -39,5 +39,5 @@ public interface IQuestionRepository {
      *         or an empty {@link Optional} if no question matches the UUID.
      * @throws DatabaseException if a database access error occurs during retrieval.
      */
-    Optional<QuestionDTO> findByUuid(UUID questionUuid);
+    Optional<QuestionDTO> findByUuid(UUID questionUuid) throws DatabaseException;
 }

@@ -22,7 +22,7 @@ import java.util.UUID;
 public class JdbcQuizzRepository implements IQuizzRepository {
 
     @Override
-    public void save(QuizzDTO quizz) {
+    public void save(QuizzDTO quizz) throws DatabaseException {
 
         String query = "INSERT INTO questionnaire(quuid, teacher_uuid, name) values (?, ?, ?)";
 
@@ -41,7 +41,7 @@ public class JdbcQuizzRepository implements IQuizzRepository {
     }
 
     @Override
-    public List<QuizzDTO> findAll(UUID teacherUuid) {
+    public List<QuizzDTO> findAll(UUID teacherUuid) throws DatabaseException {
         String query = "Select quuid, name FROM questionnaire WHERE teacher_uuid = ?";
         List<QuizzDTO> quizzes = new ArrayList<>();
 

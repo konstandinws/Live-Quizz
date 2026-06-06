@@ -1,8 +1,8 @@
 package be.helha.clapetteChaussette.client.network;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +19,9 @@ public class ClientThreadHandler implements Runnable {
 
     ObjectSocket objectSocket;
     private static final Logger LOGGER = Logger.getLogger(ClientThreadHandler.class.getName());
-    private final List<Listener> listeners = new ArrayList<>();
+    // CopyOnWriteArrayList: listeners are added/removed from the JavaFX thread
+    // while the network thread iterates them on each incoming event.
+    private final List<Listener> listeners = new CopyOnWriteArrayList<>();
 
     public ClientThreadHandler(ObjectSocket objectSocket, Listener listener) {
         this.objectSocket = objectSocket;
@@ -66,6 +68,10 @@ public class ClientThreadHandler implements Runnable {
 
     public void addListener(Listener listener) {
         this.listeners.add(listener);
+    }
+
+    public void removeListener(Listener listener) {
+        this.listeners.remove(listener);
     }
 
     public interface Listener {

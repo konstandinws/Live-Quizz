@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-//TODO add a way to find all questions of a quizz from the quizz uuid
-
 /**
  * JDBC implementation of the {@link IQuestionRepository}.
  * <p>
@@ -43,7 +41,6 @@ public class JdbcQuestionRepository implements IQuestionRepository {
 
         } catch (SQLException e) {
             throw new DatabaseException("Error while saving the question in the Database", e);
-
         }
     }
 
@@ -70,7 +67,7 @@ public class JdbcQuestionRepository implements IQuestionRepository {
     }
 
     @Override
-    public Optional<QuestionDTO> findByUuid(UUID questionUuid) {
+    public Optional<QuestionDTO> findByUuid(UUID questionUuid) throws DatabaseException {
 
         String query = "SELECT quuid, questionnaire_uuid, content, type FROM question WHERE quuid = ?";
 

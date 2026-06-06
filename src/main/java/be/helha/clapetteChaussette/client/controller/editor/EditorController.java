@@ -7,7 +7,6 @@ import be.helha.clapetteChaussette.client.controller.BaseController;
 import be.helha.clapetteChaussette.client.controller.teacher.TeacherQuizzChoicesController;
 import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.common.exception.editor.InvalidQuestionException;
 import be.helha.clapetteChaussette.common.models.Quizz;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
@@ -38,6 +37,9 @@ public class EditorController
     Quizz quizz;
     TeacherDTO teacher;
 
+    /** La vue d'édition courante, à qui on délègue l'affichage des erreurs. */
+    private QuizzEditorFX editorView;
+
     // endregion
 
     // #region Constructor
@@ -50,7 +52,7 @@ public class EditorController
      *                                      business logic.
      * @param navigationService             Service for handling navigation between
      *                                      views.
-     * @param validateQuestionEditorService Service for validating question data
+     * @param validateService Service for validating question data
      *                                      before saving.
      */
     public EditorController(Quizz quizz,
@@ -66,40 +68,55 @@ public class EditorController
         this.validateQuestionEditorService = validateService;
         this.parentController = parentController;
         this.networkController = networkController;
+    }
 
+
+    public void openEditor() {
+        showQuizzEditorView(true);
         try {
             networkController.addListener(this);
         } catch (IOException e) {
-            ErrorPopup.show("Impossible de joindre le serveur.");
+            editorView.showError("Impossible de joindre le serveur.");
         }
     }
-
-    // #endregion
 
     // #region IQuizzListener methods
 
     @Override
-    public void onAddMcqRequested() {
+    public void onAddMcqRequested(String title) {
+        quizz.setName(title);
         navigateToView(new McqEditorFX(), "Éditeur de Question QCM", this);
     }
 
     @Override
-    public void onAddPollRequested() {
+    public void onAddPollRequested(String title) {
+        quizz.setName(title);
         navigateToView(new PollEditorFX(), "Éditeur de Sondage", this);
     }
 
     @Override
-    public void onAddQuestionFreeRequested() {
+    public void onAddQuestionFreeRequested(String title) {
+        quizz.setName(title);
         navigateToView(new OpenEditorFX(), "Éditeur de Question Libre", this);
     }
 
     @Override
-    public void onSaveRequested() {
+    public void onSaveRequested(String title) {
+        if (title == null || title.isBlank()) {
+            editorView.showError("Le titre du questionnaire est obligatoire.");
+            return;
+        }
+        if (quizz.getQuestions().isEmpty()) {
+            editorView.showError("Le questionnaire doit contenir au moins une question.");
+            return;
+        }
+        quizz.setName(title);
+
         // Navigation back to the list happens when the server response arrives.
         try {
             editorService.saveQuizz(quizz, teacher.uuid());
         } catch (IOException e) {
-            ErrorPopup.show("Impossible de joindre le serveur.");
+            editorView.showError("Impossible de joindre le serveur.");
         }
     }
 
@@ -107,10 +124,10 @@ public class EditorController
     public void onSaveQuizzResponse(SaveQuizzResponse saveQuizzResponse) {
         Platform.runLater(() -> {
             if (saveQuizzResponse.isSuccess()) {
-                this.parentController.setQuizzes(saveQuizzResponse.getQuizzes());
-                navigationService.goBack();
+                networkController.removeListener(this);
+                this.parentController.showQuizzes(saveQuizzResponse.getQuizzes());
             } else {
-                ErrorPopup.show(saveQuizzResponse.getMessage());
+                editorView.showError(saveQuizzResponse.getMessage());
             }
         });
     }
@@ -152,11 +169,28 @@ public class EditorController
     // #region Private Methods
 
     /**
-     * Réaffiche l'éditeur de quiz en listant les questions déjà ajoutées.
+     * Réaffiche l'éditeur de quiz en listant les questions déjà ajoutées (retour
+     * d'un sous-éditeur).
      */
     private void showQuizzEditor() {
-        QuizzEditorFX editorView = new QuizzEditorFX();
-        replaceView(editorView, "Éditeur de Quiz", this);
+        showQuizzEditorView(false);
+    }
+
+    /**
+     * Construit et affiche la vue de l'éditeur de quiz, et la mémorise comme vue
+     * courante (pour pouvoir lui déléguer l'affichage des erreurs).
+     *
+     * @param firstTime {@code true} à la première ouverture (on empile l'écran),
+     *                  {@code false} au retour d'un sous-éditeur (on remplace).
+     */
+    private void showQuizzEditorView(boolean firstTime) {
+        this.editorView = new QuizzEditorFX();
+        if (firstTime) {
+            navigateToView(editorView, "Éditeur de Quiz", this);
+        } else {
+            replaceView(editorView, "Éditeur de Quiz", this);
+            editorView.setTitle(quizz.getName());
+        }
         editorView.displayQuestions(quizz.getQuestions());
     }
 

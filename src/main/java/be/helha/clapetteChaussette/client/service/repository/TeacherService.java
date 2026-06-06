@@ -2,6 +2,7 @@ package be.helha.clapetteChaussette.client.service.repository;
 
 import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsException;
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
+import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
 import be.helha.clapetteChaussette.server.repository.ITeacherRepository;
@@ -49,8 +50,10 @@ public class TeacherService {
      *                                       too short.
      * @throws TeacherAlreadyExistsException if a teacher with the given name
      *                                       already exists.
+     * @throws DatabaseException             if a database access error occurs.
      */
-    public Teacher registerNewTeacher(String name, String password) {
+    public Teacher registerNewTeacher(String name, String password)
+            throws DatabaseException, TeacherAlreadyExistsException {
 
         if (name.isBlank()) {
             throw new IllegalArgumentException("invalid teacher name");
@@ -80,8 +83,9 @@ public class TeacherService {
      *         database.
      * @throws LoginFailedException if no matching record is found or the password
      *                              is incorrect.
+     * @throws DatabaseException    if a database access error occurs.
      */
-    public Teacher teacherLogin(String name, String password) {
+    public Teacher teacherLogin(String name, String password) throws DatabaseException, LoginFailedException {
 
         Optional<TeacherDTO> dbResponse = repository.findByName(name);
 

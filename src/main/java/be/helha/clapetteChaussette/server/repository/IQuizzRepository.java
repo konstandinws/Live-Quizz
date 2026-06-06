@@ -23,7 +23,7 @@ public interface IQuizzRepository {
      *              quiz name).
      * @throws DatabaseException if a database access error occurs during insertion.
      */
-    void save(QuizzDTO quizz);
+    void save(QuizzDTO quizz) throws DatabaseException;
 
     /**
      * Retrieves all quizzes associated with a specific teacher.
@@ -35,5 +35,5 @@ public interface IQuizzRepository {
      *         Returns an empty list if no quizzes are found for the given teacher.
      * @throws DatabaseException if a database access error occurs during retrieval.
      */
-    List<QuizzDTO> findAll(UUID teacherUuid);
+    List<QuizzDTO> findAll(UUID teacherUuid) throws DatabaseException;
 }

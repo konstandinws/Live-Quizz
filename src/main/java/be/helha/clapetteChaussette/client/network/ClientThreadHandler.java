@@ -6,6 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import be.helha.clapetteChaussette.common.models.events.AnswerReceivedEvent;
 import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
@@ -63,6 +64,8 @@ public class ClientThreadHandler implements Runnable {
             listener.onParticipantNameUpdate((ParticipantNameUpdate) event);
         } else if (event instanceof NextQuestionResponse) {
             listener.onNextQuestionResponse((NextQuestionResponse) event);
+        } else if (event instanceof AnswerReceivedEvent) {
+            listener.onAnswerReceived((AnswerReceivedEvent) event);
         } else {
             LOGGER.log(Level.WARNING, "Unsupported network event received: {0}",
                     event == null ? "null" : event.getClass().getName());
@@ -120,6 +123,13 @@ public class ClientThreadHandler implements Runnable {
          * Called on the client side when the server replies to a next-question request.
          */
         default void onNextQuestionResponse(NextQuestionResponse nextQuestionResponse) {
+        }
+
+        /**
+         * Called on the teacher's client when a student has answered the current
+         * question, carrying the updated answered/total counts.
+         */
+        default void onAnswerReceived(AnswerReceivedEvent answerReceivedEvent) {
         }
 
         /**

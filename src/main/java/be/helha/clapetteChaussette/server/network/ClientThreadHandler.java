@@ -12,6 +12,7 @@ import be.helha.clapetteChaussette.common.models.events.NetworkEvent;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionRequest;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzRequest;
+import be.helha.clapetteChaussette.common.models.events.SubmitAnswerRequest;
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
 
 public class ClientThreadHandler implements Runnable {
@@ -56,7 +57,8 @@ public class ClientThreadHandler implements Runnable {
                     listener.onLeaveSession(this, (LeaveSessionRequest) event);
                 } else if (event instanceof NextQuestionRequest) {
                     listener.onNextQuestion(this, (NextQuestionRequest) event);
-
+                } else if (event instanceof SubmitAnswerRequest) {
+                    listener.onSubmitAnswer(this, (SubmitAnswerRequest) event);
                 } else {
                     LOGGER.log(Level.WARNING, "Unsupported network event received: {0}",
                             event == null ? "null" : event.getClass().getName());
@@ -105,6 +107,12 @@ public class ClientThreadHandler implements Runnable {
          * live session quiz.
          */
         void onNextQuestion(ClientThreadHandler clientThreadHandler, NextQuestionRequest nextQuestionRequest);
+
+        /**
+         * Called on the server side when a student submits their answer to the current
+         * question.
+         */
+        void onSubmitAnswer(ClientThreadHandler clientThreadHandler, SubmitAnswerRequest submitAnswerRequest);
 
         /**
          * Called once the connection has been closed. No-op by default.

@@ -35,7 +35,6 @@ public class TeacherWaitingViewFX extends ViewFX<ITeacherWaitingListener> {
         nameVBox.getChildren().clear();
         String message = "Nouveaux participants" + "Les participants suivants ont rejoint la session :\n"
                 + String.join("\n", names);
-        ErrorPopup.show(message);
         for (String name : names) {
             Label nameLabel = new Label(name);
             nameVBox.getChildren().add(nameLabel);

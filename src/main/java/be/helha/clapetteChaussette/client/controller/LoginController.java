@@ -73,31 +73,6 @@ public class LoginController
         }
     }
 
-    @Override
-    public void onError(Exception e) {
-        ErrorPopup.show("Impossible de joindre le serveur.");
-    }
-
-    // need to be moved at the right place
-    // @Override
-    // public void onParticipantCountUpdate(ParticipantCountUpdate update) {
-    // Platform.runLater(() -> {
-    // if (teacherWaitingView != null) {
-    // teacherWaitingView.setParticipantCount(update.getParticipantCount());
-    // }
-    // });
-    // }
-
-    // need to be moved at the right place
-    // @Override
-    // public void onParticipantNameUpdate(ParticipantNameUpdate update) {
-    // Platform.runLater(() -> {
-    // if (teacherWaitingView != null) {
-    // teacherWaitingView.setParticipantNames(update.getParticipantNames());
-    // }
-    // });
-    // }
-
     private void openTeacherQuizzChoices(LoginResponse response) {
         Teacher teacher = response.getTeacher();
         TeacherDTO teacherDTO = new TeacherDTO(teacher.getUuid(), teacher.getName(), null);

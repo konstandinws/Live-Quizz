@@ -60,6 +60,11 @@ public class TeacherQuizzChoicesController extends BaseController
         view.setQuizzes(quizz);
     }
 
+    public void showQuizzes(List<QuizzDTO> quizzes) {
+        view.setQuizzes(quizzes);
+        replaceView(view, "Mes questionnaires", this);
+    }
+
     @Override
     public void onLaunchQuizzRequested(QuizzDTO quizz) throws IOException {
         networkController.send(new LaunchQuizzRequest(quizz));

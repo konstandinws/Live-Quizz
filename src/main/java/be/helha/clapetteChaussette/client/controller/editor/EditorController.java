@@ -50,7 +50,7 @@ public class EditorController
      *                                      business logic.
      * @param navigationService             Service for handling navigation between
      *                                      views.
-     * @param validateQuestionEditorService Service for validating question data
+     * @param validateService Service for validating question data
      *                                      before saving.
      */
     public EditorController(Quizz quizz,
@@ -79,22 +79,35 @@ public class EditorController
     // #region IQuizzListener methods
 
     @Override
-    public void onAddMcqRequested() {
+    public void onAddMcqRequested(String title) {
+        quizz.setName(title);
         navigateToView(new McqEditorFX(), "Éditeur de Question QCM", this);
     }
 
     @Override
-    public void onAddPollRequested() {
+    public void onAddPollRequested(String title) {
+        quizz.setName(title);
         navigateToView(new PollEditorFX(), "Éditeur de Sondage", this);
     }
 
     @Override
-    public void onAddQuestionFreeRequested() {
+    public void onAddQuestionFreeRequested(String title) {
+        quizz.setName(title);
         navigateToView(new OpenEditorFX(), "Éditeur de Question Libre", this);
     }
 
     @Override
-    public void onSaveRequested() {
+    public void onSaveRequested(String title) {
+        if (title == null || title.isBlank()) {
+            ErrorPopup.show("Le titre du questionnaire est obligatoire.");
+            return;
+        }
+        if (quizz.getQuestions().isEmpty()) {
+            ErrorPopup.show("Le questionnaire doit contenir au moins une question.");
+            return;
+        }
+        quizz.setName(title);
+
         // Navigation back to the list happens when the server response arrives.
         try {
             editorService.saveQuizz(quizz, teacher.uuid());
@@ -107,8 +120,12 @@ public class EditorController
     public void onSaveQuizzResponse(SaveQuizzResponse saveQuizzResponse) {
         Platform.runLater(() -> {
             if (saveQuizzResponse.isSuccess()) {
-                this.parentController.setQuizzes(saveQuizzResponse.getQuizzes());
-                navigationService.goBack();
+                // Once saved, this editor is done: stop listening so it doesn't react
+                // to future saves.
+                networkController.removeListener(this);
+                // Deterministically show the questionnaires list (no reliance on the
+                // navigation history, which breaks if several editors were opened).
+                this.parentController.showQuizzes(saveQuizzResponse.getQuizzes());
             } else {
                 ErrorPopup.show(saveQuizzResponse.getMessage());
             }
@@ -157,6 +174,7 @@ public class EditorController
     private void showQuizzEditor() {
         QuizzEditorFX editorView = new QuizzEditorFX();
         replaceView(editorView, "Éditeur de Quiz", this);
+        editorView.setTitle(quizz.getName());
         editorView.displayQuestions(quizz.getQuestions());
     }
 

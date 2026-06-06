@@ -1,19 +1,17 @@
 package be.helha.clapetteChaussette.client.controller.student;
 
 import be.helha.clapetteChaussette.client.controller.BaseController;
+import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
+import be.helha.clapetteChaussette.client.service.auth.CodeValidatorService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.student.StudentInvitationViewFX.IStudentInvitationListener;
 import be.helha.clapetteChaussette.client.view.student.StudentWaitingViewFX;
 import be.helha.clapetteChaussette.common.models.events.JoinSessionRequest;
 import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
 import be.helha.clapetteChaussette.common.models.events.LeaveSessionRequest;
-import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
-import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
-import be.helha.clapetteChaussette.server.network.ClientThreadHandler;
-
 import javafx.application.Platform;
 
 import java.io.IOException;
@@ -25,22 +23,24 @@ public class StudentInvitationController extends BaseController
 
     // Waiting screen shown once the session is joined, updated as students arrive.
     private StudentWaitingViewFX waitingView;
+    private CodeValidatorService codeValidatorService;
 
     public StudentInvitationController(NavigationService nav, NetworkController networkController) {
         super(nav);
         this.networkController = networkController;
+        this.codeValidatorService = new CodeValidatorService(); // not dependency injected bc it's the only one to use
+                                                                // it
     }
 
     @Override
-    public void onJoinRequested(String code) {
+    public void onJoinRequested(String code, String pseudo) throws IOException, IllegalArgumentException {
         if (!networkController.isConnected()) {
             networkController.connect(this);
         }
-        try {
-            networkController.send(new JoinSessionRequest(code));
-        } catch (IOException e) {
-            ErrorPopup.show("Impossible de joindre le serveur.");
+        if (!codeValidatorService.validateSessionCodeAndPseudo(code, pseudo)) {
+            throw new IllegalArgumentException("Code de session ou pseudo invalide.");
         }
+        networkController.send(new JoinSessionRequest(code, pseudo));
     }
 
     @Override
@@ -62,11 +62,11 @@ public class StudentInvitationController extends BaseController
     private void leaveSession() {
         try {
             networkController.send(new LeaveSessionRequest());
+            waitingView = null;
+            navigationService.goBack();
         } catch (IOException e) {
-            ErrorPopup.show("Impossible de joindre le serveur.");
+            onError(e);
         }
-        waitingView = null;
-        navigationService.goBack();
     }
 
     @Override
@@ -80,15 +80,6 @@ public class StudentInvitationController extends BaseController
 
     @Override
     public void onError(Exception e) {
-        ErrorPopup.show("Impossible de joindre le serveur.");
-    }
-
-    // Server-side only: nothing to do on the student client.
-    @Override
-    public void onLogin(ClientThreadHandler handler, LoginRequest request) {
-    }
-
-    @Override
-    public void onRegister(ClientThreadHandler handler, RegisterRequest request) {
+        ErrorPopup.show(e.getMessage());
     }
 }

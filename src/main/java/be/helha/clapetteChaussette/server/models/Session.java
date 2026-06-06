@@ -9,8 +9,10 @@ import java.util.List;
 /**
  * A live quizz session created when a teacher launches a quizz.
  * <p>
- * It ties an invitation {@code code} to the launched {@link QuizzDTO} and to the
- * teacher's connection ({@code host}). Students who join with the code are added
+ * It ties an invitation {@code code} to the launched {@link QuizzDTO} and to
+ * the
+ * teacher's connection ({@code host}). Students who join with the code are
+ * added
  * to {@code clients}.
  * </p>
  */
@@ -20,6 +22,7 @@ public class Session {
     private final QuizzDTO quizz;
     private final ClientThreadHandler host;
     private final List<ClientThreadHandler> clients = new ArrayList<>();
+    private final List<String> participantPseudos = new ArrayList<>();
 
     public Session(String code, QuizzDTO quizz, ClientThreadHandler host) {
         this.code = code;
@@ -39,12 +42,25 @@ public class Session {
         return host;
     }
 
-    public void addClient(ClientThreadHandler client) {
+    public void addClient(ClientThreadHandler client, String pseudo) {
         clients.add(client);
+        participantPseudos.add(pseudo);
+    }
+
+    public void removeClient(ClientThreadHandler client) {
+        int index = clients.indexOf(client);
+        if (index != -1) {
+            clients.remove(index);
+            participantPseudos.remove(index);
+        }
     }
 
     public List<ClientThreadHandler> getClients() {
         return clients;
+    }
+
+    public List<String> getParticipantPseudos() {
+        return new ArrayList<>(participantPseudos);
     }
 
     public int getNumberParticipants() {

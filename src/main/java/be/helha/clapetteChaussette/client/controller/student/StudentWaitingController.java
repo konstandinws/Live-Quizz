@@ -1,10 +1,12 @@
 package be.helha.clapetteChaussette.client.controller.student;
 
 import be.helha.clapetteChaussette.client.controller.BaseController;
+import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.view.student.StudentWaitingViewFX.IStudentWaitingListener;
 
-public class StudentWaitingController extends BaseController implements IStudentWaitingListener {
+public class StudentWaitingController extends BaseController
+        implements IStudentWaitingListener, ClientThreadHandler.Listener {
 
     public StudentWaitingController(NavigationService nav) {
         super(nav);
@@ -14,4 +16,10 @@ public class StudentWaitingController extends BaseController implements IStudent
     public void onParticipantCountUpdated(int count) {
         // TODO: mettre à jour l'affichage via le réseau
     }
+
+    @Override
+    public void onError(Exception e) {
+
+    }
+
 }

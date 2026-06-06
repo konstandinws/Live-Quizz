@@ -8,6 +8,7 @@ import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
+import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
@@ -16,6 +17,7 @@ import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsException;
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
+import be.helha.clapetteChaussette.common.models.Quizz;
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.server.models.Session;
 import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
@@ -42,20 +44,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Server implements ClientThreadHandler.Listener {
 
-    /**
-     * The listening port on which the server waits for connections.
-     */
-    private final int port;
+    private static final int SERVER_PORT = 3001;
 
-    /**
-     * Initializes a new instance of the server.
-     * @param port The port number (e.g., 8080) on which the server should listen.
-     */
-    public Server(int port){
-        this.port = port;
-    }
-
-    private final List<ClientThreadHandler> clientHandlerThreads = new ArrayList<>();
+    private final List<Thread> listenerThreads = new ArrayList<>();
 
     private final TeacherService teacherService = new TeacherService(new JdbcTeacherRepository());
 
@@ -67,8 +58,8 @@ public class Server implements ClientThreadHandler.Listener {
     private final Map<String, Session> sessions = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
-            Server server = new Server(3001);
-            server.startServer();
+        Server server = new Server();
+        server.startServer();
     }
 
     /**
@@ -77,24 +68,27 @@ public class Server implements ClientThreadHandler.Listener {
      * The {@link ServerSocket#accept()} method is used to block execution
      * until a client connects.
      * </p>
-     * @throws IOException if a network communication error occurs during the socket creation
-     * or while accepting a connection.
+     * 
+     * @throws IOException if a network communication error occurs during the socket
+     *                     creation
+     *                     or while accepting a connection.
      */
-    public void startServer(){
+    public void startServer() {
         System.out.println("Starting server...");
         // Use try-with-resources to ensure the ServerSocket is closed automatically
-        try(ServerSocket serverSocket = new ServerSocket(port)){
-            System.out.println("Server started on port " + port);
+        try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
+            System.out.println("Server started on port " + SERVER_PORT + ". Waiting for connections...");
 
-            while(true) {
+            while (true) {
                 // Wait for a student to connect (blocking method)
                 Socket socket = serverSocket.accept();
                 System.out.println("New connection from " + socket.getInetAddress());
                 ObjectSocket objectSocket = new ObjectSocket(socket);
 
-                ClientThreadHandler thread = new ClientThreadHandler(objectSocket, this);
-                this.clientHandlerThreads.add(thread);
-                thread.start();
+                ClientThreadHandler handler = new ClientThreadHandler(objectSocket, this);
+                Thread listenerThread = new Thread(handler);
+                this.listenerThreads.add(listenerThread);
+                listenerThread.start();
             }
         } catch (IOException e) {
             System.err.println("Server network error: " + e.getMessage());
@@ -161,7 +155,8 @@ public class Server implements ClientThreadHandler.Listener {
             reply(clientThreadHandler, new SaveQuizzResponse(true, "OK", quizzes));
         } catch (DatabaseException e) {
             System.err.println("Échec de l'enregistrement du questionnaire : " + e.getMessage());
-            reply(clientThreadHandler, new SaveQuizzResponse(false, "Impossible d'enregistrer le questionnaire", List.of()));
+            reply(clientThreadHandler,
+                    new SaveQuizzResponse(false, "Impossible d'enregistrer le questionnaire", List.of()));
         }
     }
 
@@ -180,13 +175,14 @@ public class Server implements ClientThreadHandler.Listener {
     public void onLaunchQuizz(ClientThreadHandler clientThreadHandler, LaunchQuizzRequest request) {
         QuizzDTO quizz = request.getQuizz();
 
-        // Generate a unique code and create the session tied to the teacher's connection.
+        // Generate a unique code and create the session tied to the teacher's
+        // connection.
         String code = generateUniqueCode();
         Session session = new Session(code, quizz, clientThreadHandler);
         sessions.put(code, session);
         System.out.println("Session lancée : code " + code + " pour le questionnaire « " + quizz.name() + " »");
 
-        reply(clientThreadHandler, new LaunchQuizzResponse(true, code, session.getNumberParticipants(), "OK"));
+        reply(clientThreadHandler, new LaunchQuizzResponse(true, code, session.getNumberParticipants(), "OK", quizz));
     }
 
     /**
@@ -219,14 +215,14 @@ public class Server implements ClientThreadHandler.Listener {
             return;
         }
 
-        session.addClient(clientThreadHandler);
+        session.addClient(clientThreadHandler, request.getPseudo());
         int count = session.getNumberParticipants();
         System.out.println("Élève rejoint la session " + request.getCode() + " (" + count + " participant(s))");
 
         reply(clientThreadHandler, new JoinSessionResponse(true, count, "OK"));
 
         // Notify the teacher and the students already in the session.
-        broadcastParticipantCount(session);
+        broadcastParticipantUpdate(session);
     }
 
     /**
@@ -241,13 +237,16 @@ public class Server implements ClientThreadHandler.Listener {
     }
 
     /**
-     * Notifies the teacher (host) and every student of the session's participant count.
+     * Notifies the teacher (host) and every student of the session's participant
+     * count.
      */
-    private void broadcastParticipantCount(Session session) {
-        ParticipantCountUpdate update = new ParticipantCountUpdate(session.getNumberParticipants());
-        send(session.getHost(), update);
+    private void broadcastParticipantUpdate(Session session) {
+        ParticipantCountUpdate updateNumber = new ParticipantCountUpdate(session.getNumberParticipants());
+        ParticipantNameUpdate updateNames = new ParticipantNameUpdate(session.getParticipantPseudos());
+        send(session.getHost(), updateNumber);
+        send(session.getHost(), updateNames);
         for (ClientThreadHandler client : session.getClients()) {
-            send(client, update);
+            send(client, updateNumber);
         }
     }
 
@@ -266,7 +265,8 @@ public class Server implements ClientThreadHandler.Listener {
 
     @Override
     public void onDisconnect(ClientThreadHandler clientThreadHandler) {
-        // A student dropping out decrements the count; a teacher dropping ends the session.
+        // A student dropping out decrements the count; a teacher dropping ends the
+        // session.
         removeFromSession(clientThreadHandler);
         sessions.values().removeIf(session -> session.getHost() == clientThreadHandler);
     }
@@ -276,9 +276,9 @@ public class Server implements ClientThreadHandler.Listener {
      */
     private void removeFromSession(ClientThreadHandler clientThreadHandler) {
         for (Session session : sessions.values()) {
-            if (session.getClients().remove(clientThreadHandler)) {
-                broadcastParticipantCount(session);
-                break;
+            if (session.getClients().contains(clientThreadHandler)) {
+                session.removeClient(clientThreadHandler);
+                broadcastParticipantUpdate(session);
             }
         }
     }

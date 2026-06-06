@@ -1,33 +1,33 @@
 package be.helha.clapetteChaussette.client.network;
 
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
-import be.helha.clapetteChaussette.server.network.ClientThreadHandler;
 
 import java.io.IOException;
 import java.net.Socket;
+
 /**
  * Manages the network connection on the client side for the application.
  * Handles connecting to the server, sending objects, and disconnecting.
  */
 public class NetworkController {
 
-    private final String host;
-    private final int port;
-
     private Socket socket;
     private ObjectSocket objectSocket;
-    private Thread networkThread;
+    private Thread listenerThread;
     private boolean isConnected = false;
+    private ClientThreadHandler handler;
+
     /**
      * Creates a new client with the specified server address and port.
      *
      * @param host The IP address or domain name of the server.
      * @param port The port number the server is listening on.
      */
-    public NetworkController(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public NetworkController(String host, int port) throws IOException {
+        this.socket = new Socket(host, port);
+        this.objectSocket = new ObjectSocket(socket);
     }
+
     /**
      * Establishes a connection with the server and starts a background Thread
      * to listen for incoming messages.
@@ -39,39 +39,46 @@ public class NetworkController {
         if (isConnected) {
             return;
         }
-        try {
-            this.socket = new Socket(host, port);
-            this.objectSocket = new ObjectSocket(this.socket);
-            this.isConnected = true;
 
-            ClientThreadHandler threadHandler = new ClientThreadHandler(this.objectSocket, listener);
-
-            this.networkThread = new Thread(threadHandler, "clapetteChaussette-Client-Network");
-            this.networkThread.start();
-        } catch (IOException e) {
-            this.isConnected = false;
-            if (listener != null) {
-                listener.onError(e);
-            }
-        }
+        this.isConnected = true;
+        this.handler = new ClientThreadHandler(objectSocket, listener);
+        this.listenerThread = new Thread(handler);
+        this.listenerThread.start();
     }
+
+    public void addListener(ClientThreadHandler.Listener listener) throws IOException {
+        if (!isConnected) {
+            throw new IllegalStateException("Le client n'est pas connecté au serveur.");
+        }
+        this.handler.addListener(listener);
+    }
+
     /**
      * Sends an object to the server through the network stream.
      *
      * @param object The object to send.
-     * @throws IOException If the client is not connected or if a network error occurs.
+     * @throws IOException If the client is not connected or if a network error
+     *                     occurs.
      */
     public synchronized void send(Object object) throws IOException {
-    if (!isConnected || objectSocket == null) {
-        throw new IOException("Client not connected");
+        if (!isConnected || objectSocket == null) {
+            throw new IOException("Le client n'est pas connecté au serveur.");
+        }
+        try {
+            this.objectSocket.send(object);
+        } catch (IOException e) {
+            // it look weird to catch an IOException just to rethrow it, but this way we can
+            // add a custom message and preserve the stack trace.
+            throw new IOException("Echec d'envoi de l'objet au serveur: " + e.getMessage(), e);
+        }
     }
-    this.objectSocket.send(object);
-    }
+
     /**
-     * Closes the network connection, shuts down the streams, and stops the listening Thread.
+     * Closes the network connection, shuts down the streams, and stops the
+     * listening Thread.
      * If the client is not connected, this method does nothing.
      */
-    public synchronized void disconnect() {
+    public synchronized void disconnect() throws IOException {
         if (!isConnected) {
             return;
         }
@@ -81,17 +88,11 @@ public class NetworkController {
             objectSocket.close();
         }
 
-        try {
-            if (socket != null && !socket.isClosed()) {
-                socket.close();
-            }
-        } catch (IOException e) {
-
-        }
-        if (networkThread != null && networkThread.isAlive()) {
-            networkThread.interrupt();
+        if (listenerThread != null && listenerThread.isAlive()) {
+            listenerThread.interrupt();
         }
     }
+
     /**
      * Checks whether the client is currently connected to the server.
      *
@@ -101,6 +102,3 @@ public class NetworkController {
         return isConnected;
     }
 }
-
-
-

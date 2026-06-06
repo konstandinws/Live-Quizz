@@ -4,9 +4,14 @@ import java.io.IOException;
 import java.util.List;
 
 import be.helha.clapetteChaussette.client.controller.BaseController;
+import be.helha.clapetteChaussette.client.controller.teacher.TeacherQuizzChoicesController;
+import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
+import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.common.exception.editor.InvalidQuestionException;
 import be.helha.clapetteChaussette.common.models.Quizz;
+import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
+import javafx.application.Platform;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.service.editor.EditorService;
@@ -22,12 +27,14 @@ import be.helha.clapetteChaussette.client.view.editor.QuizzEditorFX.IQuizzListen
 
 public class EditorController
         extends BaseController
-        implements IQuizzListener, IOpenEditorListener, IMcqEditorListener, IPollEditorListener {
+        implements IQuizzListener, IOpenEditorListener, IMcqEditorListener, IPollEditorListener,
+        ClientThreadHandler.Listener {
 
     // #region Fields
-
     EditorService editorService;
     ValidateQuestionEditorService validateQuestionEditorService;
+    TeacherQuizzChoicesController parentController;
+    NetworkController networkController;
     Quizz quizz;
     TeacherDTO teacher;
 
@@ -50,12 +57,21 @@ public class EditorController
             TeacherDTO teacher,
             EditorService editorService,
             NavigationService navigationService,
-            ValidateQuestionEditorService validateService) {
+            ValidateQuestionEditorService validateService, TeacherQuizzChoicesController parentController,
+            NetworkController networkController) {
         super(navigationService);
         this.quizz = quizz;
         this.teacher = teacher;
         this.editorService = editorService;
         this.validateQuestionEditorService = validateService;
+        this.parentController = parentController;
+        this.networkController = networkController;
+
+        try {
+            networkController.addListener(this);
+        } catch (IOException e) {
+            ErrorPopup.show("Impossible de joindre le serveur.");
+        }
     }
 
     // #endregion
@@ -87,6 +103,17 @@ public class EditorController
         }
     }
 
+    @Override
+    public void onSaveQuizzResponse(SaveQuizzResponse saveQuizzResponse) {
+        Platform.runLater(() -> {
+            if (saveQuizzResponse.isSuccess()) {
+                this.parentController.setQuizzes(saveQuizzResponse.getQuizzes());
+                navigationService.goBack();
+            } else {
+                ErrorPopup.show(saveQuizzResponse.getMessage());
+            }
+        });
+    }
     // endregion
 
     // #region IOpenEditorListener methods

@@ -4,9 +4,12 @@ import be.helha.clapetteChaussette.client.controller.student.StudentWaitingContr
 import be.helha.clapetteChaussette.client.view.IListener;
 import be.helha.clapetteChaussette.client.view.ViewFX;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 public class StudentWaitingViewFX extends ViewFX<StudentWaitingController> {
+    @FXML
+    private Button returnBTN;
 
     @FXML
     private Label participantNumberLabel;

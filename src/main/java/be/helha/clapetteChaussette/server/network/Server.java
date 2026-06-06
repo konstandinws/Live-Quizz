@@ -7,8 +7,10 @@ import be.helha.clapetteChaussette.common.models.events.LaunchQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
+import be.helha.clapetteChaussette.common.models.events.AnswerReceivedEvent;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionRequest;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
+import be.helha.clapetteChaussette.common.models.events.SubmitAnswerRequest;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
@@ -21,6 +23,7 @@ import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsExceptio
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.models.Teacher;
+import be.helha.clapetteChaussette.common.models.questions.Answer;
 import be.helha.clapetteChaussette.server.models.Session;
 import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
 import be.helha.clapetteChaussette.server.repository.IQuizzRepository;
@@ -35,9 +38,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -187,15 +188,25 @@ public class Server implements ClientThreadHandler.Listener {
     @Override
     public void onLaunchQuizz(ClientThreadHandler clientThreadHandler, LaunchQuizzRequest request) {
         QuizzDTO quizz = request.getQuizz();
+        try {
+            // Load the quizz's questions up-front: from now on the session owns the
+            // progression (which question is current), not the client.
+            List<QuestionDTO> questions = questionRepository.findByQuizz(quizz.uuid());
 
-        // Generate a unique code and create the session tied to the teacher's
-        // connection.
-        String code = generateUniqueCode();
-        Session session = new Session(code, quizz, clientThreadHandler);
-        sessions.put(code, session);
-        System.out.println("Session lancée : code " + code + " pour le questionnaire « " + quizz.name() + " »");
+            String code = generateUniqueCode();
+            Session session = new Session(code, quizz, clientThreadHandler);
+            session.loadQuestions(questions);
+            sessions.put(code, session);
+            System.out.println("Session lancée : code " + code + " pour le questionnaire « " + quizz.name()
+                    + " » (" + questions.size() + " questions)");
 
-        reply(clientThreadHandler, new LaunchQuizzResponse(true, code, session.getNumberParticipants(), "OK", quizz));
+            reply(clientThreadHandler,
+                    new LaunchQuizzResponse(true, code, session.getNumberParticipants(), "OK", quizz));
+        } catch (DatabaseException e) {
+            System.err.println("Échec du chargement des questions : " + e.getMessage());
+            reply(clientThreadHandler,
+                    new LaunchQuizzResponse(false, null, 0, "Erreur serveur, réessayez plus tard", quizz));
+        }
     }
 
     /**
@@ -278,23 +289,42 @@ public class Server implements ClientThreadHandler.Listener {
 
     @Override
     public void onNextQuestion(ClientThreadHandler clientThreadHandler, NextQuestionRequest nextQuestionRequest) {
-        UUID quizzId = nextQuestionRequest.getQuizz().uuid();
-        int questionIndex = nextQuestionRequest.getQuestionIndex();
-        System.out.println("Prochaine question demandée pour le quiz " + quizzId + " : index " + questionIndex);
-        try {
-            Optional<QuestionDTO> question = questionRepository.findByQuizzUuidAndIndex(quizzId, questionIndex);
-            if (!question.isPresent()) {
-                send(clientThreadHandler, new NextQuestionResponse(false, "Question non trouvée", null, questionIndex));
-            } else {
-                Session session;
-                session = getSession(clientThreadHandler).orElseThrow();
-                broadcastNextQuestion(session, question.get(), questionIndex++);
-            }
-        } catch (DatabaseException | NoSuchElementException e) {
-            System.err.println("Erreur base de données lors de la récupération de la question : " + e.getMessage());
-            send(clientThreadHandler,
-                    new NextQuestionResponse(false, "Erreur serveur, réessayez plus tard", null, questionIndex));
+        Optional<Session> sessionOpt = getSession(clientThreadHandler);
+        if (sessionOpt.isEmpty()) {
+            send(clientThreadHandler, new NextQuestionResponse(false, "Session introuvable", null, -1));
+            return;
         }
+
+        Session session = sessionOpt.get();
+        Optional<QuestionDTO> question = session.nextQuestion();
+        if (question.isEmpty()) {
+            // No more questions: the quizz is finished (a null question signals the end).
+            send(session.getHost(), new NextQuestionResponse(true, "FIN", null, session.getCurrentIndex()));
+            return;
+        }
+
+        broadcastNextQuestion(session, question.get(), session.getCurrentIndex());
+    }
+
+    @Override
+    public void onSubmitAnswer(ClientThreadHandler clientThreadHandler, SubmitAnswerRequest request) {
+        Optional<Session> sessionOpt = getSessionByClient(clientThreadHandler);
+        if (sessionOpt.isEmpty()) {
+            return;
+        }
+        Session session = sessionOpt.get();
+
+        // Ignore an answer that targets a question which is no longer the current one.
+        Optional<QuestionDTO> current = session.getCurrentQuestion();
+        if (current.isEmpty() || !current.get().uuid().equals(request.getQuestionUuid())) {
+            return;
+        }
+
+        session.recordAnswer(clientThreadHandler, request.getAnswerIndex());
+
+        // Tell the teacher the progress (N/N) and the live vote count per answer.
+        send(session.getHost(), new AnswerReceivedEvent(session.getAnsweredCount(),
+                session.getNumberParticipants(), session.getVoteTotal()));
     }
 
     private Optional<Session> getSession(ClientThreadHandler clientThreadHandler) {
@@ -306,12 +336,33 @@ public class Server implements ClientThreadHandler.Listener {
         return Optional.empty();
     }
 
-    private void broadcastNextQuestion(Session session, QuestionDTO question, int questionIndex) {
-        NextQuestionResponse response = new NextQuestionResponse(true, "OK", question, questionIndex);
-        send(session.getHost(), response);
-        for (ClientThreadHandler client : session.getClients()) {
-            send(client, response);
+    /** Finds the session a student (non-host) belongs to. */
+    private Optional<Session> getSessionByClient(ClientThreadHandler clientThreadHandler) {
+        for (Session session : sessions.values()) {
+            if (session.getClients().contains(clientThreadHandler)) {
+                return Optional.of(session);
+            }
         }
+        return Optional.empty();
+    }
+
+    private void broadcastNextQuestion(Session session, QuestionDTO question, int index) {
+        // The teacher (host) gets the full question, correct answers included.
+        send(session.getHost(), new NextQuestionResponse(true, "OK", question, index));
+
+        // Students get a copy without the correct answers (anti-cheat).
+        NextQuestionResponse studentResponse = new NextQuestionResponse(true, "OK", hideCorrectAnswers(question), index);
+        for (ClientThreadHandler client : session.getClients()) {
+            send(client, studentResponse);
+        }
+    }
+
+    /** Returns a copy of the question whose answers no longer reveal the correct ones. */
+    private QuestionDTO hideCorrectAnswers(QuestionDTO question) {
+        List<Answer> hidden = question.answers().stream()
+                .map(answer -> new Answer(answer.getAnswer(), false))
+                .toList();
+        return new QuestionDTO(question.uuid(), question.quizzUuid(), question.title(), hidden, question.type());
     }
 
     @Override

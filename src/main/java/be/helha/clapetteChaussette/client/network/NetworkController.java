@@ -44,6 +44,9 @@ public class NetworkController {
         this.isConnected = true;
         this.handler = new ClientThreadHandler(objectSocket, listener);
         this.listenerThread = new Thread(handler);
+        // Daemon: this background thread must not keep the JVM alive once the JavaFX
+        // window is closed (it is otherwise blocked forever on objectSocket.read()).
+        this.listenerThread.setDaemon(true);
         this.listenerThread.start();
     }
 

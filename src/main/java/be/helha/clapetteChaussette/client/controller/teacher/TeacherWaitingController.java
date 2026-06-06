@@ -10,6 +10,7 @@ import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX.ITeacherWaitingListener;
+import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionRequest;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
@@ -22,6 +23,7 @@ public class TeacherWaitingController extends BaseController
     private final QuizzDTO quizz;
     private final TeacherWaitingViewFX teacherWaitingView;
     private final NetworkController networkController;
+    private int participantCount = 0;
 
     public TeacherWaitingController(NavigationService nav, QuizzDTO quizz, NetworkController networkController,
             TeacherWaitingViewFX teacherWaitingView) {
@@ -39,9 +41,10 @@ public class TeacherWaitingController extends BaseController
 
     @Override
     public void onParticipantCountUpdate(ParticipantCountUpdate update) {
+        this.participantCount = update.getParticipantCount();
         Platform.runLater(() -> {
             if (teacherWaitingView != null) {
-                teacherWaitingView.setParticipantCount(update.getParticipantCount());
+                teacherWaitingView.setParticipantCount(participantCount);
             }
         });
     }
@@ -66,32 +69,23 @@ public class TeacherWaitingController extends BaseController
 
     @Override
     public void onNextQuestionResponse(NextQuestionResponse nextQuestionResponse) {
-        if (nextQuestionResponse.isSuccess()) {
-            Platform.runLater(() -> {
-                // résume de quoi faire pour moi se soir, ensuite je doit crée le controller
-                // TeacherLiveController, link les listener des vue a se controller, et gérer la
-                // partie communication serveur avec le host et les étudiant.
-                TeacherLiveController liveController = new TeacherLiveController(navigationService, networkController);
-                switch (nextQuestionResponse.getQuestion().type()) {
-                    // case MCQ:
-                    // navigateTo();
-                    // break;
-                    // case OPEN:
-                    // navigateTo();
-                    // break;
-                    // case POLL:
-                    // navigateTo();
-                    // break;
-                    default:
-                        ErrorPopup.show(
-                                "Type de question non supporté : " + nextQuestionResponse.getQuestion().type());
-                }
-                networkController.removeListener(this);
-            });
-        } else {
-            Platform.runLater(() -> {
+        Platform.runLater(() -> {
+            if (!nextQuestionResponse.isSuccess()) {
                 ErrorPopup.show("Erreur lors du lancement du quizz : " + nextQuestionResponse.getErrorMessage());
-            });
-        }
+                return;
+            }
+
+            QuestionDTO question = nextQuestionResponse.getQuestion();
+            if (question == null) {
+                // No question to show (e.g. an empty quizz): stay on the waiting screen.
+                return;
+            }
+
+            // Hand over from the waiting screen to the live quizz screen.
+            networkController.removeListener(this);
+            TeacherLiveController liveController = new TeacherLiveController(navigationService, networkController,
+                    quizz, participantCount);
+            liveController.showQuestion(question);
+        });
     }
 }

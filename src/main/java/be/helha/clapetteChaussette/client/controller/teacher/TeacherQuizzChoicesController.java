@@ -40,6 +40,12 @@ public class TeacherQuizzChoicesController extends BaseController
         this.validateService = validateService;
         this.networkController = networkController;
         this.view = view;
+
+        try {
+            networkController.addListener(this);
+        } catch (IOException e) {
+            ErrorPopup.show("Erreur de connexion au serveur : " + e.getMessage());
+        }
     }
 
     /**
@@ -67,12 +73,11 @@ public class TeacherQuizzChoicesController extends BaseController
 
     @Override
     public void onLaunchQuizzResponse(LaunchQuizzResponse response) {
-        // Response received on the network thread: hop back onto the JavaFX thread.
         Platform.runLater(() -> {
             if (response.isSuccess()) {
-                TeacherWaitingController waitingCtrl = new TeacherWaitingController(navigationService,
-                        response.getQuizz());
                 TeacherWaitingViewFX teacherWaitingView = new TeacherWaitingViewFX();
+                TeacherWaitingController waitingCtrl = new TeacherWaitingController(navigationService,
+                        response.getQuizz(), networkController, teacherWaitingView);
                 navigateToView(teacherWaitingView, "En attente de lancement", waitingCtrl);
                 teacherWaitingView.setCode(response.getCode());
                 teacherWaitingView.setParticipantCount(response.getParticipantCount());

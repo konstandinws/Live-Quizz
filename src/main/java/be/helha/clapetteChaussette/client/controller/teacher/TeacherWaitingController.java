@@ -68,7 +68,25 @@ public class TeacherWaitingController extends BaseController
     public void onNextQuestionResponse(NextQuestionResponse nextQuestionResponse) {
         if (nextQuestionResponse.isSuccess()) {
             Platform.runLater(() -> {
-                // ici on va crée le live controller
+                // résume de quoi faire pour moi se soir, ensuite je doit crée le controller
+                // TeacherLiveController, link les listener des vue a se controller, et gérer la
+                // partie communication serveur avec le host et les étudiant.
+                TeacherLiveController liveController = new TeacherLiveController(navigationService, networkController);
+                switch (nextQuestionResponse.getQuestion().type()) {
+                    // case MCQ:
+                    // navigateTo();
+                    // break;
+                    // case OPEN:
+                    // navigateTo();
+                    // break;
+                    // case POLL:
+                    // navigateTo();
+                    // break;
+                    default:
+                        ErrorPopup.show(
+                                "Type de question non supporté : " + nextQuestionResponse.getQuestion().type());
+                }
+                networkController.removeListener(this);
             });
         } else {
             Platform.runLater(() -> {

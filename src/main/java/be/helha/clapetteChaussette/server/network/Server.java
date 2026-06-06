@@ -115,7 +115,8 @@ public class Server implements ClientThreadHandler.Listener {
             reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Identifiants invalides"));
         } catch (DatabaseException e) {
             System.err.println("Erreur base de données lors de la connexion : " + e.getMessage());
-            reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Erreur serveur, réessayez plus tard"));
+            reply(clientThreadHandler,
+                    new LoginResponse(false, null, List.of(), "Erreur serveur, réessayez plus tard"));
         }
     }
 
@@ -149,7 +150,8 @@ public class Server implements ClientThreadHandler.Listener {
             reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Données d'inscription invalides"));
         } catch (DatabaseException e) {
             System.err.println("Erreur base de données lors de l'inscription : " + e.getMessage());
-            reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Erreur serveur, réessayez plus tard"));
+            reply(clientThreadHandler,
+                    new LoginResponse(false, null, List.of(), "Erreur serveur, réessayez plus tard"));
         }
     }
 
@@ -279,19 +281,19 @@ public class Server implements ClientThreadHandler.Listener {
         UUID quizzId = nextQuestionRequest.getQuizz().uuid();
         int questionIndex = nextQuestionRequest.getQuestionIndex();
         System.out.println("Prochaine question demandée pour le quiz " + quizzId + " : index " + questionIndex);
-        Optional<QuestionDTO> question = questionRepository.findByUuid(quizzId);
-        if (!question.isPresent()) {
-            send(clientThreadHandler, new NextQuestionResponse(false, "Question non trouvée", null, questionIndex));
-        } else {
-            Session session;
-            try {
+        try {
+            Optional<QuestionDTO> question = questionRepository.findByUuid(quizzId);
+            if (!question.isPresent()) {
+                send(clientThreadHandler, new NextQuestionResponse(false, "Question non trouvée", null, questionIndex));
+            } else {
+                Session session;
                 session = getSession(clientThreadHandler).orElseThrow();
                 broadcastNextQuestion(session, question.get(), questionIndex++);
-            } catch (NoSuchElementException e) {
-                System.err.println(
-                        "Session introuvable pour le client demandant la prochaine question : " + e.getMessage());
-                send(clientThreadHandler, new NextQuestionResponse(false, "Session introuvable", null, questionIndex));
             }
+        } catch (DatabaseException | NoSuchElementException e) {
+            System.err.println("Erreur base de données lors de la récupération de la question : " + e.getMessage());
+            send(clientThreadHandler,
+                    new NextQuestionResponse(false, "Erreur serveur, réessayez plus tard", null, questionIndex));
         }
     }
 

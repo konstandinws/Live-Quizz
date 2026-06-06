@@ -32,7 +32,6 @@ public class JdbcQuizzRepository implements IQuizzRepository {
             statement.setObject(1, quizz.uuid());
             statement.setObject(2, quizz.teacherUuid());
             statement.setString(3, quizz.name());
-
             statement.executeUpdate();
 
         } catch (SQLException e) {

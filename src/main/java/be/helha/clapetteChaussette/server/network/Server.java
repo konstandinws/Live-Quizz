@@ -282,7 +282,7 @@ public class Server implements ClientThreadHandler.Listener {
         int questionIndex = nextQuestionRequest.getQuestionIndex();
         System.out.println("Prochaine question demandée pour le quiz " + quizzId + " : index " + questionIndex);
         try {
-            Optional<QuestionDTO> question = questionRepository.findByUuid(quizzId);
+            Optional<QuestionDTO> question = questionRepository.findByQuizzUuidAndIndex(quizzId, questionIndex);
             if (!question.isPresent()) {
                 send(clientThreadHandler, new NextQuestionResponse(false, "Question non trouvée", null, questionIndex));
             } else {

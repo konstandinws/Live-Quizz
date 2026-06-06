@@ -117,4 +117,36 @@ public class JdbcQuestionRepository implements IQuestionRepository {
             }
         }
     }
+
+    public Optional<QuestionDTO> findByQuizzUuidAndIndex(UUID quizzUuid, int index) throws DatabaseException {
+        String query = "SELECT quuid, questionnaire_uuid, content, type FROM question WHERE questionnaire_uuid = ? ORDER BY quuid LIMIT 1 OFFSET ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setObject(1, quizzUuid);
+            statement.setInt(2, index);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    UUID questionUuid = resultSet.getObject("quuid", UUID.class);
+                    String content = resultSet.getString("content");
+                    String type = resultSet.getString("type");
+
+                    List<Answer> answers = new ArrayList<>();
+
+                    findAnswers(questionUuid, connection, answers);
+
+                    return Optional.of(new QuestionDTO(questionUuid, quizzUuid, content, answers,
+                            QuestionType.valueOf(type)));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error while finding the question in the Database", e);
+
+        }
+
+        return Optional.empty();
+    }
 }

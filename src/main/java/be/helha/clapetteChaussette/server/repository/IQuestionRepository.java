@@ -40,4 +40,16 @@ public interface IQuestionRepository {
      * @throws DatabaseException if a database access error occurs during retrieval.
      */
     Optional<QuestionDTO> findByUuid(UUID questionUuid) throws DatabaseException;
+
+    /**
+     * Retrieves a question and all its associated possible answers from the
+     * database
+     * based on the quiz UUID and the question index within that quiz.
+     * 
+     * @param quizzUuid
+     * @param index
+     * @return
+     * @throws DatabaseException
+     */
+    Optional<QuestionDTO> findByQuizzUuidAndIndex(UUID quizzUuid, int index) throws DatabaseException;
 }

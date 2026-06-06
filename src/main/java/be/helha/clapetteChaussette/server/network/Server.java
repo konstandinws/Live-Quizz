@@ -7,17 +7,19 @@ import be.helha.clapetteChaussette.common.models.events.LaunchQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
+import be.helha.clapetteChaussette.common.models.events.NextQuestionRequest;
+import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
+import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsException;
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
-import be.helha.clapetteChaussette.common.models.Quizz;
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.server.models.Session;
 import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
@@ -33,6 +35,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -267,6 +272,44 @@ public class Server implements ClientThreadHandler.Listener {
     @Override
     public void onLeaveSession(ClientThreadHandler clientThreadHandler, LeaveSessionRequest request) {
         removeFromSession(clientThreadHandler);
+    }
+
+    @Override
+    public void onNextQuestion(ClientThreadHandler clientThreadHandler, NextQuestionRequest nextQuestionRequest) {
+        UUID quizzId = nextQuestionRequest.getQuizz().uuid();
+        int questionIndex = nextQuestionRequest.getQuestionIndex();
+        System.out.println("Prochaine question demandée pour le quiz " + quizzId + " : index " + questionIndex);
+        Optional<QuestionDTO> question = questionRepository.findByUuid(quizzId);
+        if (!question.isPresent()) {
+            send(clientThreadHandler, new NextQuestionResponse(false, "Question non trouvée", null, questionIndex));
+        } else {
+            Session session;
+            try {
+                session = getSession(clientThreadHandler).orElseThrow();
+                broadcastNextQuestion(session, question.get(), questionIndex++);
+            } catch (NoSuchElementException e) {
+                System.err.println(
+                        "Session introuvable pour le client demandant la prochaine question : " + e.getMessage());
+                send(clientThreadHandler, new NextQuestionResponse(false, "Session introuvable", null, questionIndex));
+            }
+        }
+    }
+
+    private Optional<Session> getSession(ClientThreadHandler clientThreadHandler) {
+        for (Session session : sessions.values()) {
+            if (session.getHost() == clientThreadHandler) {
+                return Optional.of(session);
+            }
+        }
+        return Optional.empty();
+    }
+
+    private void broadcastNextQuestion(Session session, QuestionDTO question, int questionIndex) {
+        NextQuestionResponse response = new NextQuestionResponse(true, "OK", question, questionIndex);
+        send(session.getHost(), response);
+        for (ClientThreadHandler client : session.getClients()) {
+            send(client, response);
+        }
     }
 
     @Override

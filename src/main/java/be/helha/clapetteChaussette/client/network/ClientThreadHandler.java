@@ -10,6 +10,7 @@ import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
 import be.helha.clapetteChaussette.common.models.events.LaunchQuizzResponse;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
 import be.helha.clapetteChaussette.common.models.events.NetworkEvent;
+import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
@@ -60,6 +61,8 @@ public class ClientThreadHandler implements Runnable {
             listener.onParticipantCountUpdate((ParticipantCountUpdate) event);
         } else if (event instanceof ParticipantNameUpdate) {
             listener.onParticipantNameUpdate((ParticipantNameUpdate) event);
+        } else if (event instanceof NextQuestionResponse) {
+            listener.onNextQuestionResponse((NextQuestionResponse) event);
         } else {
             LOGGER.log(Level.WARNING, "Unsupported network event received: {0}",
                     event == null ? "null" : event.getClass().getName());
@@ -111,6 +114,12 @@ public class ClientThreadHandler implements Runnable {
          * @param participantNameUpdate
          */
         default void onParticipantNameUpdate(ParticipantNameUpdate participantNameUpdate) {
+        }
+
+        /**
+         * Called on the client side when the server replies to a next-question request.
+         */
+        default void onNextQuestionResponse(NextQuestionResponse nextQuestionResponse) {
         }
 
         /**

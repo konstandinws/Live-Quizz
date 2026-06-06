@@ -5,11 +5,14 @@ import java.io.IOException;
 import be.helha.clapetteChaussette.client.controller.BaseController;
 import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
+import be.helha.clapetteChaussette.client.network.ClientThreadHandler.Listener;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX.ITeacherWaitingListener;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
+import be.helha.clapetteChaussette.common.models.events.NextQuestionRequest;
+import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
 import javafx.application.Platform;
@@ -54,7 +57,23 @@ public class TeacherWaitingController extends BaseController
 
     @Override
     public void onStartQuizzRequested() {
-        // TODO: lancer le quiz via le serveur omg je peu le faire c'est trop ezzzz
+        try {
+            networkController.send(new NextQuestionRequest(quizz, 0));
+        } catch (IOException e) {
+            ErrorPopup.show("Erreur lors de l'envoi de la requête de lancement : " + e.getMessage());
+        }
+    }
 
+    @Override
+    public void onNextQuestionResponse(NextQuestionResponse nextQuestionResponse) {
+        if (nextQuestionResponse.isSuccess()) {
+            Platform.runLater(() -> {
+                // ici on va crée le live controller
+            });
+        } else {
+            Platform.runLater(() -> {
+                ErrorPopup.show("Erreur lors du lancement du quizz : " + nextQuestionResponse.getErrorMessage());
+            });
+        }
     }
 }

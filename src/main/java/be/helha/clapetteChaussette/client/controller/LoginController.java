@@ -2,6 +2,7 @@ package be.helha.clapetteChaussette.client.controller;
 
 import be.helha.clapetteChaussette.common.models.events.LoginRequest;
 import be.helha.clapetteChaussette.common.models.events.LoginResponse;
+import be.helha.clapetteChaussette.common.models.events.NetworkEvent;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
@@ -56,7 +57,7 @@ public class LoginController
         send(new RegisterRequest(teacher, password));
     }
 
-    private void send(Object event) throws IOException {
+    private void send(NetworkEvent event) throws IOException {
         if (!networkController.isConnected()) {
             networkController.connect(this);
         }

@@ -33,7 +33,7 @@ public class JdbcQuestionRepository implements IQuestionRepository {
 
             statement.setObject(1, question.uuid());
             statement.setObject(2, question.quizzUuid());
-            statement.setString(3, question.titre());
+            statement.setString(3, question.title());
             statement.setString(4, question.type().name());
             statement.executeUpdate();
 

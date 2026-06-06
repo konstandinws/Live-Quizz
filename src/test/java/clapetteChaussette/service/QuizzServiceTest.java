@@ -1,6 +1,7 @@
 package clapetteChaussette.service;
 
 import be.helha.clapetteChaussette.common.exception.editor.InvalidQuizzException;
+import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.models.Quizz;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
@@ -68,7 +69,7 @@ public class QuizzServiceTest {
     }
 
     @Test
-    void findAllQuizzes_ShouldThrowException_WhenTeacherUuidIsNull() {
+    void findAllQuizzes_ShouldThrowException_WhenTeacherUuidIsNull() throws DatabaseException {
         InvalidQuizzException exception = assertThrows(InvalidQuizzException.class, () -> {
             quizzService.findAllQuizzes(null);
         });
@@ -78,7 +79,7 @@ public class QuizzServiceTest {
     }
 
     @Test
-    void findAllQuizzes_ShouldReturnListOfQuizzes_WhenValid() {
+    void findAllQuizzes_ShouldReturnListOfQuizzes_WhenValid() throws DatabaseException {
         UUID teacherUuid = UUID.randomUUID();
         List<QuizzDTO> expectedQuizzes = List.of(
                 new QuizzDTO(UUID.randomUUID(), "Math", teacherUuid),
@@ -93,7 +94,7 @@ public class QuizzServiceTest {
     }
 
     @Test
-    void registerNewQuizz_ShouldThrowException_WhenTeacherUuidIsNull() {
+    void registerNewQuizz_ShouldThrowException_WhenTeacherUuidIsNull() throws DatabaseException {
         Quizz quizz = new Quizz("Mon super Quiz");
 
         InvalidQuizzException exception = assertThrows(InvalidQuizzException.class, () -> {
@@ -107,7 +108,7 @@ public class QuizzServiceTest {
     }
 
     @Test
-    void registerNewQuizz_ShouldSaveQuizzAndAllQuestions_WhenValid() {
+    void registerNewQuizz_ShouldSaveQuizzAndAllQuestions_WhenValid() throws DatabaseException {
         UUID teacherUuid = UUID.randomUUID();
         Quizz quizz = new Quizz("Culture Générale");
 

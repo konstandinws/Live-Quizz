@@ -22,7 +22,7 @@ public interface ITeacherRepository {
     *                name, and hashed password.
     * @throws DatabaseException if a persistence error occurs.
     */
-   void save(TeacherDTO teacher);
+   void save(TeacherDTO teacher) throws DatabaseException;
 
    /**
     * Retrieves a teacher by their name, including their stored password hash.
@@ -39,5 +39,5 @@ public interface ITeacherRepository {
     *         or an empty {@link Optional} if the name does not exist in the
     *         database.
     */
-   Optional<TeacherDTO> findByName(String name);
+   Optional<TeacherDTO> findByName(String name) throws DatabaseException;
 }

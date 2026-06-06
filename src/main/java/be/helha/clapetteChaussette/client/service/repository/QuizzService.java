@@ -2,6 +2,7 @@ package be.helha.clapetteChaussette.client.service.repository;
 
 import be.helha.clapetteChaussette.common.exception.editor.InvalidQuestionException;
 import be.helha.clapetteChaussette.common.exception.editor.InvalidQuizzException;
+import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.models.Quizz;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
@@ -55,8 +56,10 @@ public class QuizzService {
      *                                  business rules (e.g., missing correct
      *                                  answers).
      * @throws InvalidQuizzException    if the provided teacher UUID is null.
+     * @throws DatabaseException        if a database access error occurs during
+     *                                  persistence.
      */
-    public void registerNewQuizz(Quizz quizz, UUID teacherUuid) {
+    public void registerNewQuizz(Quizz quizz, UUID teacherUuid) throws DatabaseException {
         if (teacherUuid == null) {
             throw new InvalidQuizzException("Un quiz doit être lié à un professeur.");
         }
@@ -92,8 +95,10 @@ public class QuizzService {
      * @param teacherUuid The unique identifier of the teacher.
      * @return A list of {@link QuizzDTO} representing the teacher's quizzes.
      * @throws InvalidQuizzException if the provided teacher UUID is null.
+     * @throws DatabaseException     if a database access error occurs during
+     *                               retrieval.
      */
-    public List<QuizzDTO> findAllQuizzes(UUID teacherUuid) {
+    public List<QuizzDTO> findAllQuizzes(UUID teacherUuid) throws DatabaseException {
         if (teacherUuid == null) {
             throw new InvalidQuizzException("L'identifiant du professeur est requis.");
         }

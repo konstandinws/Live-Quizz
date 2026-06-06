@@ -3,6 +3,7 @@ package be.helha.clapetteChaussette.server.repository;
 import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,14 +43,11 @@ public interface IQuestionRepository {
     Optional<QuestionDTO> findByUuid(UUID questionUuid) throws DatabaseException;
 
     /**
-     * Retrieves a question and all its associated possible answers from the
-     * database
-     * based on the quiz UUID and the question index within that quiz.
-     * 
-     * @param quizzUuid
-     * @param index
-     * @return
-     * @throws DatabaseException
+     * Retrieves all questions of a quizz (with their answers), in insertion order.
+     *
+     * @param quizzUuid the quizz whose questions are requested.
+     * @return the list of {@link QuestionDTO}, empty if the quizz has none.
+     * @throws DatabaseException if a database access error occurs during retrieval.
      */
-    Optional<QuestionDTO> findByQuizzUuidAndIndex(UUID quizzUuid, int index) throws DatabaseException;
+    List<QuestionDTO> findByQuizz(UUID quizzUuid) throws DatabaseException;
 }

@@ -104,7 +104,6 @@ public class JdbcQuestionRepository implements IQuestionRepository {
     public List<QuestionDTO> findByQuizz(UUID quizzUuid) throws DatabaseException {
 
         String query = "SELECT quuid, content, type FROM question WHERE questionnaire_uuid = ?";
-
         List<QuestionDTO> questions = new ArrayList<>();
 
         try (Connection connection = DatabaseConnection.getConnection();

@@ -52,7 +52,8 @@ public class TeacherService {
      *                                       already exists.
      * @throws DatabaseException             if a database access error occurs.
      */
-    public Teacher registerNewTeacher(String name, String password) throws DatabaseException {
+    public Teacher registerNewTeacher(String name, String password)
+            throws DatabaseException, TeacherAlreadyExistsException {
 
         if (name.isBlank()) {
             throw new IllegalArgumentException("invalid teacher name");
@@ -84,7 +85,7 @@ public class TeacherService {
      *                              is incorrect.
      * @throws DatabaseException    if a database access error occurs.
      */
-    public Teacher teacherLogin(String name, String password) throws DatabaseException {
+    public Teacher teacherLogin(String name, String password) throws DatabaseException, LoginFailedException {
 
         Optional<TeacherDTO> dbResponse = repository.findByName(name);
 

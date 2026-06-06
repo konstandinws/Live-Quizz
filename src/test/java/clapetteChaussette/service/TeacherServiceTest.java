@@ -70,7 +70,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void registerNewTeacher_ShouldSucceed_WhenDataIsValid() throws DatabaseException {
+    void registerNewTeacher_ShouldSucceed_WhenDataIsValid() throws DatabaseException, TeacherAlreadyExistsException {
         String teacherName = "John";
 
         when(repository.findByName(teacherName)).thenReturn(Optional.empty());
@@ -116,7 +116,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void teacherLogin_ShouldSucceed_WhenCredentialsAreCorrect() throws DatabaseException {
+    void teacherLogin_ShouldSucceed_WhenCredentialsAreCorrect() throws DatabaseException, LoginFailedException {
         String password = "MyPassword";
         String hashedPasswordInDb = PasswordHasher.hashPassword(password);
         String teacherName = "David";

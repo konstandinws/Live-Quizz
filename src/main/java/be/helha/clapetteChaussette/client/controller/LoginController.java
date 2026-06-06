@@ -12,7 +12,6 @@ import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.controller.teacher.TeacherQuizzChoicesController;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX;
-import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.service.editor.EditorService;
 import be.helha.clapetteChaussette.client.service.editor.ValidateQuestionEditorService;
@@ -32,12 +31,6 @@ public class LoginController
     private ValidateQuestionEditorService validateService;
 
     private final NetworkController networkController;
-
-    /** Logged-in teacher, kept to refresh the screen after a save. */
-    private TeacherDTO loggedInTeacher;
-
-    // Teacher's waiting screen, updated as students join.
-    private TeacherWaitingViewFX teacherWaitingView;
 
     public LoginController(NavigationService nav, EditorService ed,
             ValidateQuestionEditorService val, NetworkController networkController) {
@@ -77,7 +70,6 @@ public class LoginController
     private void openTeacherQuizzChoices(LoginResponse response) {
         Teacher teacher = response.getTeacher();
         TeacherDTO teacherDTO = new TeacherDTO(teacher.getUuid(), teacher.getName(), null);
-        this.loggedInTeacher = teacherDTO;
 
         showTeacherQuizzChoices(teacherDTO, response.getQuizzes(), false);
     }

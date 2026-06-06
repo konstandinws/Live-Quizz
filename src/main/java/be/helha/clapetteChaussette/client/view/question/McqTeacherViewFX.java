@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -20,9 +21,13 @@ import javafx.scene.layout.VBox;
 
 /**
  * Teacher's live view of an MCQ question: the question, its possible answers
- * (each with its live vote count), and the number of participants at the bottom.
+ * (each with its live vote count), and the number of participants at the
+ * bottom.
  */
 public class McqTeacherViewFX extends ViewFX<ITeacherLiveListener> {
+
+    @FXML
+    private Button nextQuestionBTN;
 
     @FXML
     private Label questionTitle;
@@ -37,7 +42,9 @@ public class McqTeacherViewFX extends ViewFX<ITeacherLiveListener> {
     private int participantCount;
     private int answeredCount = 0;
 
-    /** One vote-count label per answer (same order), kept to update tallies live. */
+    /**
+     * One vote-count label per answer (same order), kept to update tallies live.
+     */
     private final List<Label> voteLabels = new ArrayList<>();
 
     public McqTeacherViewFX(QuestionDTO question, int participantCount) {
@@ -84,7 +91,9 @@ public class McqTeacherViewFX extends ViewFX<ITeacherLiveListener> {
         listener.onNextQuestionRequested();
     }
 
-    /** Updates the per-answer vote counts (same order as the question's answers). */
+    /**
+     * Updates the per-answer vote counts (same order as the question's answers).
+     */
     public void setVotes(List<Integer> votes) {
         for (int i = 0; i < voteLabels.size() && i < votes.size(); i++) {
             int count = votes.get(i);

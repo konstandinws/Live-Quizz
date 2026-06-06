@@ -16,8 +16,6 @@ import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.service.editor.EditorService;
 import be.helha.clapetteChaussette.client.service.editor.ValidateQuestionEditorService;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
-import be.helha.clapetteChaussette.client.view.editor.QuizzEditorFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX.ITeacherQuizzChoicesListener;
@@ -51,9 +49,7 @@ public class TeacherQuizzChoicesController extends BaseController
         Quizz quizz = new Quizz("Nouveau Quiz");
         EditorController editorCtrl = new EditorController(quizz, teacher, editorService, navigationService,
                 validateService, this, networkController);
-        QuizzEditorFX editorView = new QuizzEditorFX();
-        navigateToView(editorView, "Éditeur de Quiz", editorCtrl);
-        editorView.displayQuestions(quizz.getQuestions());
+        editorCtrl.openEditor();
     }
 
     public void setQuizzes(List<QuizzDTO> quizz) {
@@ -82,7 +78,7 @@ public class TeacherQuizzChoicesController extends BaseController
                 teacherWaitingView.setCode(response.getCode());
                 teacherWaitingView.setParticipantCount(response.getParticipantCount());
             } else {
-                ErrorPopup.show(response.getMessage());
+                view.showError(response.getMessage());
             }
         });
     }

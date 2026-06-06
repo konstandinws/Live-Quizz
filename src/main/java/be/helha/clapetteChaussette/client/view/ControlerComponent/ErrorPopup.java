@@ -17,7 +17,8 @@ public final class ErrorPopup {
     }
 
     /**
-     * Displays a non-blocking error dialog with the given message.
+     * Displays an error dialog with a neutral header. The message itself carries
+     * the meaning (validation, connection, etc.), so the header stays generic.
      *
      * @param message the message to show to the user.
      */
@@ -25,7 +26,7 @@ public final class ErrorPopup {
         Platform.runLater(() -> {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Erreur");
-            alert.setHeaderText("Erreur de connexion");
+            alert.setHeaderText(null);
             alert.setContentText(message);
             alert.showAndWait();
         });

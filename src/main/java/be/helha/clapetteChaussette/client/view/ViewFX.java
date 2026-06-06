@@ -1,6 +1,7 @@
 package be.helha.clapetteChaussette.client.view;
 
 import be.helha.clapetteChaussette.client.service.NavigationService;
+import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -32,6 +33,10 @@ public abstract class ViewFX<C extends IListener> implements IDisplayable {
         if (returnBTN != null) {
             returnBTN.setOnAction(e -> nav.goBack());
         }
+    }
+
+    public void showError(String message) {
+        ErrorPopup.show(message);
     }
 
 }

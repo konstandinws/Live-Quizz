@@ -14,6 +14,7 @@ import be.helha.clapetteChaussette.client.view.question.StudentQuestionViewFX;
 import be.helha.clapetteChaussette.client.view.question.StudentQuestionViewFX.IStudentQuestionListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
+import be.helha.clapetteChaussette.common.models.events.RevealAnswerEvent;
 import be.helha.clapetteChaussette.common.models.events.SubmitAnswerRequest;
 import javafx.application.Platform;
 
@@ -89,6 +90,15 @@ public class StudentLiveController extends BaseController
         } catch (IOException e) {
             ErrorPopup.show("Erreur lors de l'envoi de la réponse : " + e.getMessage());
         }
+    }
+
+    @Override
+    public void onRevealAnswers(RevealAnswerEvent response) {
+        Platform.runLater(() -> {
+            if (currentView != null) {
+                currentView.revealCorrectAnswers(response.getQuestion(), response.getVotesPerAnswer());
+            }
+        });
     }
 
     @Override

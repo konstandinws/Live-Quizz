@@ -9,14 +9,18 @@ import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.question.McqTeacherViewFX;
 import be.helha.clapetteChaussette.client.view.question.OpenTeacherViewFX;
+import be.helha.clapetteChaussette.client.view.question.PollTeacherViewFX;
 import be.helha.clapetteChaussette.client.view.question.TeacherQuestionViewFX;
 import be.helha.clapetteChaussette.client.view.question.TeacherQuestionViewFX.ITeacherViewListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
+import be.helha.clapetteChaussette.common.models.enums.QuestionType;
 import be.helha.clapetteChaussette.common.models.events.AnswerReceivedEvent;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionRequest;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
+import be.helha.clapetteChaussette.common.models.events.RevealAnswerAskEvent;
+import be.helha.clapetteChaussette.common.models.events.RevealAnswerEvent;
 import javafx.application.Platform;
 
 /**
@@ -32,6 +36,7 @@ public class TeacherLiveController extends BaseController
     private int participantCount;
 
     private TeacherQuestionViewFX currentView;
+    private QuestionDTO currentQuestion;
 
     public TeacherLiveController(NavigationService nav, NetworkController networkController, QuizzDTO quizz,
             int participantCount) {
@@ -49,12 +54,16 @@ public class TeacherLiveController extends BaseController
 
     /** Displays a question on the teacher's live screen (MCQ only for now). */
     public void showQuestion(QuestionDTO question) {
+        this.currentQuestion = question;
         switch (question.type()) {
             case MCQ -> {
                 this.currentView = new McqTeacherViewFX(question, participantCount);
             }
             case OPEN -> {
                 this.currentView = new OpenTeacherViewFX(question, participantCount);
+            }
+            case POLL -> {
+                this.currentView = new PollTeacherViewFX(question, participantCount);
             }
             default -> {
                 ErrorPopup.show("Type de question non supporté : " + question.type());
@@ -73,6 +82,27 @@ public class TeacherLiveController extends BaseController
         } catch (IOException e) {
             ErrorPopup.show("Erreur lors du passage à la question suivante : " + e.getMessage());
         }
+    }
+
+    @Override
+    public void onRevealRequested() {
+        if (currentQuestion == null) {
+            return;
+        }
+        try {
+            networkController.send(new RevealAnswerAskEvent(currentQuestion.uuid(), currentQuestion.type()));
+        } catch (IOException e) {
+            ErrorPopup.show("Erreur lors de l'affichage des réponses : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void onRevealAnswers(RevealAnswerEvent response) {
+        Platform.runLater(() -> {
+            if (currentView != null) {
+                currentView.revealCorrectAnswers();
+            }
+        });
     }
 
     @Override
@@ -107,12 +137,8 @@ public class TeacherLiveController extends BaseController
         Platform.runLater(() -> {
             if (currentView != null) {
                 currentView.setVoteProgress(event.getAnsweredCount(), event.getParticipantCount());
-                switch (currentView.getQuestionType()) {
-                    case MCQ -> currentView.setVotes(event.getVotesPerAnswer());
-                    case OPEN -> currentView.addAnswer(event.getAnswerText());
-                    case POLL -> {
-                        ErrorPopup.show("Votes par réponse n'est pas supporté pour les sondages");
-                    }
+                if (currentView.getQuestionType() == QuestionType.OPEN) {
+                    currentView.addAnswer(event.getAnswerText());
                 }
                 currentView.setVotes(event.getVotesPerAnswer());
             }

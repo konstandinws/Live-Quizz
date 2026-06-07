@@ -40,6 +40,8 @@ public class McqTeacherViewFX extends TeacherQuestionViewFX {
      */
     private final List<Label> voteLabels = new ArrayList<>();
 
+    private final List<HBox> answerRows = new ArrayList<>();
+
     public McqTeacherViewFX(QuestionDTO question, int participantCount) {
         super(question, participantCount);
     }
@@ -52,6 +54,7 @@ public class McqTeacherViewFX extends TeacherQuestionViewFX {
         answersVbox.setPadding(new Insets(20));
         answersVbox.getChildren().clear();
         voteLabels.clear();
+        answerRows.clear();
 
         for (Answer answer : question.answers()) {
             answersVbox.getChildren().add(createAnswerRow(answer.getAnswer()));
@@ -75,12 +78,30 @@ public class McqTeacherViewFX extends TeacherQuestionViewFX {
         row.setPadding(new Insets(12, 16, 12, 16));
         row.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 8;"
                 + " -fx-border-color: #c0c0c0; -fx-border-radius: 8;");
+        answerRows.add(row);
         return row;
     }
 
     @FXML
     private void onNextClick(ActionEvent event) {
         listener.onNextRequested();
+    }
+
+    @FXML
+    private void onRevealClick(ActionEvent event) {
+        listener.onRevealRequested();
+    }
+
+    /** Colours the correct answers in green once the teacher reveals them. */
+    @Override
+    public void revealCorrectAnswers() {
+        List<Answer> answers = question.answers();
+        for (int i = 0; i < answerRows.size() && i < answers.size(); i++) {
+            if (answers.get(i).isCorrect()) {
+                answerRows.get(i).setStyle("-fx-background-color: #c8e6c9; -fx-background-radius: 8;"
+                        + " -fx-border-color: #388e3c; -fx-border-radius: 8;");
+            }
+        }
     }
 
     /**

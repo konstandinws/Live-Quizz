@@ -14,6 +14,8 @@ import be.helha.clapetteChaussette.common.models.events.SubmitAnswerRequest;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
+import be.helha.clapetteChaussette.common.models.events.RevealAnswerAskEvent;
+import be.helha.clapetteChaussette.common.models.events.RevealAnswerEvent;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
 import be.helha.clapetteChaussette.common.config.AppConfig;
@@ -24,7 +26,6 @@ import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsExceptio
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.models.Teacher;
-import be.helha.clapetteChaussette.common.models.enums.QuestionType;
 import be.helha.clapetteChaussette.common.models.questions.Answer;
 import be.helha.clapetteChaussette.server.models.Session;
 import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
@@ -322,15 +323,37 @@ public class Server implements ClientThreadHandler.Listener {
             return;
         }
 
-        if (request.getQuestionType() == QuestionType.MCQ) {
-            session.recordAnswer(clientThreadHandler, request.getAnswerIndex());
-        } else if (request.getQuestionType() == QuestionType.OPEN) {
-            session.recordTextAnswer(clientThreadHandler, request.getAnswerText());
+        switch (request.getQuestionType()) {
+            case MCQ, POLL -> session.recordAnswer(clientThreadHandler, request.getAnswerIndex());
+            case OPEN -> session.recordTextAnswer(clientThreadHandler, request.getAnswerText());
         }
 
         // Tell the teacher the progress (N/N) and the live vote count per answer.
         send(session.getHost(), new AnswerReceivedEvent(session.getAnsweredCount(),
                 session.getNumberParticipants(), session.getVoteTotal(), session.getTextAnswerTotal()));
+    }
+
+    @Override
+    public void onRevealAnswers(ClientThreadHandler clientThreadHandler, RevealAnswerAskEvent request) {
+        Optional<Session> sessionOpt = getSession(clientThreadHandler);
+        if (sessionOpt.isEmpty()) {
+            return;
+        }
+
+        Session session = sessionOpt.get();
+        Optional<QuestionDTO> current = session.getCurrentQuestion();
+        // Ignore a reveal that no longer targets the current question.
+        if (current.isEmpty() || !current.get().uuid().equals(request.getQuestionUuid())) {
+            return;
+        }
+
+        // Send the full question (correct answers included) plus the vote tally to the
+        // teacher and every student, so they can see what was right and how people voted.
+        RevealAnswerEvent event = new RevealAnswerEvent(current.get(), session.getVoteTotal());
+        send(session.getHost(), event);
+        for (ClientThreadHandler client : session.getClients()) {
+            send(client, event);
+        }
     }
 
     private Optional<Session> getSession(ClientThreadHandler clientThreadHandler) {

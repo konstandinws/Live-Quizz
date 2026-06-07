@@ -98,6 +98,7 @@ public class Session {
         currentIndex++;
         answersForCurrent.clear(); // a new question starts with no answers
         answerTextForCurrent.clear();
+        System.out.println(questions.get(currentIndex).answers().get(0));
         return Optional.of(questions.get(currentIndex));
     }
 

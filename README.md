@@ -12,10 +12,10 @@ ClapetteChaussette est un logiciel de gestion de quizz en temps réel. Un profes
 
 ## Compte de démonstration
 
-| Champ        | Valeur       |
-| ------------ | ------------ |
-| Utilisateur  | `ethan`      |
-| Mot de passe | `ethandaysi` |
+| Champ        | Valeur    |
+| ------------ | --------- |
+| Utilisateur  | `pluquet` |
+| Mot de passe | `pluquet` |
 
 Un quizz de démonstration est disponible directement après connexion.
 

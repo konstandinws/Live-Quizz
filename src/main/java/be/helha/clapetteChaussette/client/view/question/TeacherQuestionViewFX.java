@@ -48,7 +48,12 @@ public abstract class TeacherQuestionViewFX extends ViewFX<ITeacherViewListener>
 
     public abstract void addAnswer(List<String> answerText);
 
+    /** Reveals the correct answer(s) on the teacher's screen. */
+    public abstract void revealCorrectAnswers();
+
     public abstract interface ITeacherViewListener extends IListener {
         void onNextRequested();
+
+        void onRevealRequested();
     }
 }

@@ -9,6 +9,7 @@ import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.question.McqStudentViewFX;
 import be.helha.clapetteChaussette.client.view.question.OpenStudentViewFX;
+import be.helha.clapetteChaussette.client.view.question.PollStudentViewFX;
 import be.helha.clapetteChaussette.client.view.question.StudentQuestionViewFX;
 import be.helha.clapetteChaussette.client.view.question.StudentQuestionViewFX.IStudentQuestionListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
@@ -49,6 +50,10 @@ public class StudentLiveController extends BaseController
             case OPEN -> {
                 this.currentView = new OpenStudentViewFX(question);
                 navigateToView(currentView, "Question", this);
+            }
+            case POLL -> {
+                this.currentView = new PollStudentViewFX(question);
+                navigateToView(currentView, "Sondage", this);
             }
             default -> ErrorPopup.show("Type de question non supporté : " + question.type());
         }

@@ -321,11 +321,10 @@ public class Server implements ClientThreadHandler.Listener {
             return;
         }
 
-        if (request.getQuestionType() == QuestionType.MCQ) {
-            session.recordAnswer(clientThreadHandler, request.getAnswerIndex());
-        } else if (request.getQuestionType() == QuestionType.OPEN) {
-            session.recordTextAnswer(clientThreadHandler, request.getAnswerText());
-        }
+        switch (request.getQuestionType()) {
+                    case MCQ, POLL -> session.recordAnswer(clientThreadHandler, request.getAnswerIndex());
+                    case OPEN -> session.recordTextAnswer(clientThreadHandler, request.getAnswerText());
+                }
 
         // Tell the teacher the progress (N/N) and the live vote count per answer.
         send(session.getHost(), new AnswerReceivedEvent(session.getAnsweredCount(),

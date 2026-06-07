@@ -9,10 +9,12 @@ import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.question.McqTeacherViewFX;
 import be.helha.clapetteChaussette.client.view.question.OpenTeacherViewFX;
+import be.helha.clapetteChaussette.client.view.question.PollTeacherViewFX;
 import be.helha.clapetteChaussette.client.view.question.TeacherQuestionViewFX;
 import be.helha.clapetteChaussette.client.view.question.TeacherQuestionViewFX.ITeacherViewListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
+import be.helha.clapetteChaussette.common.models.enums.QuestionType;
 import be.helha.clapetteChaussette.common.models.events.AnswerReceivedEvent;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionRequest;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
@@ -55,6 +57,10 @@ public class TeacherLiveController extends BaseController
             }
             case OPEN -> {
                 this.currentView = new OpenTeacherViewFX(question, participantCount);
+            }
+            case POLL -> {
+                this.currentView = new PollTeacherViewFX(question, participantCount);
+                return;
             }
             default -> {
                 ErrorPopup.show("Type de question non supporté : " + question.type());
@@ -107,12 +113,8 @@ public class TeacherLiveController extends BaseController
         Platform.runLater(() -> {
             if (currentView != null) {
                 currentView.setVoteProgress(event.getAnsweredCount(), event.getParticipantCount());
-                switch (currentView.getQuestionType()) {
-                    case MCQ -> currentView.setVotes(event.getVotesPerAnswer());
-                    case OPEN -> currentView.addAnswer(event.getAnswerText());
-                    case POLL -> {
-                        ErrorPopup.show("Votes par réponse n'est pas supporté pour les sondages");
-                    }
+                if (currentView.getQuestionType() == QuestionType.OPEN) {
+                    currentView.addAnswer(event.getAnswerText());
                 }
                 currentView.setVotes(event.getVotesPerAnswer());
             }

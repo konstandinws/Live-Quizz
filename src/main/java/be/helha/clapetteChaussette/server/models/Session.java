@@ -34,6 +34,7 @@ public class Session {
     private int currentIndex = -1;
     /** Who answered the current question, and which answer index they chose. */
     private final Map<ClientThreadHandler, Integer> answersForCurrent = new HashMap<>();
+    private final Map<ClientThreadHandler, String> answerTextForCurrent = new HashMap<>();
 
     public Session(String code, QuizzDTO quizz, ClientThreadHandler host) {
         this.code = code;
@@ -106,7 +107,10 @@ public class Session {
         return questions.size();
     }
 
-    /** The question currently shown, or empty before the quizz starts / once finished. */
+    /**
+     * The question currently shown, or empty before the quizz starts / once
+     * finished.
+     */
     public Optional<QuestionDTO> getCurrentQuestion() {
         if (currentIndex < 0 || currentIndex >= questions.size()) {
             return Optional.empty();
@@ -114,9 +118,21 @@ public class Session {
         return Optional.of(questions.get(currentIndex));
     }
 
-    /** Records a student's answer to the current question (overwrites a previous one). */
+    /**
+     * Records a student's answer to the current question (overwrites a previous
+     * one).
+     */
     public void recordAnswer(ClientThreadHandler client, int answerIndex) {
         answersForCurrent.put(client, answerIndex);
+    }
+
+    /**
+     * Records a student's text answer to the current question (overwrites a
+     * previous
+     * one).
+     */
+    public void recordTextAnswer(ClientThreadHandler client, String answerText) {
+        answerTextForCurrent.put(client, answerText);
     }
 
     /** How many participants have answered the current question. */

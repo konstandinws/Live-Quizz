@@ -23,6 +23,7 @@ import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsExceptio
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.models.Teacher;
+import be.helha.clapetteChaussette.common.models.enums.QuestionType;
 import be.helha.clapetteChaussette.common.models.questions.Answer;
 import be.helha.clapetteChaussette.server.models.Session;
 import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
@@ -320,11 +321,15 @@ public class Server implements ClientThreadHandler.Listener {
             return;
         }
 
-        session.recordAnswer(clientThreadHandler, request.getAnswerIndex());
+        if (request.getQuestionType() == QuestionType.MCQ) {
+            session.recordAnswer(clientThreadHandler, request.getAnswerIndex());
+        } else if (request.getQuestionType() == QuestionType.OPEN) {
+            session.recordTextAnswer(clientThreadHandler, request.getAnswerText());
+        }
 
         // Tell the teacher the progress (N/N) and the live vote count per answer.
         send(session.getHost(), new AnswerReceivedEvent(session.getAnsweredCount(),
-                session.getNumberParticipants(), session.getVoteTotal()));
+                session.getNumberParticipants(), session.getVoteTotal(), ));
     }
 
     private Optional<Session> getSession(ClientThreadHandler clientThreadHandler) {
@@ -351,13 +356,17 @@ public class Server implements ClientThreadHandler.Listener {
         send(session.getHost(), new NextQuestionResponse(true, "OK", question, index));
 
         // Students get a copy without the correct answers (anti-cheat).
-        NextQuestionResponse studentResponse = new NextQuestionResponse(true, "OK", hideCorrectAnswers(question), index);
+        NextQuestionResponse studentResponse = new NextQuestionResponse(true, "OK", hideCorrectAnswers(question),
+                index);
         for (ClientThreadHandler client : session.getClients()) {
             send(client, studentResponse);
         }
     }
 
-    /** Returns a copy of the question whose answers no longer reveal the correct ones. */
+    /**
+     * Returns a copy of the question whose answers no longer reveal the correct
+     * ones.
+     */
     private QuestionDTO hideCorrectAnswers(QuestionDTO question) {
         List<Answer> hidden = question.answers().stream()
                 .map(answer -> new Answer(answer.getAnswer(), false))

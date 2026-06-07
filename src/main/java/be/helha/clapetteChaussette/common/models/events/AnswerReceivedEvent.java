@@ -12,11 +12,14 @@ public class AnswerReceivedEvent extends NetworkEvent {
     private final int answeredCount;
     private final int participantCount;
     private final List<Integer> votesPerAnswer;
+    private final List<String> AnswerText;
 
-    public AnswerReceivedEvent(int answeredCount, int participantCount, List<Integer> votesPerAnswer) {
+    public AnswerReceivedEvent(int answeredCount, int participantCount, List<Integer> votesPerAnswer,
+            List<String> answerText) {
         this.answeredCount = answeredCount;
         this.participantCount = participantCount;
         this.votesPerAnswer = votesPerAnswer;
+        this.AnswerText = answerText;
     }
 
     public int getAnsweredCount() {
@@ -29,5 +32,9 @@ public class AnswerReceivedEvent extends NetworkEvent {
 
     public List<Integer> getVotesPerAnswer() {
         return votesPerAnswer;
+    }
+
+    public List<String> getAnswerText() {
+        return AnswerText;
     }
 }

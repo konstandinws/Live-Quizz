@@ -14,6 +14,7 @@ import be.helha.clapetteChaussette.common.models.events.NetworkEvent;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
+import be.helha.clapetteChaussette.common.models.events.RevealAnswerEvent;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
 
@@ -66,6 +67,8 @@ public class ClientThreadHandler implements Runnable {
             listener.onNextQuestionResponse((NextQuestionResponse) event);
         } else if (event instanceof AnswerReceivedEvent) {
             listener.onAnswerReceived((AnswerReceivedEvent) event);
+        } else if (event instanceof RevealAnswerEvent) {
+            listener.onRevealAnswers((RevealAnswerEvent) event);
         } else {
             LOGGER.log(Level.WARNING, "Unsupported network event received: {0}",
                     event == null ? "null" : event.getClass().getName());
@@ -130,6 +133,13 @@ public class ClientThreadHandler implements Runnable {
          * question, carrying the updated answered/total counts.
          */
         default void onAnswerReceived(AnswerReceivedEvent answerReceivedEvent) {
+        }
+
+        /**
+         * Called on every client when the teacher reveals the correct answers,
+         * carrying the current question with its correct answers.
+         */
+        default void onRevealAnswers(RevealAnswerEvent revealAnswerEvent) {
         }
 
         /**

@@ -88,7 +88,7 @@ public class McqTeacherViewFX extends ViewFX<ITeacherLiveListener> {
 
     @FXML
     private void onNextClick(ActionEvent event) {
-        listener.onNextQuestionRequested();
+        listener.onNextRequested();
     }
 
     /**
@@ -124,6 +124,6 @@ public class McqTeacherViewFX extends ViewFX<ITeacherLiveListener> {
     }
 
     public interface ITeacherLiveListener extends IListener {
-        void onNextQuestionRequested();
+        void onNextRequested();
     }
 }

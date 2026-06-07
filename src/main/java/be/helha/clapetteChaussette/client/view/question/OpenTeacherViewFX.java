@@ -35,7 +35,7 @@ public class OpenTeacherViewFX extends ViewFX<IOpenTeacherListener> {
     private int answeredCount = 0;
     private final List<Label> answerLabels = new ArrayList<>();
 
-    OpenTeacherViewFX(QuestionDTO question, int participantCount) {
+    public OpenTeacherViewFX(QuestionDTO question, int participantCount) {
         this.question = question;
         this.participantCount = participantCount;
     }
@@ -74,7 +74,7 @@ public class OpenTeacherViewFX extends ViewFX<IOpenTeacherListener> {
 
     @FXML
     private void onNextClick(ActionEvent event) {
-        listener.onNextOpenSubmitted();
+        listener.onNextRequested();
     }
 
     @FXML
@@ -88,7 +88,7 @@ public class OpenTeacherViewFX extends ViewFX<IOpenTeacherListener> {
     }
 
     public interface IOpenTeacherListener extends IListener {
-        void onNextOpenSubmitted();
+        void onNextRequested();
     }
 
 }

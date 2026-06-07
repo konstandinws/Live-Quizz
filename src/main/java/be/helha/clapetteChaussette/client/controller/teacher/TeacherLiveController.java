@@ -9,6 +9,8 @@ import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.question.McqTeacherViewFX;
 import be.helha.clapetteChaussette.client.view.question.McqTeacherViewFX.ITeacherLiveListener;
+import be.helha.clapetteChaussette.client.view.question.OpenTeacherViewFX;
+import be.helha.clapetteChaussette.client.view.question.OpenTeacherViewFX.IOpenTeacherListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.models.events.AnswerReceivedEvent;
@@ -23,7 +25,7 @@ import javafx.application.Platform;
  * question is current, so "next" only asks it to advance.
  */
 public class TeacherLiveController extends BaseController
-        implements ITeacherLiveListener, ClientThreadHandler.Listener {
+        implements ITeacherLiveListener, IOpenTeacherListener, ClientThreadHandler.Listener {
 
     private final NetworkController networkController;
     private final QuizzDTO quizz;
@@ -51,12 +53,16 @@ public class TeacherLiveController extends BaseController
                 this.currentView = new McqTeacherViewFX(question, participantCount);
                 navigateToView(currentView, "Question en cours", this);
             }
+            case OPEN -> {
+                OpenTeacherViewFX openView = new OpenTeacherViewFX(question, participantCount);
+                navigateToView(openView, "Question en cours", this);
+            }
             default -> ErrorPopup.show("Type de question non supporté : " + question.type());
         }
     }
 
     @Override
-    public void onNextQuestionRequested() {
+    public void onNextRequested() {
         try {
             // The server owns the index; it only needs to locate the session (via this
             // connection), so the index sent here is ignored server-side.

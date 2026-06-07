@@ -103,10 +103,10 @@ public class EditorServiceTest {
         List<Boolean> listeenswerbool = new ArrayList<>();
         doThrow(new InvalidQuestionException("Liste de réponses vide"))
                 .when(validateQuestionEditorService).validateOpenQuestion("question", listeanswerstring);
-
+        assertThrows(InvalidQuestionException.class, () -> {
+            editorService.createOpenQuestion("question", listeanswerstring, listeenswerbool, false);
+        });
         // WHEN + THEN
-        doThrow(new InvalidQuestionException("Liste de réponses vide"))
-                .when(validateQuestionEditorService).validateOpenQuestion("question", listeanswerstring);
 
     }
     @Test
@@ -156,18 +156,82 @@ public class EditorServiceTest {
         );
     }
     @Test
-    void createOpenQuestion_shouldHavePoints_whenHasPointsIsTrue() throws InvalidQuestionException {
+    void createMcqQuestion_shouldMapAnswersCorrectly() throws InvalidQuestionException {
         // GIVEN
-        String title = "Question avec points";
-        List<String> answerTexts = List.of("Réponse 1");
-        List<Boolean> correctAnswers = List.of(true);
-        boolean hasPoints = true;
+        String title = "Question test";
+        List<String> answers = List.of("A", "B", "C");
+        List<Boolean> correctAnswers = List.of(false, true, false);
 
-        doNothing().when(validateQuestionEditorService).validateOpenQuestion(title, answerTexts);
+        doNothing().when(validateQuestionEditorService)
+                .validateMcqQuestion(title, answers, correctAnswers);
 
         // WHEN
-        Question question =editorService.createOpenQuestion(title, answerTexts, correctAnswers, hasPoints);
-        assertTrue(question.isPointsEnabled());
+        Question question = editorService.createMcqQuestion(title, answers, correctAnswers);
+
+        List<String> actualStrings = question.getAnswers().stream()
+                .map(Answer::getAnswer)
+                .collect(Collectors.toList());
+
+        List<Boolean> actualBools = question.getAnswers().stream()
+                .map(Answer::isCorrect)
+                .collect(Collectors.toList());
+
         // THEN
+        assertAll(
+                () -> assertEquals(answers, actualStrings),
+                () -> assertEquals(correctAnswers, actualBools)
+        );
+    }
+    @Test
+    void createMcqQuestion_shouldThrowException_whenTitleIsInvalid() throws InvalidQuestionException {
+        // GIVEN
+        String title = "";
+        List<String> answers = List.of("A", "B");
+        List<Boolean> correctAnswers = List.of(true, false);
+
+        doThrow(new InvalidQuestionException("Titre invalide"))
+                .when(validateQuestionEditorService)
+                .validateMcqQuestion(title, answers, correctAnswers);
+
+        // WHEN + THEN
+        InvalidQuestionException exception = assertThrows(InvalidQuestionException.class, () -> {
+            editorService.createMcqQuestion(title, answers, correctAnswers);
+        });
+
+        assertEquals("Titre invalide", exception.getMessage());
+    }
+    @Test
+    void createMcqQuestion_shouldThrowException_whenAnswersIsEmpty() throws InvalidQuestionException {
+        // GIVEN
+        String title = "Question valide";
+        List<String> answers = List.of();
+        List<Boolean> correctAnswers = List.of();
+
+        doThrow(new InvalidQuestionException("Liste de réponses vide"))
+                .when(validateQuestionEditorService)
+                .validateMcqQuestion(title, answers, correctAnswers);
+
+        // WHEN + THEN
+        assertThrows(InvalidQuestionException.class, () -> {
+            editorService.createMcqQuestion(title, answers, correctAnswers);
+        });
+    }
+    @Test
+    void createMcqQuestion_shouldThrowException_whenNoCorrectAnswer() throws InvalidQuestionException {
+        // GIVEN
+        String title = "Question valide";
+        List<String> answers = List.of("A", "B", "C");
+        List<Boolean> correctAnswers = List.of(false, false, false); // aucune bonne réponse
+
+        doThrow(new InvalidQuestionException("Aucune bonne réponse définie"))
+                .when(validateQuestionEditorService)
+                .validateMcqQuestion(title, answers, correctAnswers);
+
+        // WHEN + THEN
+        InvalidQuestionException exception = assertThrows(InvalidQuestionException.class, () -> {
+            editorService.createMcqQuestion(title, answers, correctAnswers);
+        });
+
+        assertEquals("Aucune bonne réponse définie", exception.getMessage());
     }
 }

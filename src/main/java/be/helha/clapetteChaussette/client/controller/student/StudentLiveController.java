@@ -7,6 +7,7 @@ import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
+import be.helha.clapetteChaussette.client.view.student.StudentInvitationViewFX;
 import be.helha.clapetteChaussette.client.view.question.McqStudentViewFX;
 import be.helha.clapetteChaussette.client.view.question.OpenStudentViewFX;
 import be.helha.clapetteChaussette.client.view.question.PollStudentViewFX;
@@ -110,7 +111,12 @@ public class StudentLiveController extends BaseController
             }
             QuestionDTO question = response.getQuestion();
             if (question == null) {
+                // End of the quizz: send the student back to the join (code) screen.
+                networkController.removeListener(this);
                 ErrorPopup.show("Le quiz est terminé.");
+                StudentInvitationController invitationCtrl = new StudentInvitationController(navigationService,
+                        networkController);
+                navigateToView(new StudentInvitationViewFX(), "Rejoindre un Quiz", invitationCtrl);
                 return;
             }
             showQuestion(question);

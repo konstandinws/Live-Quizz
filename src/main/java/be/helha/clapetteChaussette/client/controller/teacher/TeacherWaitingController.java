@@ -22,14 +22,16 @@ public class TeacherWaitingController extends BaseController
     private final QuizzDTO quizz;
     private final TeacherWaitingViewFX teacherWaitingView;
     private final NetworkController networkController;
+    private final TeacherQuizzChoicesController choicesController;
     private int participantCount = 0;
 
     public TeacherWaitingController(NavigationService nav, QuizzDTO quizz, NetworkController networkController,
-            TeacherWaitingViewFX teacherWaitingView) {
+            TeacherWaitingViewFX teacherWaitingView, TeacherQuizzChoicesController choicesController) {
         super(nav);
         this.quizz = quizz;
         this.networkController = networkController;
         this.teacherWaitingView = teacherWaitingView;
+        this.choicesController = choicesController;
 
         try {
             networkController.addListener(this);
@@ -83,7 +85,7 @@ public class TeacherWaitingController extends BaseController
             // Hand over from the waiting screen to the live quizz screen.
             networkController.removeListener(this);
             TeacherLiveController liveController = new TeacherLiveController(navigationService, networkController,
-                    quizz, participantCount);
+                    quizz, participantCount, choicesController);
             liveController.showQuestion(question);
         });
     }

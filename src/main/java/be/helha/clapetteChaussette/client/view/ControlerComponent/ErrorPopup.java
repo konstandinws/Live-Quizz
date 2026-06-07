@@ -13,9 +13,6 @@ import javafx.scene.control.Alert.AlertType;
  */
 public final class ErrorPopup {
 
-    private ErrorPopup() {
-    }
-
     /**
      * Displays an error dialog with a neutral header. The message itself carries
      * the meaning (validation, connection, etc.), so the header stays generic.

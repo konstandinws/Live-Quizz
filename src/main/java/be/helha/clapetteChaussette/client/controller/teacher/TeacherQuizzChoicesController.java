@@ -68,6 +68,14 @@ public class TeacherQuizzChoicesController extends BaseController
         replaceView(view, "Mes questionnaires", this);
     }
 
+    /**
+     * Re-displays the questionnaire list once a live session ends. The view still
+     * holds the teacher's quizzes, so we just show it again.
+     */
+    public void returnToChoices() {
+        navigateToView(view, "Mes questionnaires", this);
+    }
+
     @Override
     public void onLaunchQuizzRequested(QuizzDTO quizz) throws IOException {
         networkController.send(new LaunchQuizzRequest(quizz));
@@ -79,7 +87,7 @@ public class TeacherQuizzChoicesController extends BaseController
             if (response.isSuccess()) {
                 TeacherWaitingViewFX teacherWaitingView = new TeacherWaitingViewFX();
                 TeacherWaitingController waitingCtrl = new TeacherWaitingController(navigationService,
-                        response.getQuizz(), networkController, teacherWaitingView);
+                        response.getQuizz(), networkController, teacherWaitingView, this);
                 navigateToView(teacherWaitingView, "En attente de lancement", waitingCtrl);
                 teacherWaitingView.setCode(response.getCode());
                 teacherWaitingView.setParticipantCount(response.getParticipantCount());

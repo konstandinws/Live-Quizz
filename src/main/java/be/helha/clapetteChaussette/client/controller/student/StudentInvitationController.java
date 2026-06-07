@@ -26,6 +26,8 @@ public class StudentInvitationController extends BaseController
     // Waiting screen shown once the session is joined, updated as students arrive.
     private StudentWaitingViewFX waitingView;
     private CodeValidatorService codeValidatorService;
+    // Whether this controller is already registered to receive server events.
+    private boolean registered = false;
 
     public StudentInvitationController(NavigationService nav, NetworkController networkController) {
         super(nav);
@@ -36,11 +38,19 @@ public class StudentInvitationController extends BaseController
 
     @Override
     public void onJoinRequested(String code, String pseudo) throws IOException, IllegalArgumentException {
-        if (!networkController.isConnected()) {
-            networkController.connect(this);
-        }
         if (!codeValidatorService.validateSessionCodeAndPseudo(code, pseudo)) {
             throw new IllegalArgumentException("Code de session ou pseudo invalide.");
+        }
+        // Make sure we listen for the server's reply. connect() registers us on the
+        // first join, but a controller created after a finished quizz reuses an already
+        // open connection, so it must register itself explicitly.
+        if (!registered) {
+            if (networkController.isConnected()) {
+                networkController.addListener(this);
+            } else {
+                networkController.connect(this);
+            }
+            registered = true;
         }
         networkController.send(new JoinSessionRequest(code, pseudo));
     }

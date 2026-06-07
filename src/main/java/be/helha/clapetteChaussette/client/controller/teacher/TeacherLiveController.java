@@ -33,17 +33,19 @@ public class TeacherLiveController extends BaseController
 
     private final NetworkController networkController;
     private final QuizzDTO quizz;
+    private final TeacherQuizzChoicesController choicesController;
     private int participantCount;
 
     private TeacherQuestionViewFX currentView;
     private QuestionDTO currentQuestion;
 
     public TeacherLiveController(NavigationService nav, NetworkController networkController, QuizzDTO quizz,
-            int participantCount) {
+            int participantCount, TeacherQuizzChoicesController choicesController) {
         super(nav);
         this.networkController = networkController;
         this.quizz = quizz;
         this.participantCount = participantCount;
+        this.choicesController = choicesController;
 
         try {
             networkController.addListener(this);
@@ -114,8 +116,10 @@ public class TeacherLiveController extends BaseController
             }
             QuestionDTO question = response.getQuestion();
             if (question == null) {
-                // A null question signals the end of the quizz.
+                // A null question signals the end of the quizz: go back to the list.
+                networkController.removeListener(this);
                 ErrorPopup.show("Le quiz est terminé.");
+                choicesController.returnToChoices();
                 return;
             }
             showQuestion(question);

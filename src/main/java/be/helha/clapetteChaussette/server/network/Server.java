@@ -16,6 +16,7 @@ import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzRequest;
 import be.helha.clapetteChaussette.common.models.events.SaveQuizzResponse;
+import be.helha.clapetteChaussette.common.config.AppConfig;
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
@@ -51,7 +52,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Server implements ClientThreadHandler.Listener {
 
-    private static final int SERVER_PORT = 3001;
+    private final int serverPort = AppConfig.getInstance().getServerPort();
 
     private final List<Thread> listenerThreads = new ArrayList<>();
 
@@ -83,8 +84,8 @@ public class Server implements ClientThreadHandler.Listener {
     public void startServer() {
         System.out.println("Starting server...");
         // Use try-with-resources to ensure the ServerSocket is closed automatically
-        try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
-            System.out.println("Server started on port " + SERVER_PORT + ". Waiting for connections...");
+        try (ServerSocket serverSocket = new ServerSocket(serverPort)) {
+            System.out.println("Server started on port " + serverPort + ". Waiting for connections...");
 
             while (true) {
                 // Wait for a student to connect (blocking method)

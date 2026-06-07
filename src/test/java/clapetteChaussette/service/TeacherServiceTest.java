@@ -6,7 +6,7 @@ import be.helha.clapetteChaussette.common.exception.repository.DatabaseException
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
 import be.helha.clapetteChaussette.server.repository.ITeacherRepository;
-import be.helha.clapetteChaussette.client.service.repository.TeacherService;
+import be.helha.clapetteChaussette.server.repository.TeacherService;
 import be.helha.clapetteChaussette.server.utils.PasswordHasher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

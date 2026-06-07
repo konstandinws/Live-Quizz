@@ -1,11 +1,10 @@
-package be.helha.clapetteChaussette.client.service.repository;
+package be.helha.clapetteChaussette.server.repository;
 
 import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsException;
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.models.Teacher;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
-import be.helha.clapetteChaussette.server.repository.ITeacherRepository;
 import be.helha.clapetteChaussette.server.utils.PasswordHasher;
 
 import java.util.Optional;

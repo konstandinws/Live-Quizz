@@ -34,7 +34,7 @@ import be.helha.clapetteChaussette.server.repository.db.JdbcQuestionRepository;
 import be.helha.clapetteChaussette.server.repository.db.JdbcQuizzRepository;
 import be.helha.clapetteChaussette.server.repository.db.JdbcTeacherRepository;
 import be.helha.clapetteChaussette.server.utils.CodeGenerator;
-import be.helha.clapetteChaussette.client.service.repository.TeacherService;
+import be.helha.clapetteChaussette.server.repository.TeacherService;
 
 import java.net.*;
 import java.io.*;

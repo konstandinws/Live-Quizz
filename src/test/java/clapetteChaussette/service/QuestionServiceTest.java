@@ -44,7 +44,6 @@ public class QuestionServiceTest {
         Answer reponseA = new Answer("1", true);
         Answer reponseB = new Answer("2", false);
         List<Answer> listAnswers = Arrays.asList(reponseA, reponseB);
-        System.out.println(listAnswers);
         Question testquestion = new McqQuestion("question", listAnswers);
         assertTrue(questionService.isMcqCorrect(testquestion, 0));
         assertFalse(questionService.isMcqCorrect(testquestion, 1));

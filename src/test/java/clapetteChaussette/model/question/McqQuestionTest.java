@@ -24,7 +24,6 @@ class McqQuestionTest {
 
         assertEquals(title, question.getQuestion());
         assertEquals(choices, question.getAnswers());
-        System.out.println(question.getCorrectAnswers().get(0).getAnswer());
         assertEquals(correctAnswers.get(0).getAnswer(), question.getCorrectAnswers().get(0).getAnswer());
 
         assertFalse(question.isMultipleAnswers());

@@ -60,7 +60,7 @@ public class McqStudentViewFX extends ViewFX<IMcqStudentListener> {
             showError("Choisis une réponse avant de valider.");
             return;
         }
-        listener.onAnswerSelected(index);
+        listener.onAnswerMcqSelected(index);
     }
 
     /** Locks the answer in: once submitted, the student can no longer change it. */
@@ -76,6 +76,6 @@ public class McqStudentViewFX extends ViewFX<IMcqStudentListener> {
     }
 
     public interface IMcqStudentListener extends IListener {
-        void onAnswerSelected(int index);
+        void onAnswerMcqSelected(int index);
     }
 }

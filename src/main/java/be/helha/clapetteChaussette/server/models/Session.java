@@ -2,6 +2,7 @@ package be.helha.clapetteChaussette.server.models;
 
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
+import be.helha.clapetteChaussette.common.models.enums.QuestionType;
 import be.helha.clapetteChaussette.server.network.ClientThreadHandler;
 
 import java.util.ArrayList;
@@ -96,6 +97,7 @@ public class Session {
         }
         currentIndex++;
         answersForCurrent.clear(); // a new question starts with no answers
+        answerTextForCurrent.clear();
         return Optional.of(questions.get(currentIndex));
     }
 
@@ -126,6 +128,10 @@ public class Session {
         answersForCurrent.put(client, answerIndex);
     }
 
+    public void recordAnswer(ClientThreadHandler client, String answerText) {
+        answerTextForCurrent.put(client, answerText);
+    }
+
     /**
      * Records a student's text answer to the current question (overwrites a
      * previous
@@ -137,7 +143,11 @@ public class Session {
 
     /** How many participants have answered the current question. */
     public int getAnsweredCount() {
-        return answersForCurrent.size();
+        if (questions.get(currentIndex).type() == QuestionType.OPEN) {
+            return answerTextForCurrent.size();
+        } else {
+            return answersForCurrent.size();
+        }
     }
 
     /**
@@ -164,5 +174,9 @@ public class Session {
             tally.add(count);
         }
         return tally;
+    }
+
+    public List<String> getTextAnswerTotal() {
+        return new ArrayList<>(answerTextForCurrent.values());
     }
 }

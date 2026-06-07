@@ -49,13 +49,13 @@ public class StudentLiveController extends BaseController
     }
 
     @Override
-    public void onAnswerSelected(int index) {
+    public void onAnswerMcqSelected(int index) {
         if (currentQuestion == null) {
             return;
         }
         try {
-            networkController.send(new SubmitAnswerRequest(currentQuestion.uuid(), index));
-            // The answer is final: lock the choices so it can't be changed.
+            networkController
+                    .send(new SubmitAnswerRequest(currentQuestion.uuid(), index, null, currentQuestion.type()));
             if (currentView != null) {
                 currentView.lockAfterAnswer();
             }

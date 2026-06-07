@@ -329,7 +329,7 @@ public class Server implements ClientThreadHandler.Listener {
 
         // Tell the teacher the progress (N/N) and the live vote count per answer.
         send(session.getHost(), new AnswerReceivedEvent(session.getAnsweredCount(),
-                session.getNumberParticipants(), session.getVoteTotal(), ));
+                session.getNumberParticipants(), session.getVoteTotal(), session.getTextAnswerTotal()));
     }
 
     private Optional<Session> getSession(ClientThreadHandler clientThreadHandler) {

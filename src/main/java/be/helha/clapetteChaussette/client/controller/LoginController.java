@@ -10,7 +10,6 @@ import be.helha.clapetteChaussette.common.dto.TeacherDTO;
 import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.controller.teacher.TeacherQuizzChoicesController;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.service.editor.EditorService;
@@ -63,7 +62,7 @@ public class LoginController
             // Response arrives on the network thread: hop back onto the JavaFX thread.
             Platform.runLater(() -> openTeacherQuizzChoices(response));
         } else {
-            ErrorPopup.show(response.getMessage());
+            showError(response.getMessage());
         }
     }
 

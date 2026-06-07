@@ -5,7 +5,6 @@ import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.service.auth.CodeValidatorService;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.student.StudentInvitationViewFX.IStudentInvitationListener;
 import be.helha.clapetteChaussette.client.view.student.StudentWaitingViewFX;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
@@ -65,7 +64,7 @@ public class StudentInvitationController extends BaseController
                 waitingView.setParticipantCount(response.getParticipantCount());
                 waitingView.setOnReturn(this::leaveSession);
             } else {
-                ErrorPopup.show(response.getMessage());
+                showError(response.getMessage());
             }
         });
     }
@@ -95,7 +94,7 @@ public class StudentInvitationController extends BaseController
     public void onNextQuestionResponse(NextQuestionResponse response) {
         Platform.runLater(() -> {
             if (!response.isSuccess()) {
-                ErrorPopup.show("Erreur lors du lancement : " + response.getErrorMessage());
+                showError("Erreur lors du lancement : " + response.getErrorMessage());
                 return;
             }
             QuestionDTO question = response.getQuestion();
@@ -111,6 +110,6 @@ public class StudentInvitationController extends BaseController
 
     @Override
     public void onError(Exception e) {
-        ErrorPopup.show(e.getMessage());
+        showError(e.getMessage());
     }
 }

@@ -2,7 +2,6 @@ package be.helha.clapetteChaussette.client.view.teacher;
 
 import be.helha.clapetteChaussette.client.view.IListener;
 import be.helha.clapetteChaussette.client.view.ViewFX;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherQuizzChoicesViewFX.ITeacherQuizzChoicesListener;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import javafx.fxml.FXML;
@@ -93,7 +92,7 @@ public class TeacherQuizzChoicesViewFX extends ViewFX<ITeacherQuizzChoicesListen
             try {
                 listener.onLaunchQuizzRequested(quizz);
             } catch (IOException ex) {
-                ErrorPopup.show("Erreur lors de la tentative de lancement du quiz : " + ex.getMessage());
+                showError("Erreur lors de la tentative de lancement du quiz : " + ex.getMessage());
             }
         });
 

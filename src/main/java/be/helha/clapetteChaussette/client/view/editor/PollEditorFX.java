@@ -79,7 +79,7 @@ public class PollEditorFX extends ViewFX<IPollEditorListener> {
             listener.createPoll(title, answers);
 
         } catch (InvalidQuestionException e) {
-            showErrorPopup(e.getMessage());
+            showError(e.getMessage());
         }
     }
 
@@ -104,7 +104,7 @@ public class PollEditorFX extends ViewFX<IPollEditorListener> {
                 textFields.remove(answerTF);
                 setAddAnswerBTNVisibility();
             } else {
-                showErrorPopup("Vous devez avoir au minimum 2 options pour un sondage.");
+                showError("Vous devez avoir au minimum 2 options pour un sondage.");
             }
         });
 
@@ -120,14 +120,6 @@ public class PollEditorFX extends ViewFX<IPollEditorListener> {
             }
         }
         return answers;
-    }
-
-    private void showErrorPopup(String message) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-        alert.setTitle("Erreur de saisie");
-        alert.setHeaderText("Impossible de sauvegarder le sondage");
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     /**

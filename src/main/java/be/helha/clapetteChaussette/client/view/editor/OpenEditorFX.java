@@ -77,14 +77,8 @@ public class OpenEditorFX extends ViewFX<IOpenEditorListener> {
             listener.createOpenQuestion(title, answerText, correctAnswers, hasPoints);
 
         } catch (InvalidQuestionException e) {
-            showErrorPopup(e.getMessage());
+            showError(e.getMessage());
         }
-    }
-
-    private void showErrorPopup(String msg) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-        alert.setContentText(msg);
-        alert.show();
     }
 
     @Override

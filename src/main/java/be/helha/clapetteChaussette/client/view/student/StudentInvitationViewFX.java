@@ -1,14 +1,13 @@
 package be.helha.clapetteChaussette.client.view.student;
 
-import be.helha.clapetteChaussette.client.controller.student.StudentInvitationController;
 import be.helha.clapetteChaussette.client.view.IListener;
 import be.helha.clapetteChaussette.client.view.ViewFX;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
+import be.helha.clapetteChaussette.client.view.student.StudentInvitationViewFX.IStudentInvitationListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-public class StudentInvitationViewFX extends ViewFX<StudentInvitationController> {
+public class StudentInvitationViewFX extends ViewFX<IStudentInvitationListener> {
     @FXML
     private Button returnBTN;
 
@@ -23,7 +22,7 @@ public class StudentInvitationViewFX extends ViewFX<StudentInvitationController>
         try {
             listener.onJoinRequested(codeField.getText(), pseudoField.getText());
         } catch (Exception e) {
-            ErrorPopup.show("Impossible de joindre le serveur.");
+            showError("Impossible de joindre le serveur.");
         }
     }
 

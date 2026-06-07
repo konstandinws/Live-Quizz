@@ -5,7 +5,6 @@ import java.util.List;
 
 import be.helha.clapetteChaussette.client.controller.BaseController;
 import be.helha.clapetteChaussette.client.controller.editor.EditorController;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.common.models.Quizz;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.dto.TeacherDTO;
@@ -43,7 +42,7 @@ public class TeacherQuizzChoicesController extends BaseController
         try {
             networkController.addListener(this);
         } catch (IOException e) {
-            ErrorPopup.show("Erreur de connexion au serveur : " + e.getMessage());
+            view.showError("Erreur de connexion au serveur : " + e.getMessage());
         }
     }
 

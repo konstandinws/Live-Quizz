@@ -6,7 +6,6 @@ import be.helha.clapetteChaussette.client.controller.BaseController;
 import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX;
 import be.helha.clapetteChaussette.client.view.teacher.TeacherWaitingViewFX.ITeacherWaitingListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
@@ -36,7 +35,7 @@ public class TeacherWaitingController extends BaseController
         try {
             networkController.addListener(this);
         } catch (IOException e) {
-            ErrorPopup.show("Erreur de connexion au serveur : " + e.getMessage());
+            teacherWaitingView.showError("Erreur de connexion au serveur : " + e.getMessage());
         }
     }
 
@@ -64,7 +63,7 @@ public class TeacherWaitingController extends BaseController
         try {
             networkController.send(new NextQuestionRequest(quizz, 0));
         } catch (IOException e) {
-            ErrorPopup.show("Erreur lors de l'envoi de la requête de lancement : " + e.getMessage());
+            teacherWaitingView.showError("Erreur lors de l'envoi de la requête de lancement : " + e.getMessage());
         }
     }
 
@@ -72,7 +71,7 @@ public class TeacherWaitingController extends BaseController
     public void onNextQuestionResponse(NextQuestionResponse nextQuestionResponse) {
         Platform.runLater(() -> {
             if (!nextQuestionResponse.isSuccess()) {
-                ErrorPopup.show("Erreur lors du lancement du quizz : " + nextQuestionResponse.getErrorMessage());
+                teacherWaitingView.showError("Erreur lors du lancement du quizz : " + nextQuestionResponse.getErrorMessage());
                 return;
             }
 

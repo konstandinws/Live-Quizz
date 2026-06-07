@@ -1,13 +1,13 @@
 package be.helha.clapetteChaussette.client.view.student;
 
-import be.helha.clapetteChaussette.client.controller.student.StudentWaitingController;
 import be.helha.clapetteChaussette.client.view.IListener;
 import be.helha.clapetteChaussette.client.view.ViewFX;
+import be.helha.clapetteChaussette.client.view.student.StudentWaitingViewFX.IStudentWaitingListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class StudentWaitingViewFX extends ViewFX<StudentWaitingController> {
+public class StudentWaitingViewFX extends ViewFX<IStudentWaitingListener> {
     @FXML
     private Button returnBTN;
 

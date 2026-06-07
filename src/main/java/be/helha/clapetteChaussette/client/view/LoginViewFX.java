@@ -3,13 +3,11 @@ package be.helha.clapetteChaussette.client.view;
 
 import java.io.IOException;
 
-import be.helha.clapetteChaussette.client.controller.LoginController;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-public class LoginViewFX extends ViewFX<LoginController> {
+public class LoginViewFX extends ViewFX<LoginViewFX.ILoginListener> {
 
     @FXML
     private TextField nameField;
@@ -22,7 +20,7 @@ public class LoginViewFX extends ViewFX<LoginController> {
         try {
             listener.onLoginRequested(nameField.getText(), passwordField.getText());
         } catch (IOException e) {
-            ErrorPopup.show("Erreur lors de la connexion au serveur: " + e.getMessage());
+            showError("Erreur lors de la connexion au serveur: " + e.getMessage());
         }
     }
 
@@ -31,7 +29,7 @@ public class LoginViewFX extends ViewFX<LoginController> {
         try {
             listener.onRegisterRequested(nameField.getText(), passwordField.getText());
         } catch (IOException e) {
-            ErrorPopup.show("Erreur lors de l'inscription au serveur: " + e.getMessage());
+            showError("Erreur lors de l'inscription au serveur: " + e.getMessage());
         }
     }
 

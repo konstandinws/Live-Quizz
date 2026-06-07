@@ -102,7 +102,7 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
         try {
             listener.createMcqQuestion(title, answers, correctAnswers);
         } catch (InvalidQuestionException e) {
-            showErrorPopup(e.getMessage());
+            showError(e.getMessage());
         }
     }
 
@@ -142,7 +142,7 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
                 textFields.remove(answerTF);
                 setAddAnswerBTNVisibility();
             } else {
-                showErrorPopup("You must have at least 2 answers.");
+                showError("You must have at least 2 answers.");
             }
         });
         answerRow.getChildren().addAll(validAnswerCB, answerTF, deleteBTN);
@@ -171,20 +171,6 @@ public class McqEditorFX extends ViewFX<IMcqEditorListener> {
      */
     String getTitle() {
         return questionTitle.getText();
-    }
-
-    /**
-     * Displays a modal error popup with the provided message.
-     * The application is paused until the popup is closed.
-     *
-     * @param message the error message to display to the user.
-     */
-    private void showErrorPopup(String message) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-        alert.setTitle("Input error");
-        alert.setHeaderText("Unable to save the question");
-        alert.setContentText(message);
-        alert.showAndWait(); // Pauses the application until the user clicks OK
     }
 
     @Override

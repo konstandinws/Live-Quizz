@@ -6,7 +6,6 @@ import be.helha.clapetteChaussette.client.controller.BaseController;
 import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.student.StudentInvitationViewFX;
 import be.helha.clapetteChaussette.client.view.question.McqStudentViewFX;
 import be.helha.clapetteChaussette.client.view.question.OpenStudentViewFX;
@@ -37,7 +36,7 @@ public class StudentLiveController extends BaseController
         try {
             networkController.addListener(this);
         } catch (IOException e) {
-            ErrorPopup.show("Erreur de connexion au serveur : " + e.getMessage());
+            showError("Erreur de connexion au serveur : " + e.getMessage());
         }
     }
 
@@ -57,7 +56,7 @@ public class StudentLiveController extends BaseController
                 this.currentView = new PollStudentViewFX(question);
                 navigateToView(currentView, "Sondage", this);
             }
-            default -> ErrorPopup.show("Type de question non supporté : " + question.type());
+            default -> showError("Type de question non supporté : " + question.type());
         }
     }
 
@@ -73,7 +72,7 @@ public class StudentLiveController extends BaseController
                 currentView.lockAfterAnswer();
             }
         } catch (IOException e) {
-            ErrorPopup.show("Erreur lors de l'envoi de la réponse : " + e.getMessage());
+            showError("Erreur lors de l'envoi de la réponse : " + e.getMessage());
         }
     }
 
@@ -89,7 +88,7 @@ public class StudentLiveController extends BaseController
                 currentView.lockAfterAnswer();
             }
         } catch (IOException e) {
-            ErrorPopup.show("Erreur lors de l'envoi de la réponse : " + e.getMessage());
+            showError("Erreur lors de l'envoi de la réponse : " + e.getMessage());
         }
     }
 
@@ -106,14 +105,14 @@ public class StudentLiveController extends BaseController
     public void onNextQuestionResponse(NextQuestionResponse response) {
         Platform.runLater(() -> {
             if (!response.isSuccess()) {
-                ErrorPopup.show("Erreur : " + response.getErrorMessage());
+                showError("Erreur : " + response.getErrorMessage());
                 return;
             }
             QuestionDTO question = response.getQuestion();
             if (question == null) {
                 // End of the quizz: send the student back to the join (code) screen.
                 networkController.removeListener(this);
-                ErrorPopup.show("Le quiz est terminé.");
+                showError("Le quiz est terminé.");
                 StudentInvitationController invitationCtrl = new StudentInvitationController(navigationService,
                         networkController);
                 navigateToView(new StudentInvitationViewFX(), "Rejoindre un Quiz", invitationCtrl);

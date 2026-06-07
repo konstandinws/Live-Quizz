@@ -6,7 +6,6 @@ import be.helha.clapetteChaussette.client.controller.BaseController;
 import be.helha.clapetteChaussette.client.network.ClientThreadHandler;
 import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.question.McqTeacherViewFX;
 import be.helha.clapetteChaussette.client.view.question.OpenTeacherViewFX;
 import be.helha.clapetteChaussette.client.view.question.PollTeacherViewFX;
@@ -50,7 +49,7 @@ public class TeacherLiveController extends BaseController
         try {
             networkController.addListener(this);
         } catch (IOException e) {
-            ErrorPopup.show("Erreur de connexion au serveur : " + e.getMessage());
+            showError("Erreur de connexion au serveur : " + e.getMessage());
         }
     }
 
@@ -68,7 +67,7 @@ public class TeacherLiveController extends BaseController
                 this.currentView = new PollTeacherViewFX(question, participantCount);
             }
             default -> {
-                ErrorPopup.show("Type de question non supporté : " + question.type());
+                showError("Type de question non supporté : " + question.type());
                 return;
             }
         }
@@ -82,7 +81,7 @@ public class TeacherLiveController extends BaseController
             // connection), so the index sent here is ignored server-side.
             networkController.send(new NextQuestionRequest(quizz, 0));
         } catch (IOException e) {
-            ErrorPopup.show("Erreur lors du passage à la question suivante : " + e.getMessage());
+            showError("Erreur lors du passage à la question suivante : " + e.getMessage());
         }
     }
 
@@ -94,7 +93,7 @@ public class TeacherLiveController extends BaseController
         try {
             networkController.send(new RevealAnswerAskEvent(currentQuestion.uuid(), currentQuestion.type()));
         } catch (IOException e) {
-            ErrorPopup.show("Erreur lors de l'affichage des réponses : " + e.getMessage());
+            showError("Erreur lors de l'affichage des réponses : " + e.getMessage());
         }
     }
 
@@ -111,14 +110,14 @@ public class TeacherLiveController extends BaseController
     public void onNextQuestionResponse(NextQuestionResponse response) {
         Platform.runLater(() -> {
             if (!response.isSuccess()) {
-                ErrorPopup.show("Erreur : " + response.getErrorMessage());
+                showError("Erreur : " + response.getErrorMessage());
                 return;
             }
             QuestionDTO question = response.getQuestion();
             if (question == null) {
                 // A null question signals the end of the quizz: go back to the list.
                 networkController.removeListener(this);
-                ErrorPopup.show("Le quiz est terminé.");
+                showError("Le quiz est terminé.");
                 choicesController.returnToChoices();
                 return;
             }

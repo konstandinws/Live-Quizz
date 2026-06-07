@@ -17,6 +17,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class PollTeacherViewFX extends TeacherQuestionViewFX {
+    @FXML
+    private Button revealAnswersBTN;
 
     @FXML
     private Button nextQuestionBTN;

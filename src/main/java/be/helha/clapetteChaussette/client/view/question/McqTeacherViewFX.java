@@ -22,6 +22,8 @@ import javafx.scene.layout.VBox;
  * bottom.
  */
 public class McqTeacherViewFX extends TeacherQuestionViewFX {
+    @FXML
+    private Button revealAnswersBTN;
 
     @FXML
     private Button nextQuestionBTN;

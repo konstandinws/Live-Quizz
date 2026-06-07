@@ -15,6 +15,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class OpenTeacherViewFX extends TeacherQuestionViewFX {
+    @FXML
+    private Button revealAnswersBTN;
 
     @FXML
     private VBox answersVbox;

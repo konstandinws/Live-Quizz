@@ -14,7 +14,7 @@ public class StudentWaitingController extends BaseController
 
     @Override
     public void onParticipantCountUpdated(int count) {
-        // TODO: mettre à jour l'affichage via le réseau
+        return;
     }
 
     @Override

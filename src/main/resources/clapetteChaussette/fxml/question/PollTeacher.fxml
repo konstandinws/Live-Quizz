@@ -27,6 +27,11 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </HBox.margin>
             </Label>
+            <Button fx:id="revealAnswersBTN" mnemonicParsing="false" onAction="#onRevealClick" text="Afficher les votes">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Button>
             <Button fx:id="nextQuestionBTN" mnemonicParsing="false" onAction="#onNextClick" text="question suivante" />
          </children>
       </HBox>

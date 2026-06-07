@@ -78,6 +78,11 @@ public class PollTeacherViewFX extends TeacherQuestionViewFX {
         listener.onNextRequested();
     }
 
+    @FXML
+    private void onRevealClick(ActionEvent event) {
+        listener.onRevealRequested();
+    }
+
     /**
      * Updates the per-answer vote counts (same order as the question's answers).
      */
@@ -91,6 +96,11 @@ public class PollTeacherViewFX extends TeacherQuestionViewFX {
     @Override
     public void addAnswer(List<String> answerText) {
         return;
+    }
+
+    @Override
+    public void revealCorrectAnswers() {
+        // A poll is a survey: there is no correct answer to reveal.
     }
 
     protected void refreshProgress() {

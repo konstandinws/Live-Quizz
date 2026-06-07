@@ -26,6 +26,7 @@ public class PollStudentViewFX extends StudentQuestionViewFX {
 
     private final ToggleGroup group = new ToggleGroup();
     private final List<RadioButton> options = new ArrayList<>();
+    private boolean revealed = false;
 
     public PollStudentViewFX(QuestionDTO question) {
         super(question);
@@ -60,6 +61,23 @@ public class PollStudentViewFX extends StudentQuestionViewFX {
         options.forEach(option -> option.setDisable(true));
         validateButton.setDisable(true);
         validateButton.setText("Réponse envoyée");
+    }
+
+    /**
+     * A poll has no correct answer, so the reveal just shows how many votes each
+     * option got, appended to its label.
+     */
+    @Override
+    public void revealCorrectAnswers(QuestionDTO correctQuestion, List<Integer> votes) {
+        if (revealed) {
+            return;
+        }
+        revealed = true;
+        for (int i = 0; i < options.size() && i < votes.size(); i++) {
+            int count = votes.get(i);
+            RadioButton option = options.get(i);
+            option.setText(option.getText() + " — " + count + (count > 1 ? " votes" : " vote"));
+        }
     }
 
     @Override

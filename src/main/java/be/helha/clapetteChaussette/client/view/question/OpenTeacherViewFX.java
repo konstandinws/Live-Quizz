@@ -56,13 +56,16 @@ public class OpenTeacherViewFX extends TeacherQuestionViewFX {
         playersResponseCount.setText(answeredCount + "/" + participantCount);
     }
 
-    public void addAnswer(String answerText) {
-        answersVbox.getChildren().add(createAnswerRow(answerText));
+    public void addAnswer(List<String> answerText) {
+        answersVbox.getChildren().clear();
+        for (String text : answerText) {
+            answersVbox.getChildren().add(createAnswerRow(text));
+        }
     }
 
     @Override
     public void setVotes(List<Integer> votes) {
-        ErrorPopup.show("setVotes n'est pas supporté pour les questions ouvertes");
+        return;
     }
 
     @FXML

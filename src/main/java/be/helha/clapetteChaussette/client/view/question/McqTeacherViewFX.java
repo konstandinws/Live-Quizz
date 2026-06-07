@@ -93,6 +93,11 @@ public class McqTeacherViewFX extends TeacherQuestionViewFX {
         }
     }
 
+    @Override
+    public void addAnswer(List<String> answerText) {
+        return;
+    }
+
     protected void refreshProgress() {
         playersVoteCount.setText(answeredCount + "/" + participantCount);
     }

@@ -107,6 +107,13 @@ public class TeacherLiveController extends BaseController
         Platform.runLater(() -> {
             if (currentView != null) {
                 currentView.setVoteProgress(event.getAnsweredCount(), event.getParticipantCount());
+                switch (currentView.getQuestionType()) {
+                    case MCQ -> currentView.setVotes(event.getVotesPerAnswer());
+                    case OPEN -> currentView.addAnswer(event.getAnswerText());
+                    case POLL -> {
+                        ErrorPopup.show("Votes par réponse n'est pas supporté pour les sondages");
+                    }
+                }
                 currentView.setVotes(event.getVotesPerAnswer());
             }
         });

@@ -6,6 +6,7 @@ import be.helha.clapetteChaussette.client.view.IListener;
 import be.helha.clapetteChaussette.client.view.ViewFX;
 import be.helha.clapetteChaussette.client.view.question.TeacherQuestionViewFX.ITeacherViewListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
+import be.helha.clapetteChaussette.common.models.enums.QuestionType;
 
 public abstract class TeacherQuestionViewFX extends ViewFX<ITeacherViewListener> {
 
@@ -37,9 +38,15 @@ public abstract class TeacherQuestionViewFX extends ViewFX<ITeacherViewListener>
         refreshProgress();
     }
 
+    public QuestionType getQuestionType() {
+        return question.type();
+    }
+
     protected abstract void refreshProgress();
 
     public abstract void setVotes(List<Integer> votes);
+
+    public abstract void addAnswer(List<String> answerText);
 
     public abstract interface ITeacherViewListener extends IListener {
         void onNextRequested();

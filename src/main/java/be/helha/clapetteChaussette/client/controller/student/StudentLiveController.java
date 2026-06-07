@@ -78,6 +78,9 @@ public class StudentLiveController extends BaseController
         try {
             networkController
                     .send(new SubmitAnswerRequest(currentQuestion.uuid(), -1, answer, currentQuestion.type()));
+            if (currentView != null) {
+                currentView.lockAfterAnswer();
+            }
         } catch (IOException e) {
             ErrorPopup.show("Erreur lors de l'envoi de la réponse : " + e.getMessage());
         }

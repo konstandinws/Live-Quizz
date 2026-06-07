@@ -38,6 +38,7 @@ public class QuestionServiceTest {
         MockitoAnnotations.openMocks(this);
         questionService = new QuestionService();
     }
+
     @Test
     public void isMcqCorrectTest() {
         Answer reponseA = new Answer("1", true);
@@ -45,18 +46,20 @@ public class QuestionServiceTest {
         List<Answer> listAnswers = Arrays.asList(reponseA, reponseB);
         System.out.println(listAnswers);
         Question testquestion = new McqQuestion("question", listAnswers);
-        assertTrue(questionService.isMcqCorrect(testquestion,0));
-        assertFalse(questionService.isMcqCorrect(testquestion,1));
+        assertTrue(questionService.isMcqCorrect(testquestion, 0));
+        assertFalse(questionService.isMcqCorrect(testquestion, 1));
 
     }
+
     @Test
     public void isReponseCorrectTest() {
         when(correctAnswer.isCorrect()).thenReturn(true);
         when(correctAnswer.getAnswer()).thenReturn("Paris");
         when(question.getAnswers()).thenReturn(List.of(correctAnswer));
-        assertTrue(questionService.isReponseCorrect(question,"Paris"));
-        assertFalse(questionService.isReponseCorrect(question,"londre"));
+        assertTrue(questionService.isReponseCorrect(question, "Paris"));
+        assertFalse(questionService.isReponseCorrect(question, "londre"));
     }
+
     @Test
     public void transformQuestionToDTOTest() {
         UUID quuid = UUID.randomUUID();
@@ -70,10 +73,9 @@ public class QuestionServiceTest {
         assertNotNull(dto);
         assertEquals(quuid, dto.uuid());
         assertEquals(questionnaireUuid, dto.quizzUuid());
-        assertEquals("Quelle est la capitale de la France ?", dto.titre());
+        assertEquals("Quelle est la capitale de la France ?", dto.title());
         assertEquals(List.of(correctAnswer), dto.answers());
         assertEquals(QuestionType.MCQ, dto.type());
     }
-
 
 }

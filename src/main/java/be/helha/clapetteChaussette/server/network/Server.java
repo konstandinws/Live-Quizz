@@ -23,7 +23,6 @@ import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsExceptio
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.models.Teacher;
-import be.helha.clapetteChaussette.common.models.enums.QuestionType;
 import be.helha.clapetteChaussette.common.models.questions.Answer;
 import be.helha.clapetteChaussette.server.models.Session;
 import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
@@ -322,9 +321,9 @@ public class Server implements ClientThreadHandler.Listener {
         }
 
         switch (request.getQuestionType()) {
-                    case MCQ, POLL -> session.recordAnswer(clientThreadHandler, request.getAnswerIndex());
-                    case OPEN -> session.recordTextAnswer(clientThreadHandler, request.getAnswerText());
-                }
+            case MCQ, POLL -> session.recordAnswer(clientThreadHandler, request.getAnswerIndex());
+            case OPEN -> session.recordTextAnswer(clientThreadHandler, request.getAnswerText());
+        }
 
         // Tell the teacher the progress (N/N) and the live vote count per answer.
         send(session.getHost(), new AnswerReceivedEvent(session.getAnsweredCount(),

@@ -60,7 +60,6 @@ public class TeacherLiveController extends BaseController
             }
             case POLL -> {
                 this.currentView = new PollTeacherViewFX(question, participantCount);
-                return;
             }
             default -> {
                 ErrorPopup.show("Type de question non supporté : " + question.type());

@@ -3,7 +3,6 @@ package be.helha.clapetteChaussette.client.view.question;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.models.questions.Answer;
 import javafx.event.ActionEvent;

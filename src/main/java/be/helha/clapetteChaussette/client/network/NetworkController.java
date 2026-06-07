@@ -1,5 +1,6 @@
 package be.helha.clapetteChaussette.client.network;
 
+import be.helha.clapetteChaussette.common.models.events.NetworkEvent;
 import be.helha.clapetteChaussette.common.network.ObjectSocket;
 
 import java.io.IOException;
@@ -43,6 +44,9 @@ public class NetworkController {
         this.isConnected = true;
         this.handler = new ClientThreadHandler(objectSocket, listener);
         this.listenerThread = new Thread(handler);
+        // Daemon: this background thread must not keep the JVM alive once the JavaFX
+        // window is closed (it is otherwise blocked forever on objectSocket.read()).
+        this.listenerThread.setDaemon(true);
         this.listenerThread.start();
     }
 
@@ -62,16 +66,16 @@ public class NetworkController {
     /**
      * Sends an object to the server through the network stream.
      *
-     * @param object The object to send.
+     * @param event The object to send.
      * @throws IOException If the client is not connected or if a network error
      *                     occurs.
      */
-    public synchronized void send(Object object) throws IOException {
+    public synchronized void send(NetworkEvent event) throws IOException {
         if (!isConnected || objectSocket == null) {
             throw new IOException("Le client n'est pas connecté au serveur.");
         }
         try {
-            this.objectSocket.send(object);
+            this.objectSocket.send(event);
         } catch (IOException e) {
             // it look weird to catch an IOException just to rethrow it, but this way we can
             // add a custom message and preserve the stack trace.

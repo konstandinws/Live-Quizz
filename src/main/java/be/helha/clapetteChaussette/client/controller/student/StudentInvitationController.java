@@ -8,9 +8,11 @@ import be.helha.clapetteChaussette.client.service.auth.CodeValidatorService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.student.StudentInvitationViewFX.IStudentInvitationListener;
 import be.helha.clapetteChaussette.client.view.student.StudentWaitingViewFX;
+import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.models.events.JoinSessionRequest;
 import be.helha.clapetteChaussette.common.models.events.JoinSessionResponse;
 import be.helha.clapetteChaussette.common.models.events.LeaveSessionRequest;
+import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
 import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
 import javafx.application.Platform;
 
@@ -75,6 +77,25 @@ public class StudentInvitationController extends BaseController
             if (waitingView != null) {
                 waitingView.setParticipantCount(update.getParticipantCount());
             }
+        });
+    }
+
+    // Only for the first question, then it passes to the StudentLiveController's same name method
+    @Override
+    public void onNextQuestionResponse(NextQuestionResponse response) {
+        Platform.runLater(() -> {
+            if (!response.isSuccess()) {
+                ErrorPopup.show("Erreur lors du lancement : " + response.getErrorMessage());
+                return;
+            }
+            QuestionDTO question = response.getQuestion();
+            if (question == null) {
+                return;
+            }
+            // Hand over from the waiting screen to the live quizz screen.
+            networkController.removeListener(this);
+            StudentLiveController liveController = new StudentLiveController(navigationService, networkController);
+            liveController.showQuestion(question);
         });
     }
 

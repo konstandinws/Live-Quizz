@@ -33,7 +33,7 @@ public class JdbcQuestionRepository implements IQuestionRepository {
 
             statement.setObject(1, question.uuid());
             statement.setObject(2, question.quizzUuid());
-            statement.setString(3, question.titre());
+            statement.setString(3, question.title());
             statement.setString(4, question.type().name());
             statement.executeUpdate();
 
@@ -100,6 +100,38 @@ public class JdbcQuestionRepository implements IQuestionRepository {
         return Optional.empty();
     }
 
+    @Override
+    public List<QuestionDTO> findByQuizz(UUID quizzUuid) throws DatabaseException {
+
+        String query = "SELECT quuid, content, type FROM question WHERE questionnaire_uuid = ?";
+        List<QuestionDTO> questions = new ArrayList<>();
+
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setObject(1, quizzUuid);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    UUID questionUuid = resultSet.getObject("quuid", UUID.class);
+                    String content = resultSet.getString("content");
+                    String type = resultSet.getString("type");
+
+                    List<Answer> answers = new ArrayList<>();
+                    findAnswers(questionUuid, connection, answers);
+
+                    questions.add(new QuestionDTO(questionUuid, quizzUuid, content, answers,
+                            QuestionType.valueOf(type)));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error while finding the questions of a quizz in the Database", e);
+        }
+
+        return questions;
+    }
+
     // Fetch the choices and correct answers for each question
     public void findAnswers(UUID questionUuid, Connection connection, List<Answer> answers)
             throws SQLException {
@@ -116,5 +148,37 @@ public class JdbcQuestionRepository implements IQuestionRepository {
                 }
             }
         }
+    }
+
+    public Optional<QuestionDTO> findByQuizzUuidAndIndex(UUID quizzUuid, int index) throws DatabaseException {
+        String query = "SELECT quuid, questionnaire_uuid, content, type FROM question WHERE questionnaire_uuid = ? ORDER BY quuid LIMIT 1 OFFSET ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setObject(1, quizzUuid);
+            statement.setInt(2, index);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    UUID questionUuid = resultSet.getObject("quuid", UUID.class);
+                    String content = resultSet.getString("content");
+                    String type = resultSet.getString("type");
+
+                    List<Answer> answers = new ArrayList<>();
+
+                    findAnswers(questionUuid, connection, answers);
+
+                    return Optional.of(new QuestionDTO(questionUuid, quizzUuid, content, answers,
+                            QuestionType.valueOf(type)));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error while finding the question in the Database", e);
+
+        }
+
+        return Optional.empty();
     }
 }

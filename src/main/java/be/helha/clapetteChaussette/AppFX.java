@@ -10,6 +10,8 @@ import be.helha.clapetteChaussette.client.view.HomeViewFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class AppFX extends Application {
 
     private static final String SERVER_HOST = "localhost";
@@ -22,6 +24,16 @@ public class AppFX extends Application {
 
         // Network connection shared across the whole application (login + save).
         NetworkController networkController = new NetworkController(SERVER_HOST, SERVER_PORT);
+
+        // Closing the window closes the socket, so the server detects the disconnect
+        // (and ends/leaves the session) and the listener thread stops.
+        mainstage.setOnCloseRequest(event -> {
+            try {
+                networkController.disconnect();
+            } catch (IOException e) {
+                System.err.println("Erreur à la fermeture de la connexion : " + e.getMessage());
+            }
+        });
 
         EditorService editorService = new EditorService(networkController, validateService);
 

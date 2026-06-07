@@ -11,8 +11,6 @@ import be.helha.clapetteChaussette.common.models.events.AnswerReceivedEvent;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionRequest;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
 import be.helha.clapetteChaussette.common.models.events.SubmitAnswerRequest;
-import be.helha.clapetteChaussette.common.models.events.ParticipantCountUpdate;
-import be.helha.clapetteChaussette.common.models.events.ParticipantNameUpdate;
 import be.helha.clapetteChaussette.common.models.events.RegisterRequest;
 import be.helha.clapetteChaussette.common.models.events.RevealAnswerAskEvent;
 import be.helha.clapetteChaussette.common.models.events.RevealAnswerEvent;
@@ -26,23 +24,25 @@ import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsExceptio
 import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
 import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
 import be.helha.clapetteChaussette.common.models.Teacher;
-import be.helha.clapetteChaussette.common.models.questions.Answer;
 import be.helha.clapetteChaussette.server.models.Session;
 import be.helha.clapetteChaussette.server.repository.IQuestionRepository;
 import be.helha.clapetteChaussette.server.repository.IQuizzRepository;
 import be.helha.clapetteChaussette.server.repository.db.JdbcQuestionRepository;
 import be.helha.clapetteChaussette.server.repository.db.JdbcQuizzRepository;
 import be.helha.clapetteChaussette.server.repository.db.JdbcTeacherRepository;
-import be.helha.clapetteChaussette.server.utils.CodeGenerator;
+import be.helha.clapetteChaussette.server.service.AuthService;
+import be.helha.clapetteChaussette.server.service.QuizzService;
+import be.helha.clapetteChaussette.server.service.ServerMessagingService;
+import be.helha.clapetteChaussette.server.service.SessionManagementService;
+import be.helha.clapetteChaussette.server.service.AnswerService;
+import be.helha.clapetteChaussette.server.service.QuestionService;
 import be.helha.clapetteChaussette.server.repository.TeacherService;
 
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Represents the server for the Clapette Chaussette application.
@@ -63,8 +63,12 @@ public class Server implements ClientThreadHandler.Listener {
 
     private final IQuestionRepository questionRepository = new JdbcQuestionRepository();
 
-    /** Active quizz sessions, indexed by their invitation code. */
-    private final Map<String, Session> sessions = new ConcurrentHashMap<>();
+    // import all our services
+    private final ServerMessagingService messagingService = new ServerMessagingService(new QuestionService());
+    private final SessionManagementService sessionManagementService = new SessionManagementService();
+    private final AuthService authService = new AuthService(teacherService);
+    private final QuizzService quizzService = new QuizzService(quizzRepository, questionRepository);
+    private final AnswerService answerService = new AnswerService();
 
     public static void main(String[] args) {
         Server server = new Server();
@@ -107,18 +111,18 @@ public class Server implements ClientThreadHandler.Listener {
     @Override
     public void onLogin(ClientThreadHandler clientThreadHandler, LoginRequest loginRequest) {
         String name = loginRequest.getTeacher().getName();
+        String password = loginRequest.getPassword();
         try {
-            // Le mot de passe en clair est vérifié ici via BCrypt (hashage côté serveur).
-            Teacher teacher = teacherService.teacherLogin(name, loginRequest.getPassword());
-            System.out.println("Connecté avec " + teacher.getName());
+            Teacher teacher = authService.login(name, password);
+            System.out.println("Prof connecté : " + teacher.getName());
 
-            List<QuizzDTO> quizzes = quizzRepository.findAll(teacher.getUuid());
+            List<QuizzDTO> quizzes = quizzService.getTeacherQuizzes(teacher.getUuid());
             reply(clientThreadHandler, new LoginResponse(true, teacher, quizzes, "OK"));
         } catch (LoginFailedException e) {
-            System.out.println("Échec de connexion pour " + name);
+            System.out.println("fail connection for : " + name);
             reply(clientThreadHandler, new LoginResponse(false, null, List.of(), "Identifiants invalides"));
         } catch (DatabaseException e) {
-            System.err.println("Erreur base de données lors de la connexion : " + e.getMessage());
+            System.err.println("Database error : " + e.getMessage());
             reply(clientThreadHandler,
                     new LoginResponse(false, null, List.of(), "Erreur serveur, réessayez plus tard"));
         }
@@ -131,7 +135,7 @@ public class Server implements ClientThreadHandler.Listener {
         try {
             clientThreadHandler.send(response);
         } catch (IOException e) {
-            System.err.println("Impossible d'envoyer la réponse au client : " + e.getMessage());
+            System.err.println("Impossible to send response : " + e.getMessage());
         }
     }
 
@@ -139,12 +143,10 @@ public class Server implements ClientThreadHandler.Listener {
     public void onRegister(ClientThreadHandler clientThreadHandler, RegisterRequest registerRequest) {
         String name = registerRequest.getTeacher().getName();
         try {
-            // Le serveur hashe le mot de passe (BCrypt) avant de le persister.
-            Teacher teacher = teacherService.registerNewTeacher(name, registerRequest.getPassword());
+            Teacher teacher = authService.register(name, registerRequest.getPassword());
             System.out.println("Nouveau prof créé : " + teacher.getName());
 
-            // On répond comme pour un login réussi afin que le client bascule d'écran.
-            List<QuizzDTO> quizzes = quizzRepository.findAll(teacher.getUuid());
+            List<QuizzDTO> quizzes = quizzService.getTeacherQuizzes(teacher.getUuid());
             reply(clientThreadHandler, new LoginResponse(true, teacher, quizzes, "OK"));
         } catch (TeacherAlreadyExistsException e) {
             System.out.println("Le prof existe déjà : " + name);
@@ -163,12 +165,10 @@ public class Server implements ClientThreadHandler.Listener {
     public void onSaveQuizz(ClientThreadHandler clientThreadHandler, SaveQuizzRequest request) {
         QuizzDTO quizz = request.getQuizz();
         try {
-            quizzRepository.save(quizz);
-            questionRepository.saveQuestions(request.getQuestions());
+            quizzService.saveQuizz(quizz, request.getQuestions());
             System.out.println("Questionnaire enregistré : " + quizz.name());
 
-            // Return the refreshed list so the teacher's screen can update.
-            List<QuizzDTO> quizzes = quizzRepository.findAll(quizz.teacherUuid());
+            List<QuizzDTO> quizzes = quizzService.getTeacherQuizzes(quizz.teacherUuid());
             reply(clientThreadHandler, new SaveQuizzResponse(true, "OK", quizzes));
         } catch (DatabaseException e) {
             System.err.println("Échec de l'enregistrement du questionnaire : " + e.getMessage());
@@ -192,35 +192,20 @@ public class Server implements ClientThreadHandler.Listener {
     public void onLaunchQuizz(ClientThreadHandler clientThreadHandler, LaunchQuizzRequest request) {
         QuizzDTO quizz = request.getQuizz();
         try {
-            // Load the quizz's questions up-front: from now on the session owns the
-            // progression (which question is current), not the client.
-            List<QuestionDTO> questions = questionRepository.findByQuizz(quizz.uuid());
+            List<QuestionDTO> questions = quizzService.getQuizzQuestions(quizz.uuid());
 
-            String code = generateUniqueCode();
-            Session session = new Session(code, quizz, clientThreadHandler);
+            Session session = sessionManagementService.createSession(quizz, clientThreadHandler);
             session.loadQuestions(questions);
-            sessions.put(code, session);
-            System.out.println("Session lancée : code " + code + " pour le questionnaire « " + quizz.name()
+            System.out.println("Session lancée : code " + session.getCode() + " pour le questionnaire « " + quizz.name()
                     + " » (" + questions.size() + " questions)");
 
             reply(clientThreadHandler,
-                    new LaunchQuizzResponse(true, code, session.getNumberParticipants(), "OK", quizz));
+                    new LaunchQuizzResponse(true, session.getCode(), session.getNumberParticipants(), "OK", quizz));
         } catch (DatabaseException e) {
             System.err.println("Échec du chargement des questions : " + e.getMessage());
             reply(clientThreadHandler,
                     new LaunchQuizzResponse(false, null, 0, "Erreur serveur, réessayez plus tard", quizz));
         }
-    }
-
-    /**
-     * Generates an invitation code not already used by an active session.
-     */
-    private String generateUniqueCode() {
-        String code;
-        do {
-            code = CodeGenerator.generate();
-        } while (sessions.containsKey(code));
-        return code;
     }
 
     /**
@@ -236,20 +221,26 @@ public class Server implements ClientThreadHandler.Listener {
 
     @Override
     public void onJoinSession(ClientThreadHandler clientThreadHandler, JoinSessionRequest request) {
-        Session session = sessions.get(request.getCode());
-        if (session == null) {
+        boolean joined = sessionManagementService.addClientToSession(request.getCode(), clientThreadHandler,
+                request.getPseudo());
+        if (!joined) {
             reply(clientThreadHandler, new JoinSessionResponse(false, 0, "Code invalide"));
             return;
         }
 
-        session.addClient(clientThreadHandler, request.getPseudo());
+        Optional<Session> sessionOpt = sessionManagementService.getSessionByCode(request.getCode());
+        if (sessionOpt.isEmpty()) {
+            reply(clientThreadHandler, new JoinSessionResponse(false, 0, "Code invalide"));
+            return;
+        }
+
+        Session session = sessionOpt.get();
         int count = session.getNumberParticipants();
         System.out.println("Élève rejoint la session " + request.getCode() + " (" + count + " participant(s))");
 
         reply(clientThreadHandler, new JoinSessionResponse(true, count, "OK"));
 
-        // Notify the teacher and the students already in the session.
-        broadcastParticipantUpdate(session);
+        messagingService.broadcastParticipantUpdate(session);
     }
 
     /**
@@ -263,158 +254,83 @@ public class Server implements ClientThreadHandler.Listener {
         }
     }
 
-    /**
-     * Notifies the teacher (host) and every student of the session's participant
-     * count.
-     */
-    private void broadcastParticipantUpdate(Session session) {
-        ParticipantCountUpdate updateNumber = new ParticipantCountUpdate(session.getNumberParticipants());
-        ParticipantNameUpdate updateNames = new ParticipantNameUpdate(session.getParticipantPseudos());
-        send(session.getHost(), updateNumber);
-        send(session.getHost(), updateNames);
-        for (ClientThreadHandler client : session.getClients()) {
-            send(client, updateNumber);
-        }
-    }
-
-    private void send(ClientThreadHandler clientThreadHandler, Object event) {
-        try {
-            clientThreadHandler.send(event);
-        } catch (IOException e) {
-            System.err.println("Impossible d'envoyer un message au client : " + e.getMessage());
-        }
-    }
-
     @Override
     public void onLeaveSession(ClientThreadHandler clientThreadHandler, LeaveSessionRequest request) {
-        removeFromSession(clientThreadHandler);
+        Optional<Session> sessionOpt = sessionManagementService.getSessionByClient(clientThreadHandler);
+        if (sessionOpt.isPresent()) {
+            Session session = sessionOpt.get();
+            sessionManagementService.removeClientFromSession(clientThreadHandler);
+            messagingService.broadcastParticipantUpdate(session);
+        }
     }
 
     @Override
     public void onNextQuestion(ClientThreadHandler clientThreadHandler, NextQuestionRequest nextQuestionRequest) {
-        Optional<Session> sessionOpt = getSession(clientThreadHandler);
+        Optional<Session> sessionOpt = sessionManagementService.getSessionByHost(clientThreadHandler);
         if (sessionOpt.isEmpty()) {
-            send(clientThreadHandler, new NextQuestionResponse(false, "Session introuvable", null, -1));
+            messagingService.send(clientThreadHandler,
+                    new NextQuestionResponse(false, "Session introuvable", null, -1));
             return;
         }
 
         Session session = sessionOpt.get();
         Optional<QuestionDTO> question = session.nextQuestion();
         if (question.isEmpty()) {
-            // No more questions: the quizz is finished (a null question signals the end).
-            send(session.getHost(), new NextQuestionResponse(true, "FIN", null, session.getCurrentIndex()));
+            messagingService.send(session.getHost(),
+                    new NextQuestionResponse(true, "FIN", null, session.getCurrentIndex()));
             return;
         }
 
-        broadcastNextQuestion(session, question.get(), session.getCurrentIndex());
+        messagingService.broadcastNextQuestion(session, question.get(), session.getCurrentIndex());
     }
 
     @Override
     public void onSubmitAnswer(ClientThreadHandler clientThreadHandler, SubmitAnswerRequest request) {
-        Optional<Session> sessionOpt = getSessionByClient(clientThreadHandler);
+        Optional<Session> sessionOpt = sessionManagementService.getSessionByClient(clientThreadHandler);
         if (sessionOpt.isEmpty()) {
             return;
         }
         Session session = sessionOpt.get();
 
-        // Ignore an answer that targets a question which is no longer the current one.
-        Optional<QuestionDTO> current = session.getCurrentQuestion();
-        if (current.isEmpty() || !current.get().uuid().equals(request.getQuestionUuid())) {
+        boolean answered = answerService.recordAnswer(session, clientThreadHandler, request.getQuestionUuid(),
+                request.getQuestionType(), request.getAnswerIndex(), request.getAnswerText());
+        if (!answered) {
             return;
         }
 
-        switch (request.getQuestionType()) {
-            case MCQ, POLL -> session.recordAnswer(clientThreadHandler, request.getAnswerIndex());
-            case OPEN -> session.recordTextAnswer(clientThreadHandler, request.getAnswerText());
-        }
-
-        // Tell the teacher the progress (N/N) and the live vote count per answer.
-        send(session.getHost(), new AnswerReceivedEvent(session.getAnsweredCount(),
+        messagingService.send(session.getHost(), new AnswerReceivedEvent(session.getAnsweredCount(),
                 session.getNumberParticipants(), session.getVoteTotal(), session.getTextAnswerTotal()));
     }
 
     @Override
     public void onRevealAnswers(ClientThreadHandler clientThreadHandler, RevealAnswerAskEvent request) {
-        Optional<Session> sessionOpt = getSession(clientThreadHandler);
+        Optional<Session> sessionOpt = sessionManagementService.getSessionByHost(clientThreadHandler);
         if (sessionOpt.isEmpty()) {
             return;
         }
 
         Session session = sessionOpt.get();
         Optional<QuestionDTO> current = session.getCurrentQuestion();
-        // Ignore a reveal that no longer targets the current question.
         if (current.isEmpty() || !current.get().uuid().equals(request.getQuestionUuid())) {
             return;
         }
 
-        // Send the full question (correct answers included) plus the vote tally to the
-        // teacher and every student, so they can see what was right and how people voted.
         RevealAnswerEvent event = new RevealAnswerEvent(current.get(), session.getVoteTotal());
-        send(session.getHost(), event);
+        messagingService.send(session.getHost(), event);
         for (ClientThreadHandler client : session.getClients()) {
-            send(client, event);
+            messagingService.send(client, event);
         }
-    }
-
-    private Optional<Session> getSession(ClientThreadHandler clientThreadHandler) {
-        for (Session session : sessions.values()) {
-            if (session.getHost() == clientThreadHandler) {
-                return Optional.of(session);
-            }
-        }
-        return Optional.empty();
-    }
-
-    /** Finds the session a student (non-host) belongs to. */
-    private Optional<Session> getSessionByClient(ClientThreadHandler clientThreadHandler) {
-        for (Session session : sessions.values()) {
-            if (session.getClients().contains(clientThreadHandler)) {
-                return Optional.of(session);
-            }
-        }
-        return Optional.empty();
-    }
-
-    private void broadcastNextQuestion(Session session, QuestionDTO question, int index) {
-        // The teacher (host) gets the full question, correct answers included.
-        send(session.getHost(), new NextQuestionResponse(true, "OK", question, index));
-
-        // Students get a copy without the correct answers (anti-cheat).
-        NextQuestionResponse studentResponse = new NextQuestionResponse(true, "OK", hideCorrectAnswers(question),
-                index);
-        for (ClientThreadHandler client : session.getClients()) {
-            send(client, studentResponse);
-        }
-    }
-
-    /**
-     * Returns a copy of the question whose answers no longer reveal the correct
-     * ones.
-     */
-    private QuestionDTO hideCorrectAnswers(QuestionDTO question) {
-        List<Answer> hidden = question.answers().stream()
-                .map(answer -> new Answer(answer.getAnswer(), false))
-                .toList();
-        return new QuestionDTO(question.uuid(), question.quizzUuid(), question.title(), hidden, question.type());
     }
 
     @Override
     public void onDisconnect(ClientThreadHandler clientThreadHandler) {
-        // A student dropping out decrements the count; a teacher dropping ends the
-        // session.
-        removeFromSession(clientThreadHandler);
-        sessions.values().removeIf(session -> session.getHost() == clientThreadHandler);
-    }
-
-    /**
-     * Removes a student from its session (if any) and refreshes the count.
-     */
-    private void removeFromSession(ClientThreadHandler clientThreadHandler) {
-        for (Session session : sessions.values()) {
-            if (session.getClients().contains(clientThreadHandler)) {
-                session.removeClient(clientThreadHandler);
-                broadcastParticipantUpdate(session);
-            }
+        Optional<Session> studentSessionOpt = sessionManagementService.getSessionByClient(clientThreadHandler);
+        if (studentSessionOpt.isPresent()) {
+            Session session = studentSessionOpt.get();
+            sessionManagementService.removeClientFromSession(clientThreadHandler);
+            messagingService.broadcastParticipantUpdate(session);
         }
+
+        sessionManagementService.removeSessionByHost(clientThreadHandler);
     }
 }

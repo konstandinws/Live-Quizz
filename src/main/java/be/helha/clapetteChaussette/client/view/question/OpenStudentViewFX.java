@@ -1,26 +1,12 @@
 package be.helha.clapetteChaussette.client.view.question;
 
-import be.helha.clapetteChaussette.client.view.IListener;
-import be.helha.clapetteChaussette.client.view.ViewFX;
-import be.helha.clapetteChaussette.client.view.question.OpenStudentViewFX.IOpenQuestionStudentListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
-public class OpenStudentViewFX extends ViewFX<IOpenQuestionStudentListener> {
-
-    private final QuestionDTO question;
-
-    public OpenStudentViewFX(QuestionDTO question) {
-        this.question = question;
-    }
-
-    @Override
-    protected String getFXMLPath() {
-        return "question/OpenStudent.fxml";
-    }
+public class OpenStudentViewFX extends StudentQuestionViewFX {
 
     @FXML
     private Label questionFree;
@@ -30,6 +16,15 @@ public class OpenStudentViewFX extends ViewFX<IOpenQuestionStudentListener> {
 
     @FXML
     private Button submitButton;
+
+    public OpenStudentViewFX(QuestionDTO question) {
+        super(question);
+    }
+
+    @Override
+    protected String getFXMLPath() {
+        return "question/OpenStudent.fxml";
+    }
 
     @FXML
     private void initialize() {
@@ -43,10 +38,12 @@ public class OpenStudentViewFX extends ViewFX<IOpenQuestionStudentListener> {
             showError("Tu dois écrire une réponse avant de soumettre.");
             return;
         }
-        listener.onSubmitOpenQuestion(answer);
+        listener.onAnswerSelected(answer);
     }
 
-    public interface IOpenQuestionStudentListener extends IListener {
-        void onSubmitOpenQuestion(String answer);
+    @Override
+    public void lockAfterAnswer() {
+        textArea.setDisable(true);
+        submitButton.setDisable(true);
     }
 }

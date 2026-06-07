@@ -9,7 +9,8 @@ import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.question.McqStudentViewFX;
 import be.helha.clapetteChaussette.client.view.question.OpenStudentViewFX;
-import be.helha.clapetteChaussette.client.view.question.McqStudentViewFX.IMcqStudentListener;
+import be.helha.clapetteChaussette.client.view.question.StudentQuestionViewFX;
+import be.helha.clapetteChaussette.client.view.question.StudentQuestionViewFX.IStudentQuestionListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
 import be.helha.clapetteChaussette.common.models.events.SubmitAnswerRequest;
@@ -20,10 +21,10 @@ import javafx.application.Platform;
  * server and lets the student answer it.
  */
 public class StudentLiveController extends BaseController
-        implements IMcqStudentListener, ClientThreadHandler.Listener {
+        implements IStudentQuestionListener, ClientThreadHandler.Listener {
 
     private final NetworkController networkController;
-    private McqStudentViewFX currentView;
+    private StudentQuestionViewFX currentView;
     private QuestionDTO currentQuestion;
 
     public StudentLiveController(NavigationService nav, NetworkController networkController) {
@@ -47,13 +48,14 @@ public class StudentLiveController extends BaseController
             }
             case OPEN -> {
                 this.currentView = new OpenStudentViewFX(question);
+                navigateToView(currentView, "Question", this);
             }
             default -> ErrorPopup.show("Type de question non supporté : " + question.type());
         }
     }
 
     @Override
-    public void onAnswerMcqSelected(int index) {
+    public void onAnswerSelected(int index) {
         if (currentQuestion == null) {
             return;
         }
@@ -63,6 +65,19 @@ public class StudentLiveController extends BaseController
             if (currentView != null) {
                 currentView.lockAfterAnswer();
             }
+        } catch (IOException e) {
+            ErrorPopup.show("Erreur lors de l'envoi de la réponse : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void onAnswerSelected(String answer) {
+        if (currentQuestion == null) {
+            return;
+        }
+        try {
+            networkController
+                    .send(new SubmitAnswerRequest(currentQuestion.uuid(), -1, answer, currentQuestion.type()));
         } catch (IOException e) {
             ErrorPopup.show("Erreur lors de l'envoi de la réponse : " + e.getMessage());
         }

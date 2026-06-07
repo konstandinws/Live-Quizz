@@ -52,14 +52,13 @@ public class TeacherLiveController extends BaseController
         switch (question.type()) {
             case MCQ -> {
                 this.currentView = new McqTeacherViewFX(question, participantCount);
-                navigateToView(currentView, "Question en cours", this);
             }
             case OPEN -> {
                 this.currentView = new OpenTeacherViewFX(question, participantCount);
-                navigateToView(currentView, "Question en cours", this);
             }
             default -> ErrorPopup.show("Type de question non supporté : " + question.type());
         }
+        navigateToView(currentView, "Question en cours", this);
     }
 
     @Override

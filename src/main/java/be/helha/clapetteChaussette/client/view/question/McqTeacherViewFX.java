@@ -3,9 +3,6 @@ package be.helha.clapetteChaussette.client.view.question;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.client.view.IListener;
-import be.helha.clapetteChaussette.client.view.ViewFX;
-import be.helha.clapetteChaussette.client.view.question.McqTeacherViewFX.ITeacherLiveListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.models.questions.Answer;
 import javafx.event.ActionEvent;
@@ -24,7 +21,7 @@ import javafx.scene.layout.VBox;
  * (each with its live vote count), and the number of participants at the
  * bottom.
  */
-public class McqTeacherViewFX extends ViewFX<ITeacherLiveListener> {
+public class McqTeacherViewFX extends TeacherQuestionViewFX {
 
     @FXML
     private Button nextQuestionBTN;
@@ -38,18 +35,13 @@ public class McqTeacherViewFX extends ViewFX<ITeacherLiveListener> {
     @FXML
     private Label playersVoteCount;
 
-    private final QuestionDTO question;
-    private int participantCount;
-    private int answeredCount = 0;
-
     /**
      * One vote-count label per answer (same order), kept to update tallies live.
      */
     private final List<Label> voteLabels = new ArrayList<>();
 
     public McqTeacherViewFX(QuestionDTO question, int participantCount) {
-        this.question = question;
-        this.participantCount = participantCount;
+        super(question, participantCount);
     }
 
     @FXML
@@ -101,29 +93,12 @@ public class McqTeacherViewFX extends ViewFX<ITeacherLiveListener> {
         }
     }
 
-    /** Updates the total number of participants (the denominator of N/N). */
-    public void setParticipantCount(int count) {
-        this.participantCount = count;
-        refreshProgress();
-    }
-
-    /** Updates the answered/total progress shown at the bottom (e.g. "3/5"). */
-    public void setVoteProgress(int answered, int total) {
-        this.answeredCount = answered;
-        this.participantCount = total;
-        refreshProgress();
-    }
-
-    private void refreshProgress() {
+    protected void refreshProgress() {
         playersVoteCount.setText(answeredCount + "/" + participantCount);
     }
 
     @Override
     protected String getFXMLPath() {
         return "question/McqTeacher.fxml";
-    }
-
-    public interface ITeacherLiveListener extends IListener {
-        void onNextRequested();
     }
 }

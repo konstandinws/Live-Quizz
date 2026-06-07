@@ -8,9 +8,9 @@ import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.question.McqTeacherViewFX;
-import be.helha.clapetteChaussette.client.view.question.McqTeacherViewFX.ITeacherLiveListener;
 import be.helha.clapetteChaussette.client.view.question.OpenTeacherViewFX;
-import be.helha.clapetteChaussette.client.view.question.OpenTeacherViewFX.IOpenTeacherListener;
+import be.helha.clapetteChaussette.client.view.question.TeacherQuestionViewFX;
+import be.helha.clapetteChaussette.client.view.question.TeacherQuestionViewFX.ITeacherViewListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.dto.QuizzDTO;
 import be.helha.clapetteChaussette.common.models.events.AnswerReceivedEvent;
@@ -25,12 +25,13 @@ import javafx.application.Platform;
  * question is current, so "next" only asks it to advance.
  */
 public class TeacherLiveController extends BaseController
-        implements ITeacherLiveListener, IOpenTeacherListener, ClientThreadHandler.Listener {
+        implements ITeacherViewListener, ClientThreadHandler.Listener {
 
     private final NetworkController networkController;
     private final QuizzDTO quizz;
     private int participantCount;
-    private McqTeacherViewFX currentView;
+
+    private TeacherQuestionViewFX currentView;
 
     public TeacherLiveController(NavigationService nav, NetworkController networkController, QuizzDTO quizz,
             int participantCount) {
@@ -54,8 +55,8 @@ public class TeacherLiveController extends BaseController
                 navigateToView(currentView, "Question en cours", this);
             }
             case OPEN -> {
-                OpenTeacherViewFX openView = new OpenTeacherViewFX(question, participantCount);
-                navigateToView(openView, "Question en cours", this);
+                this.currentView = new OpenTeacherViewFX(question, participantCount);
+                navigateToView(currentView, "Question en cours", this);
             }
             default -> ErrorPopup.show("Type de question non supporté : " + question.type());
         }

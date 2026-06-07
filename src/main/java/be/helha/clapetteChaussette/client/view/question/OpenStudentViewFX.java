@@ -2,18 +2,18 @@ package be.helha.clapetteChaussette.client.view.question;
 
 import be.helha.clapetteChaussette.client.view.IListener;
 import be.helha.clapetteChaussette.client.view.ViewFX;
-import be.helha.clapetteChaussette.client.view.question.OpenQuestionStudentFX.IOpenQuestionStudentListener;
+import be.helha.clapetteChaussette.client.view.question.OpenStudentViewFX.IOpenQuestionStudentListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
-public class OpenQuestionStudentFX extends ViewFX<IOpenQuestionStudentListener> {
+public class OpenStudentViewFX extends ViewFX<IOpenQuestionStudentListener> {
 
     private final QuestionDTO question;
 
-    public OpenQuestionStudentFX(QuestionDTO question) {
+    public OpenStudentViewFX(QuestionDTO question) {
         this.question = question;
     }
 

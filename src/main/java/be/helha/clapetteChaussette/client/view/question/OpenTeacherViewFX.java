@@ -3,9 +3,7 @@ package be.helha.clapetteChaussette.client.view.question;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.helha.clapetteChaussette.client.view.IListener;
-import be.helha.clapetteChaussette.client.view.ViewFX;
-import be.helha.clapetteChaussette.client.view.question.OpenTeacherViewFX.IOpenTeacherListener;
+import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class OpenTeacherViewFX extends ViewFX<IOpenTeacherListener> {
+public class OpenTeacherViewFX extends TeacherQuestionViewFX {
 
     @FXML
     private VBox answersVbox;
@@ -30,14 +28,10 @@ public class OpenTeacherViewFX extends ViewFX<IOpenTeacherListener> {
     @FXML
     private Label questionTitle;
 
-    private QuestionDTO question;
-    private int participantCount;
-    private int answeredCount = 0;
     private final List<Label> answerLabels = new ArrayList<>();
 
     public OpenTeacherViewFX(QuestionDTO question, int participantCount) {
-        this.question = question;
-        this.participantCount = participantCount;
+        super(question, participantCount);
     }
 
     @Override
@@ -58,18 +52,17 @@ public class OpenTeacherViewFX extends ViewFX<IOpenTeacherListener> {
         return row;
     }
 
-    private void refreshProgress() {
+    protected void refreshProgress() {
         playersResponseCount.setText(answeredCount + "/" + participantCount);
-    }
-
-    /** Updates the answered/total progress shown at the bottom (e.g. "3/5"). */
-    public void setVoteProgress(int answered) {
-        this.answeredCount = answered;
-        refreshProgress();
     }
 
     public void addAnswer(String answerText) {
         answersVbox.getChildren().add(createAnswerRow(answerText));
+    }
+
+    @Override
+    public void setVotes(List<Integer> votes) {
+        ErrorPopup.show("setVotes n'est pas supporté pour les questions ouvertes");
     }
 
     @FXML
@@ -86,9 +79,4 @@ public class OpenTeacherViewFX extends ViewFX<IOpenTeacherListener> {
         answersVbox.getChildren().clear();
         answerLabels.clear();
     }
-
-    public interface IOpenTeacherListener extends IListener {
-        void onNextRequested();
-    }
-
 }

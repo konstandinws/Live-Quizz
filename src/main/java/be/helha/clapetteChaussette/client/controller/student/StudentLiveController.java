@@ -8,6 +8,7 @@ import be.helha.clapetteChaussette.client.network.NetworkController;
 import be.helha.clapetteChaussette.client.service.NavigationService;
 import be.helha.clapetteChaussette.client.view.ControlerComponent.ErrorPopup;
 import be.helha.clapetteChaussette.client.view.question.McqStudentViewFX;
+import be.helha.clapetteChaussette.client.view.question.OpenStudentViewFX;
 import be.helha.clapetteChaussette.client.view.question.McqStudentViewFX.IMcqStudentListener;
 import be.helha.clapetteChaussette.common.dto.QuestionDTO;
 import be.helha.clapetteChaussette.common.models.events.NextQuestionResponse;
@@ -43,6 +44,9 @@ public class StudentLiveController extends BaseController
             case MCQ -> {
                 this.currentView = new McqStudentViewFX(question);
                 navigateToView(currentView, "Question", this);
+            }
+            case OPEN -> {
+                this.currentView = new OpenStudentViewFX(question);
             }
             default -> ErrorPopup.show("Type de question non supporté : " + question.type());
         }

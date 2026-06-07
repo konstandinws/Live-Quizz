@@ -56,7 +56,10 @@ public class TeacherLiveController extends BaseController
             case OPEN -> {
                 this.currentView = new OpenTeacherViewFX(question, participantCount);
             }
-            default -> ErrorPopup.show("Type de question non supporté : " + question.type());
+            default -> {
+                ErrorPopup.show("Type de question non supporté : " + question.type());
+                return;
+            }
         }
         navigateToView(currentView, "Question en cours", this);
     }

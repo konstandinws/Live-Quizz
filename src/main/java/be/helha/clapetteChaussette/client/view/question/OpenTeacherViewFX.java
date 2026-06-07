@@ -36,7 +36,7 @@ public class OpenTeacherViewFX extends TeacherQuestionViewFX {
 
     @Override
     protected String getFXMLPath() {
-        return "/question/OpenTeacher.fxml";
+        return "question/OpenTeacher.fxml";
     }
 
     private HBox createAnswerRow(String answerText) {

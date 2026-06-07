@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
@@ -34,7 +33,7 @@ public class EditorServiceTest {
     }
 
     @Test
-    void testCreateOpenQuestion_withValidAnswers_shouldCreateQuestion() {
+    void testCreateOpenQuestion_withValidAnswers_shouldCreateQuestion() throws InvalidQuestionException {
         // GIVEN
         String title = "question";
         List<String> answerTexts = List.of("1", "2", "3");
@@ -55,12 +54,11 @@ public class EditorServiceTest {
                 () -> assertEquals(title, question.getQuestion()),
                 () -> assertEquals(answerTexts, actualAnswerStrings),
                 () -> assertEquals(correctAnswers, actualAnswerBools),
-                () -> assertEquals(OPEN, question.getType())
-        );
+                () -> assertEquals(OPEN, question.getType()));
     }
 
     @Test
-    void testCreateMcqQuestion_withValidAnswers_shouldCreateQuestion() {
+    void testCreateMcqQuestion_withValidAnswers_shouldCreateQuestion() throws InvalidQuestionException {
         // GIVEN
         String title = "question";
         List<String> answerTexts = List.of("1", "2", "3");
@@ -80,12 +78,11 @@ public class EditorServiceTest {
                 () -> assertEquals(title, question.getQuestion()),
                 () -> assertEquals(answerTexts, actualAnswerStrings),
                 () -> assertEquals(correctAnswers, actualAnswerBools),
-                () -> assertEquals(MCQ, question.getType())
-        );
+                () -> assertEquals(MCQ, question.getType()));
     }
 
     @Test
-    void testCreatePollQuestion_withValidAnswers_shouldCreateQuestion() {
+    void testCreatePollQuestion_withValidAnswers_shouldCreateQuestion() throws InvalidQuestionException {
         // GIVEN
         String title = "Quelle est ta couleur préférée ?";
         List<String> answers = List.of("Rouge", "Bleu", "Vert");
@@ -97,13 +94,12 @@ public class EditorServiceTest {
         assertAll(
                 () -> assertNotNull(question),
                 () -> assertEquals(title, question.getQuestion()),
-                () -> assertEquals(answers.size(), question.getAnswers().size())
-        );
+                () -> assertEquals(answers.size(), question.getAnswers().size()));
         verify(validateQuestionEditorService, times(1)).validatePollQuestion(title, answers);
     }
 
     @Test
-    void testCreateOpenQuestion_withEmptyAnswers_shouldThrowException() {
+    void testCreateOpenQuestion_withEmptyAnswers_shouldThrowException() throws InvalidQuestionException {
         // GIVEN
         String title = "question";
         List<String> answerTexts = List.of();
@@ -112,13 +108,12 @@ public class EditorServiceTest {
                 .when(validateQuestionEditorService).validateOpenQuestion(title, answerTexts);
 
         // WHEN + THEN
-        assertThrows(InvalidQuestionException.class, () ->
-            editorService.createOpenQuestion(title, answerTexts, correctAnswers, false)
-        );
+        assertThrows(InvalidQuestionException.class,
+                () -> editorService.createOpenQuestion(title, answerTexts, correctAnswers, false));
     }
 
     @Test
-    void testCreateOpenQuestion_withInvalidTitle_shouldThrowException() {
+    void testCreateOpenQuestion_withInvalidTitle_shouldThrowException() throws InvalidQuestionException {
         // GIVEN
         String title = "";
         List<String> answerTexts = List.of("1", "2");
@@ -127,9 +122,8 @@ public class EditorServiceTest {
                 .when(validateQuestionEditorService).validateOpenQuestion(title, answerTexts);
 
         // WHEN + THEN
-        InvalidQuestionException exception = assertThrows(InvalidQuestionException.class, () ->
-            editorService.createOpenQuestion(title, answerTexts, correctAnswers, false)
-        );
+        InvalidQuestionException exception = assertThrows(InvalidQuestionException.class,
+                () -> editorService.createOpenQuestion(title, answerTexts, correctAnswers, false));
 
         assertEquals("Titre invalide", exception.getMessage());
     }
@@ -154,8 +148,7 @@ public class EditorServiceTest {
                 .collect(Collectors.toList());
         assertAll(
                 () -> assertEquals(answerTexts, actualStrings),
-                () -> assertEquals(correctAnswers, actualBools)
-        );
+                () -> assertEquals(correctAnswers, actualBools));
     }
 
     @Test
@@ -179,8 +172,7 @@ public class EditorServiceTest {
                 .collect(Collectors.toList());
         assertAll(
                 () -> assertEquals(answers, actualStrings),
-                () -> assertEquals(correctAnswers, actualBools)
-        );
+                () -> assertEquals(correctAnswers, actualBools));
     }
 
     @Test
@@ -194,9 +186,8 @@ public class EditorServiceTest {
                 .validateMcqQuestion(title, answers, correctAnswers);
 
         // WHEN + THEN
-        InvalidQuestionException exception = assertThrows(InvalidQuestionException.class, () ->
-            editorService.createMcqQuestion(title, answers, correctAnswers)
-        );
+        InvalidQuestionException exception = assertThrows(InvalidQuestionException.class,
+                () -> editorService.createMcqQuestion(title, answers, correctAnswers));
         assertEquals("Titre invalide", exception.getMessage());
     }
 
@@ -211,9 +202,8 @@ public class EditorServiceTest {
                 .validateMcqQuestion(title, answers, correctAnswers);
 
         // WHEN + THEN
-        assertThrows(InvalidQuestionException.class, () ->
-            editorService.createMcqQuestion(title, answers, correctAnswers)
-        );
+        assertThrows(InvalidQuestionException.class,
+                () -> editorService.createMcqQuestion(title, answers, correctAnswers));
     }
 
     @Test
@@ -227,9 +217,8 @@ public class EditorServiceTest {
                 .validateMcqQuestion(title, answers, correctAnswers);
 
         // WHEN + THEN
-        InvalidQuestionException exception = assertThrows(InvalidQuestionException.class, () ->
-            editorService.createMcqQuestion(title, answers, correctAnswers)
-        );
+        InvalidQuestionException exception = assertThrows(InvalidQuestionException.class,
+                () -> editorService.createMcqQuestion(title, answers, correctAnswers));
         assertEquals("Aucune bonne réponse définie", exception.getMessage());
     }
 }

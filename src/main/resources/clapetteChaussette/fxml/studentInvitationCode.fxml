@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.helha.clapetteChaussette.client.view.student.StudentInvitationViewFX">
+   <children>
+      <Label alignment="CENTER" layoutX="216.0" layoutY="74.0" prefHeight="49.0" prefWidth="168.0" text="Code d'invitation" textAlignment="CENTER">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+      <TextField fx:id="codeField" layoutX="188.0" layoutY="231.0" prefHeight="38.0" prefWidth="133.0" promptText="saisissez le code">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <Button layoutX="332.0" layoutY="231.0" mnemonicParsing="false" onAction="#handleJoin" prefHeight="38.0" prefWidth="71.0" text="Rejoindre" />
+      <Button fx:id="returnBTN" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Retour" />
+      <TextField fx:id="pseudoField" layoutX="188.0" layoutY="181.0" prefHeight="38.0" prefWidth="133.0" promptText="Pseudo">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <Label layoutX="90.0" layoutY="185.0" text="Pseudo :">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+      <Label layoutX="90.0" layoutY="235.0" text="Code :">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

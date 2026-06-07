@@ -1,7 +1,7 @@
 package clapetteChaussette.model.question;
 
-import be.helha.clapetteChaussette.model.question.Answer;
-import be.helha.clapetteChaussette.model.question.OpenQuestion;
+import be.helha.clapetteChaussette.common.models.questions.Answer;
+import be.helha.clapetteChaussette.common.models.questions.OpenQuestion;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;

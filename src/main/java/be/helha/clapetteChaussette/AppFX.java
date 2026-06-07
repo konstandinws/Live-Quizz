@@ -1,36 +1,44 @@
 // be.helha.clapetteChaussette.AppFX
 package be.helha.clapetteChaussette;
 
-import be.helha.clapetteChaussette.controller.LoginController;
-import be.helha.clapetteChaussette.repository.IQuestionRepository;
-import be.helha.clapetteChaussette.repository.IQuizzRepository;
-import be.helha.clapetteChaussette.repository.ITeacherRepository;
-import be.helha.clapetteChaussette.repository.db.JdbcQuestionRepository;
-import be.helha.clapetteChaussette.repository.db.JdbcQuizzRepository;
-import be.helha.clapetteChaussette.repository.db.JdbcTeacherRepository;
-import be.helha.clapetteChaussette.service.NavigationService;
-import be.helha.clapetteChaussette.service.editor.EditorService;
-import be.helha.clapetteChaussette.service.editor.ValidateQuestionEditorService;
-import be.helha.clapetteChaussette.view.LoginViewFX;
+import be.helha.clapetteChaussette.client.controller.HomeController;
+import be.helha.clapetteChaussette.client.network.NetworkController;
+import be.helha.clapetteChaussette.client.service.NavigationService;
+import be.helha.clapetteChaussette.client.service.editor.EditorService;
+import be.helha.clapetteChaussette.client.service.editor.ValidateQuestionEditorService;
+import be.helha.clapetteChaussette.client.view.HomeViewFX;
+import be.helha.clapetteChaussette.common.config.AppConfig;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class AppFX extends Application {
 
     @Override
     public void start(Stage mainstage) throws Exception {
+        AppConfig config = AppConfig.getInstance();
         NavigationService navigationService = new NavigationService(mainstage);
         ValidateQuestionEditorService validateService = new ValidateQuestionEditorService();
 
-        IQuizzRepository QuizzRepo = new JdbcQuizzRepository();
-        IQuestionRepository QuestionRepo = new JdbcQuestionRepository();
-        ITeacherRepository TeacherRepo = new JdbcTeacherRepository();
+        // Network connection shared across the whole application (login + save).
+        NetworkController networkController = new NetworkController(config.getServerHost(), config.getServerPort());
 
-        EditorService editorService = new EditorService(QuizzRepo, QuestionRepo, validateService);
+        // Closing the window closes the socket, so the server detects the disconnect
+        // (and ends/leaves the session) and the listener thread stops.
+        mainstage.setOnCloseRequest(event -> {
+            try {
+                networkController.disconnect();
+            } catch (IOException e) {
+                System.err.println("Erreur à la fermeture de la connexion : " + e.getMessage());
+            }
+        });
 
-        LoginController loginController = new LoginController(navigationService, TeacherRepo, editorService,
-                validateService);
-        loginController.navigateToView(new LoginViewFX(), "Clapette Chaussette - Connexion", loginController);
+        EditorService editorService = new EditorService(networkController, validateService);
+
+        HomeController homeController = new HomeController(navigationService, editorService,
+                validateService, networkController);
+        homeController.navigateToView(new HomeViewFX(), "Clapette Chaussette", homeController);
     }
 
     public static void main(String[] args) {

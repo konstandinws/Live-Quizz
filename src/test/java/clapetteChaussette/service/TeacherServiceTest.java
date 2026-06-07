@@ -1,12 +1,13 @@
 package clapetteChaussette.service;
 
-import be.helha.clapetteChaussette.exception.TeacherAlreadyExistsException;
-import be.helha.clapetteChaussette.exception.login.LoginFailedException;
-import be.helha.clapetteChaussette.model.Teacher;
-import be.helha.clapetteChaussette.model.dto.TeacherDTO;
-import be.helha.clapetteChaussette.repository.ITeacherRepository;
-import be.helha.clapetteChaussette.service.repository.TeacherService;
-import be.helha.clapetteChaussette.utils.PasswordHasher;
+import be.helha.clapetteChaussette.common.exception.TeacherAlreadyExistsException;
+import be.helha.clapetteChaussette.common.exception.login.LoginFailedException;
+import be.helha.clapetteChaussette.common.exception.repository.DatabaseException;
+import be.helha.clapetteChaussette.common.models.Teacher;
+import be.helha.clapetteChaussette.common.dto.TeacherDTO;
+import be.helha.clapetteChaussette.server.repository.ITeacherRepository;
+import be.helha.clapetteChaussette.server.repository.TeacherService;
+import be.helha.clapetteChaussette.server.utils.PasswordHasher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,7 +30,7 @@ public class TeacherServiceTest {
     private TeacherService teacherService;
 
     @Test
-    void registerNewTeacher_ShouldThrowException_WhenNameIsBlank() {
+    void registerNewTeacher_ShouldThrowException_WhenNameIsBlank() throws DatabaseException {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             teacherService.registerNewTeacher("   ", "password123");
         });
@@ -41,7 +42,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void registerNewTeacher_ShouldThrowException_WhenPasswordIsTooShort() {
+    void registerNewTeacher_ShouldThrowException_WhenPasswordIsTooShort() throws DatabaseException {
         String teacher = "Bob";
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             teacherService.registerNewTeacher(teacher, "1234");
@@ -53,7 +54,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void registerNewTeacher_ShouldThrowException_WhenTeacherAlreadyExists() {
+    void registerNewTeacher_ShouldThrowException_WhenTeacherAlreadyExists() throws DatabaseException {
         String teacherName = "Mark";
         // we simulate that the teacher is already in the DB
         when(repository.findByName(teacherName))
@@ -69,7 +70,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void registerNewTeacher_ShouldSucceed_WhenDataIsValid() {
+    void registerNewTeacher_ShouldSucceed_WhenDataIsValid() throws DatabaseException, TeacherAlreadyExistsException {
         String teacherName = "John";
 
         when(repository.findByName(teacherName)).thenReturn(Optional.empty());
@@ -85,7 +86,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void teacherLogin_ShouldThrowException_WhenNameDoesNotExist() {
+    void teacherLogin_ShouldThrowException_WhenNameDoesNotExist() throws DatabaseException {
         String loginName = "Alex";
         when(repository.findByName(loginName)).thenReturn(Optional.empty());
 
@@ -97,7 +98,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void teacherLogin_ShouldThrowException_WhenPasswordIsIncorrect() {
+    void teacherLogin_ShouldThrowException_WhenPasswordIsIncorrect() throws DatabaseException {
         String wrongPassword = "wrongPassword";
         String realPassword = "correctPassword";
         String hashedPasswordInDb = PasswordHasher.hashPassword(realPassword);
@@ -115,7 +116,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void teacherLogin_ShouldSucceed_WhenCredentialsAreCorrect() {
+    void teacherLogin_ShouldSucceed_WhenCredentialsAreCorrect() throws DatabaseException, LoginFailedException {
         String password = "MyPassword";
         String hashedPasswordInDb = PasswordHasher.hashPassword(password);
         String teacherName = "David";

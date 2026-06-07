@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -24,6 +23,7 @@ public class NavigationServiceTest {
 
     @InjectMocks
     NavigationService navigationService;
+
     @Test
     void navigueto_history_notnulltest() throws Exception {
         Scene oldScene = mock(Scene.class);
@@ -38,6 +38,7 @@ public class NavigationServiceTest {
         verify(stage, times(1)).setTitle("Titre");
         verify(stage, times(1)).show();
     }
+
     @Test
     void navigateTo_History_nulltest() throws Exception {
         Scene newScene = mock(Scene.class);
@@ -61,6 +62,7 @@ public class NavigationServiceTest {
         });
 
     }
+
     @Test
     void goBack_Scene() throws Exception {
         Scene oldScene = mock(Scene.class);

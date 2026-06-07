@@ -6,8 +6,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-// TODO javadoc
-
+/**
+ * Utility class used to create and provide database connections.
+ * <p>
+ * The connection parameters are loaded from environment variables via
+ * {@link Dotenv}.
+ * </p>
+ */
 public class DatabaseConnection {
     private static final Dotenv dotenv = Dotenv.load();
 
@@ -18,6 +23,12 @@ public class DatabaseConnection {
 
     private static Connection connection;
 
+    /**
+     * Creates a new database connection.
+     *
+     * @return the JDBC connection
+     * @throws SQLException if the connection cannot be established
+     */
     public static Connection getConnection() throws SQLException {
         connection = DriverManager.getConnection(url, user, password);
         return connection;

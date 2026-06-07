@@ -1,5 +1,6 @@
 package be.helha.clapetteChaussette.client.model.question;
 
+import be.helha.clapetteChaussette.common.models.questions.Answer;
 import be.helha.clapetteChaussette.common.models.questions.PollQuestion;
 import be.helha.clapetteChaussette.common.models.questions.Question;
 
@@ -20,8 +21,9 @@ public class PollFactory extends QuestionFactory {
      */
     @Override
     public Question createQuestion(String questionText, List<String> answers, List<Boolean> correctAnswers,
-                                   boolean asPoints) {
-        return new PollQuestion(questionText);
+            boolean asPoints) {
+        List<Answer> options = answers.stream().map(a -> new Answer(a, true)).toList();
+        return new PollQuestion(questionText, options);
     }
 
 }

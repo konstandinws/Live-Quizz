@@ -276,8 +276,7 @@ public class Server implements ClientThreadHandler.Listener {
         Session session = sessionOpt.get();
         Optional<QuestionDTO> question = session.nextQuestion();
         if (question.isEmpty()) {
-            messagingService.send(session.getHost(),
-                    new NextQuestionResponse(true, "FIN", null, session.getCurrentIndex()));
+            messagingService.broadcastQuizzFinished(session, session.getCurrentIndex());
             return;
         }
 

@@ -71,4 +71,19 @@ public class ServerMessagingService {
             send(client, studentResponse);
         }
     }
+
+    /**
+     * Tells everyone in the session the quizz is over. The null question is the
+     * signal both the teacher and the students use to leave the live screen.
+     *
+     * @param session the session that just finished
+     * @param index   the last question index
+     */
+    public void broadcastQuizzFinished(Session session, int index) {
+        NextQuestionResponse finished = new NextQuestionResponse(true, "FIN", null, index);
+        send(session.getHost(), finished);
+        for (ClientThreadHandler client : session.getClients()) {
+            send(client, finished);
+        }
+    }
 }

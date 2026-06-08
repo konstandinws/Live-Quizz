@@ -8,7 +8,7 @@ ClapetteChaussette est un logiciel de gestion de quizz en temps réel. Un profes
 
 ## Démonstration
 
-[Voir la vidéo de démonstration](https://www.youtube.com/watch?v=PLACEHOLDER)
+[Voir la vidéo de démonstration](https://youtu.be/dQ3LohcqVxA)
 
 ## Compte de démonstration
 
